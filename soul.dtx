@@ -2157,13 +2157,12 @@
 % \TeX\ convention.
 %
 %    \begin{macrocode}
-\toksdef\SOUL@word\z@
-\toksdef\SOUL@lasttoken\tw@
+\newtoks\SOUL@word
+\newtoks\SOUL@lasttoken
 \toksdef\SOUL@syllable=4
-\toksdef\SOUL@temp=6
 \newtoks\SOUL@cmds
-\toksdef\SOUL@buffer\@ne
-\toksdef\SOUL@token\thr@@
+\newtoks\SOUL@buffer
+\newtoks\SOUL@token
 \dimendef\SOUL@syllgoal\z@
 \dimendef\SOUL@syllwidth\tw@
 \dimendef\SOUL@charkern=4
