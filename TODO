@@ -3,6 +3,6 @@ v2.2:
 + fix \begin{tabularx}{}{}\so{test}\end{tabularx} bug:
   soul doesn't seem to restore \toks@ properly, so tabularx falls on its
   nose  :->
-+ fix \SOUL@uleveryexhyphen (#1 -> \hbox{#1})
++ fix \SOUL@soeveryexhyphen (#1 -> \hbox{#1})
 + likewise s/toksdef/newtoks/ for SOUL@cmds. (nasty bug!)
 + make \hl work in plain mode (explain /tex-archive/macros/plain/graphics use)

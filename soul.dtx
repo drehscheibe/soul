@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1898}
+% \CheckSum{1899}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -552,7 +552,7 @@
 % \noindent
 % The \cs{\hl} command does only highlight if the \package{color} package
 % was loaded, otherwise it falls back to underlining.\footnote{Note that
-% it is possible to use the \package{color} package also under Plain \TeX.
+% you can also use \LaTeX's \package{color} package with Plain \TeX.
 % See~\ref{sec:plain} for the details.} The highlighting
 % color is by default yellow, underlines and overstriking lines are by
 % default black. The colors can be changed using the following commands:
@@ -688,7 +688,8 @@
 %   |\if|, |\else|, |\fi|, |\ifcase|, etc.
 % \item[Unexpandable material in command sequences: \def\foo{\copyright} \so\foo]
 %   Some commands must not be used in an \cs{\edef} statement^^A
-%   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.}.
+%   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.
+%   \quad\texttt{:-)}}.
 %   As \package{soul} does this when its argument is
 %   a command sequence, it has to protect such commands with \cs{\noexpand} in
 %   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
@@ -1975,7 +1976,7 @@
 % A big thank you goes to \person{Stefan Ulrich} for his tips and bug reports
 % during the development of versions 1.* and for his lessons on high quality
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
-% suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach},
+% suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach,}
 % who sent me a couple of bug reports and feature requests, and finally encouraged
 % me to (almost) completely rewrite \soul.
 % \person{Rowland McDonnel} gave useful hints for how to improve the documentation,
@@ -1989,18 +1990,20 @@
 %
 %
 % \begin{thebibliography}{00}
-% \bibitem{titlesec}{\person{Bezos, Javier}: \bibtitle{The titlesec and titletoc package.}
+% \raggedright
+%
+% \bibitem{titlesec}{\person{Bezos, Javier:} \bibtitle{The titlesec and titletoc package.}
 %   \CTAN-Archive, 1999, v2.1.}
 %
-% \bibitem{color}{\person{Carlisle, D. P.}: \bibtitle{The color package.} \CTAN-Archive, 1997, v1.0d.}
+% \bibitem{color}{\person{Carlisle, D. P.:} \bibtitle{The color package.} \CTAN-Archive, 1997, v1.0d.}
 %
 % \bibitem{Duden}{Duden, Volume 1. \bibtitle{Die Rechtschreibung.} Bibliographisches Institut, 
 %   Mann\-heim--\hskip0pt Wien--Z\"urich, 1986, 19th~edition.}
 %
-% \bibitem{DEK}{\person{Knuth, Donald E.}: \bibtitle{The \TeX book.}
+% \bibitem{DEK}{\person{Knuth, Donald E.:} \bibtitle{The \TeX book.}
 %   Addison--Wesley Publishing Company, Reading/Massachusetts, 1989, 16th~edition.}
 %
-% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P\v rihoda, Eduard}:
+% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P\v rihoda, Eduard:}
 %   \bibtitle{Die Terrainlehre in Verbindung mit der Darstellung, Beurtheilung und
 %   Beschreibung des Terrains vom milit\"arischen
 %   Standpunkte.}
@@ -2010,16 +2013,16 @@
 %   \bibtitle{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{german}{\person{Raichle, Bernd}: \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
+% \bibitem{german}{\person{Raichle, Bernd:} \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
 %    
-% \bibitem{yfonts}{\person{Schmidt, Walter}: \bibtitle{Ein Makropaket f\"ur die gebrochenen
+% \bibitem{yfonts}{\person{Schmidt, Walter:} \bibtitle{Ein Makropaket f\"ur die gebrochenen
 %   Schriften.} \CTAN-Archive, 1998, v1.2.}
 %    
-% \bibitem{Tschichold}{\person{Tschichold, Jan}: \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
+% \bibitem{Tschichold}{\person{Tschichold, Jan:} \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
 %   1987, 2nd~edition.}
 %
-% \bibitem{Willberg}{\person{Willberg, Hans Peter} and \person{Forssmann, Friedrich}:
+% \bibitem{Willberg}{\person{Willberg, Hans Peter} and \person{Forssmann, Friedrich:}
 %   \bibtitle{Lesetypographie.} H. Schmidt, Mainz, 1997.}
 %
 % \end{thebibliography}
@@ -2150,15 +2153,15 @@
 %
 % \noindent
 % Other packages wouldn't be happy if we reserved piles of \cs{\newtoks} and
-% \cs{\newdimen}, so we try to get away with their \cs{\...def} counterparts.
-% If the future shows that it was a bad decision, this can still be changed.
+% \cs{\newdimen}, so we try to get away with their \cs{\...def} counterparts
+% where possible.
 % Local registers are always even, while global ones are odd---this is a
 % \TeX\ convention.
 %
 %    \begin{macrocode}
 \newtoks\SOUL@word
 \newtoks\SOUL@lasttoken
-\toksdef\SOUL@syllable=4
+\toksdef\SOUL@syllable\z@
 \newtoks\SOUL@cmds
 \newtoks\SOUL@buffer
 \newtoks\SOUL@token
@@ -2449,7 +2452,7 @@
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%
     \def\SOUL@@{\SOUL@addtoken{#1}}%
-    \ifcat\noexpand#1\noexpand\end
+    \ifcat\noexpand#1\noexpand\SOUL@dotoken
         \def\\##1##2{%
             \ifx##2#1%
                 \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
@@ -3949,10 +3952,10 @@
 % \subsection{The \st{overstriking} driver}
 %
 % \begin{macro}{\SOUL@stpreamble}
-% Striking out is just underlining with a raised line with a different
+% Striking out is just underlining with a raised line of a different
 % color. Hence we only need to define the preamble accordingly and
 % let the underlining preamble finally do its job. Not that colored
-% overstriking were especially useful, but we want at least to keep
+% overstriking was especially useful, but we want at least to keep
 % it black while we might want to set underlines in some fancy color.
 %
 %    \begin{macrocode}
