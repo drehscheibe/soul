@@ -24,9 +24,14 @@
 %
 % DISCLAIMER: note that a Makefile could actually contain malign commands
 % that erase your whole account, so having a look at it before won't hurt!
-% I take no responsibility for any damage, but I'll do what I can to make
+% I take no responsibility for any damage, but I do what I can to make
 % using the original Makefile safe.
 %
+% COPYRIGHT NOTICE:
+% This package is free software that can be redistributed and/or modified
+% under the terms of the LaTeX Project Public License as specified
+% in the file macros/latex/base/lppl.txt on any CTAN archive server,
+% such as ftp://ftp.dante.de/.
 %
 %$
 %% ====================================================================
@@ -60,12 +65,6 @@
 %%                        packages, too.",
 %%  }
 %% ====================================================================
-%
-% COPYRIGHT NOTICE:
-% This package is free software that can be redistributed and/or modified
-% under the terms of the LaTeX Project Public License as specified
-% in the file macros/latex/base/lppl.txt on any CTAN archive server,
-% such as ftp://ftp.dante.de/.
 %
 %
 %
@@ -144,7 +143,7 @@
 %
 %
 %
-%^^A \CheckSum{1940}
+% \CheckSum{1996}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -522,7 +521,7 @@
 % However, in the last centuries letterspacing was excessively used,
 % underlining at least sometimes, because capitals and italic shape could
 % not be used together with the \emph{Fraktur} font and other black-letter fonts,
-% which are sometimes also (wrongly) called ``old German fonts''.
+% which are sometimes also called ``old German'' fonts.
 % This tradition is widely continued until today. The same limitations apply still today
 % to many languages with non-latin glyphs, which is why letterspacing has a strong
 % tradition in eastern countries where Cyrillic fonts are used.
@@ -1856,6 +1855,32 @@
 % 1.\qquad|\newcommand*\periodafter[2]{#1{#2.}}|\\
 % 2.\qquad|\newcommand*\periodafter[2]{#1{#2}.}|\\
 % \end{example}
+%
+%
+%
+% \noindent\FIXME{URKS}
+% Sometimes people are forced to underline section titles. The
+% \cs{\titlefont} command is provided by the \textsc{KOMA} script
+% package. You can write |\normalfont\sffamily\bfseries| instead.
+%
+% \begin{example}
+% |\titleformat{\section}|\\
+% |    {\LARGE\titlefont}|\\
+% |    {\thesection}|\\
+% |    {.66em}|\\
+% |    {\ul}|\\
+% \end{example}
+%
+% \indent
+% \begin{example}
+% |\titleformat{\section}|\\
+% |    {\LARGE\titlefont}|\\
+% |    {\ul{\thesubsubsection{\kern.66em}}}|\\
+% |    {0pt}|\\
+% |    {\ul}|\\
+% \end{example}
+%
+%
 %
 %
 %
