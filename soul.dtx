@@ -85,9 +85,7 @@
 %
 %
 %
-%
-%^^A  the `draft' option is needed for demonstration
-\documentclass[draft]{ltxdoc}
+\documentclass{ltxdoc}
 %
 %
 %
@@ -108,12 +106,14 @@
 %
 %
 %
-%
 \ifx\makehyperref\SOULundefined
     \newcommand*\texorpdfstring[2]{#1}
-\else
+\else   ^^A for "make hyper"
     \usepackage[colorlinks=true]{hyperref}
+    \usepackage{graphicx,color}
+    \usepackage[screen,article]{pdfscreen}
 \fi
+%
 %
 %
 %\RecordChanges
@@ -393,6 +393,7 @@
 % }
 %
 % \def\FIXME#1{\message{<FIXME>}#1}
+% \let\st\textst    ^^A don't collide with pdfscreen
 %
 % \makeatother
 %
@@ -1129,6 +1130,7 @@
 %
 % \begin{table}
 % \begin{center}
+% \overfullrule5pt
 % \usebox\dirtytrick
 % \caption{Ragged-right, magazine style (using \soul), and block-aligned
 %          in comparison. But, frankly, none of them is really acceptable.
