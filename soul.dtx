@@ -130,7 +130,7 @@
 %
 %
 %
-% \CheckSum{1860}
+% \CheckSum{1858}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -638,7 +638,7 @@
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
 %   The argument must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
-% \item[Material without cmtt10 representation: \so{foo \TeX\ bar}]
+% \item[Material without ectt10 representation: \so{foo \TeX\ bar}]
 %   Every token that can't be typeset with just one character of
 %   the |cmtt10| font leads to a reconstruction error. This can be
 %   avoided by grouping the token, e.\,g.~|\so{foo {\TeX} bar}|, or registering
@@ -663,13 +663,6 @@
 %   and fancy stuff like |\vadjust|. As long as you are writing simple,
 %   ordinary `horizontal' material, you are on the safe side.
 % \end{verblist}
-%
-% \noindent
-% Note that with the exception of \ref{par:Grouping hyphenateable material}
-% you may get error messages that do not indicate that you violated one of the
-% above rules. Instead they may show some low-level problems that \TeX\ has detected.
-% \texttt{`Incomplete }\cs{\ifcat}\texttt{'} in a line with a \package{soul}
-% command is such a non-obvious message.
 %
 %
 %
@@ -707,7 +700,7 @@
 % \verb+\setuloverlap{y}+&                  \pref{setuloverlap} &\ti{set underline overlap width to} \m{y}\\
 % \verb+\setulcolor{y}+\Ast&                \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
 % \verb+\setstcolor{y}+\Ast&                \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
-% \verb+\sethlcolor{y}+\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\^^A[1.5ex]\hline
+% \verb+\sethlcolor{y}+\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\
 % \end{tabular}
 % \caption{List of all available commands. The number points to the
 %          page where the command is described. Those marked
@@ -719,6 +712,39 @@
 % \end{table}
 %
 %
+%
+%
+%
+%
+%
+% \subsection{Troubleshooting}
+%
+% Unfortunately, there's just one error message that really describes
+% the cause and it is provided by the \package{soul} package. All other
+% error messages come directly from \TeX\ and do not really explain
+% what \package{soul} syntax rules were violated. Instead you will
+% get some complaints about low-level commands that \TeX\ wasn't
+% happy with. In these cases comment the \package{soul} statement out
+% and see if the error message still appears. If not, check if you
+% followed all the rules stated in~\S\S\,20--26.
+%
+%
+%
+% \subsubsection{``Reconstruction failed''}
+%
+% This message appears if \ref{par:Grouping hyphenateable material} or
+% eventually \ref{par:Material without ectt10 representation} were
+% violated. It is caused by the fact that the ????
+%
+%
+%
+%
+% \subsubsection{Missing characters}
+%
+% you may get error messages that do not indicate that you violated one of the
+% above rules. Instead they may show some low-level problems that \TeX\ has detected.
+% \texttt{`Incomplete }\cs{\ifcat}\texttt{'} in a line with a \package{soul}
+% command is such a non-obvious message. ????
 %
 %
 %
@@ -888,7 +914,7 @@
 % \begin{tabular}{rl}
 % |\normalfont|&\sampletext\\
 % |\scshape|&{\scshape\sampletext}\\
-% |\caps|&\null\expandafter\caps\expandafter{\sampletext}
+% |\caps|&\person\sampletext      ^^A ????
 % \end{tabular}
 %
 % \medbreak\noindent 
@@ -1251,12 +1277,12 @@
 % \package{yfonts} commands are already pre-registered:
 % 
 % \begin{example}
-% |\em, \rm, \bf, \it, \tt, \sc, \sl, \sf, \emph, \textrm, \textsf,|\\
-% |\texttt, \textmd, \textbf, \textup, \textsl, \textit,|\\
-% |\textsc, \textnormal, \rmfamily, \sffamily, \ttfamily,|\\
-% |\mdseries, \upshape, \slshape, \itshape, \scshape,|\\
-% |\normalfont, \tiny, \scriptsize, \footnotesize, \small|\\
-% |\normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
+% |\em, \rm, \bf, \it, \tt, \sc, \sl, \sf, \emph, \textrm,|\\
+% |\textsf, \texttt, \textmd, \textbf, \textup, \textsl,|\\
+% |\textit, \textsc, \textnormal, \rmfamily, \sffamily,|\\
+% |\ttfamily, \mdseries, \upshape, \slshape, \itshape,|\\
+% |\scshape, \normalfont, \tiny, \scriptsize, \footnotesize,|\\
+% |\small, \normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
 % |\textfrak, \textswab, \textgoth, \frakfamily,|\\
 % |\swabfamily, \gothfamily|\\
 % \end{example}
@@ -1265,11 +1291,42 @@
 % analyzer won't see them. This is necessary because they
 % have no representation in the |cmtt10| font and would
 % hence cause a reconstruction error.
-% See~\ref{par:Material without cmtt10 representation}.
+% See~\ref{par:Material without ectt10 representation}.
 %
 % \begin{example}
 % |\S, \textregistered, \copyright, \TeX, \LaTeX|\\
 % \end{example}
+%
+%
+%
+%
+%
+%
+% \subsection{Changing the internal font}
+% \label{sec:internalfont}
+%
+% The \package{soul} package uses the |ectt10| font to
+% analyze the syllables. This font belongs to \person{J\"org Knappen'\textrm{s}}
+% \caps{EC}-fonts, which should be part of every modern \TeX\ installation.
+% If \TeX\ reports ``\texttt{I can't find file `ectt10'.}'' you don't
+% seem to have this font installed. This font is used, because it
+% has 256~mono-space characters without any kerning. It is recommended that
+% you install at least the file |ectt10.tfm| which has has less than 1.4\,kB\null.
+% Alternatively, you can make the \package{soul} package use another
+% font like the |cmtt10| font that is part of any installation, or
+% some other mono-spaced font.
+% 
+% \begin{example}
+% |\font\SOUL@tt=cmtt10|
+% \end{example}
+%
+% Note, however, that \package{soul} does only handle characters,
+% for which the internal font has a character with the same
+% character code. As |cmtt10| contains only characters with codes
+% 0 to~127, you can't typeset character with codes 128 to~256.
+% These 8-bit character codes are used by many fonts with non-ascii
+% glyphs. So the |cmtt10| font will, for example, not work for |T2A|
+% encoded cyrillic characters.
 %
 %
 %
@@ -1329,7 +1386,7 @@
 % \subsection{Using \package{soul} with other flavors of \TeX}
 %
 % This documentation describes how to use \package{soul} together
-% with \LaTeXe, for which it is optimized. It work's, however, with
+% with \LaTeXe, for which it is optimized. It works, however, with
 % all other flavors of \TeX, too. There are just some minor restrictions
 % for Non-\LaTeX\ use:
 %
@@ -1596,13 +1653,15 @@
 % \tabline{\string\SOUL@everyspace}{\texttt{\char`\ }}
 %   {executed between every two words}
 % }
-% \tabline{\string\SOUL@everyhyphen}{$H$}    
+% \tabline{\string\SOUL@everyhyphen}{$-$}    
 %   {executed at every implicit hyphenation point; It may access the
 %   letter kern in \texttt{\string\dimen@}, the hyphen kern in \texttt{\string\dimen3},
 %   and the hyphen in \texttt{\string\box2}. This interface macro has
 %   to reinsert the hyphen kern, it may remove a
 %   character kern inserted by \texttt{\string\SOUL@everytoken}, if
 %   necessary.}
+% \tabline{\string\SOUL@everyexhyphen}{$=$}    
+%   {executed at every explicit hyphenation point; ???? }
 % \tabline{\string\SOUL@everytoken}{$T$}
 %   {executed after scanning a token; It may access the 
 %   current token in \texttt{\string\SOUL@actual}, the next two tokens in
@@ -1680,7 +1739,7 @@
 % \subsubsection{Defining a new interface}
 %
 % Let's define a \package{soul} driver that allows to typeset text
-% with a hyphen at every possible hyphenation point. The name of
+% with a hyphen at every potential hyphenation point. The name of
 % the macro shall be \cs{\sy} (for \emph{syllables}).
 % Since the \package{soul} mechanism is highly fragile, we use the \LaTeX\
 % command \cs{\DeclareRobustCommand}, so that the \cs{\sy} macro
@@ -1758,6 +1817,7 @@
 % \emph{\sy{This little macro will hardly be good enough
 % for linguists, although it uses {\TeX's} excellent hyphenation algorithm,
 % but it is at least a nice alternative to the}} \cs{\showhyphens} \emph{\sy{command}.}
+%
 %
 %
 %
@@ -2758,7 +2818,8 @@
 % \subsection{The \so{letterspacing} driver}
 %
 % \begin{macro}{\SOUL@sosetletterskip}
-% A handy helper macro that sets the inter-letter skip.
+% A handy helper macro that sets the inter-letter skip with a
+% draconian \cs{\penalty}.
 %
 %    \begin{macrocode}
 \def\SOUL@sosetletterskip{\nobreak\hskip\SOUL@soletterskip}
@@ -2798,15 +2859,12 @@
 %
 %
 % \begin{macro}{\SOUL@sopostamble}
-% Remove the last letter skip with its high penalty and start the
-% look-ahead scanner \cs{\SOUL@socheck} outside the \cs{\SOUL@}
+% Start the look-ahead scanner \cs{\SOUL@socheck} outside the \cs{\SOUL@}
 % scope. That's why we make the \syn{outer space} globally available in
 % \cs{\skip@}.
 %
 %    \begin{macrocode}
 \def\SOUL@sopostamble{%
-    \unskip
-    \unpenalty    
     \global\skip@=\SOUL@soouterskip
     \aftergroup\SOUL@socheck
 }
@@ -2824,9 +2882,9 @@
 % \begin{macro}{\SOUL@socheck}
 % \begin{macro}{\SOUL@sodoouter}
 % Read the next token after the \package{soul} command into \cs{\SOUL@@}
-% and have a look at it. If it's some kind of space, remove that and set
+% and examine it. If it's some kind of space, remove that and set
 % our \syn{outer space} with the appropriate penalty, else if it's
-% a closing brace, keep on scanning. If it is neither: do nothing.
+% a closing brace, continue scanning. If it is neither: do nothing.
 %
 %    \begin{macrocode}
 \def\SOUL@socheck{%
@@ -2952,6 +3010,10 @@
 %
 % \begin{macro}{\SOUL@soeveryexhyphen}
 % Sets the explicit hyphen that is passed as argument.
+% \cs{\SOUL@soeventuallyskip} equals \cs{\SOUL@sosetletterskip},
+% except when a \cs{\<} has been detected. This is necessary because
+% \cs{\SOUL@soeveryexhyphen} wouldn't know otherwise, that it
+% follows a \cs{\<}.
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryexhyphen#1{%
@@ -3354,7 +3416,7 @@
 % \subsection{The \ul{underlining} driver}
 %
 % \begin{macro}{\SOUL@ulleaders}
-% 
+% This macro sets the underline under the followin \cs{\hsbkip}.
 %
 %    \begin{macrocode}
 \newdimen\SOUL@uldp
@@ -3374,6 +3436,10 @@
 %
 %
 % \begin{macro}{\SOUL@ulunderline}
+% Set an underline under the given material. It draws the line first,
+% and the given material afterwards. This is needed for highlighting,
+% but gives less than optimal results for colored overstiking, which,
+% however, will hardly ever be used, anyway.
 %
 %    \begin{macrocode}
 \def\SOUL@ulunderline#1{{%
@@ -3399,6 +3465,9 @@
 %
 %
 % \begin{macro}{\SOUL@ulpreamble}
+% Just set up the line dimensions and the space skip. Normally,
+% \cs{\spaceskip} is unset and not used by \TeX. We need it, though,
+% because we feed it to the \cs{\leaders} primitive.
 %
 %    \begin{macrocode}
 \def\SOUL@ulpreamble{%
@@ -3420,6 +3489,9 @@
 %
 %
 % \begin{macro}{\SOUL@uleverysyllable}
+% If we use \cs{\SOUL@everysyllable}, we don't have to care about
+% kerning values and get better results for highlighting, where
+% negative kerning values would otherwise cut off characters.
 %
 %    \begin{macrocode}
 \def\SOUL@uleverysyllable{%
@@ -3440,6 +3512,7 @@
 %
 %
 % \begin{macro}{\SOUL@uleveryspace}
+% Set a given penalty and an underlined \cs{\space} equivalent.
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryspace#1{%
@@ -3461,6 +3534,8 @@
 %
 %
 % \begin{macro}{\SOUL@uleveryhyphen}
+% If hyphenation takes place, output an underlines hyphen with the
+% required hyphen kerning value.
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryhyphen{%
@@ -3486,6 +3561,8 @@
 %
 %
 % \begin{macro}{\SOUL@uleveryexhyphen}
+% Underline the given hyphen, en-dash, em-dash or \cs{\slash} and set
+% the appropriate \cs{\penalty}.
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryexhyphen#1{%
@@ -3505,6 +3582,10 @@
 %
 % \begin{macro}{\SOUL@ulcolor}
 % \begin{macro}{\setulcolor}
+% Define the underline color or turn off coloring. The lines are not
+% just colored black, but remain uncolored, which makes them appear
+% black nevertheless. This has the advantage, that no PostScript
+% \cs{\specials} are cluttering the output. 
 %
 %    \begin{macrocode}
 \let\SOUL@ulcolor\relax
@@ -3529,6 +3610,8 @@
 %
 % \begin{macro}{\setuloverlap}
 % \begin{macro}{\SOUL@uloverlap}
+% Set the overlap amount, that helps to avoid gaps on sloppy output
+% devices.
 %
 %    \begin{macrocode}
 \def\setuloverlap#1{\def\SOUL@uloverlap{#1}}
@@ -3546,6 +3629,7 @@
 %
 %
 % \begin{macro}{\SOUL@ulsetup}
+% The underlining driver is quite simple. No need for fancy.
 %
 %    \begin{macrocode}
 \def\SOUL@ulsetup{%
@@ -3568,6 +3652,7 @@
 %
 %
 % \begin{macro}{\SOUL@textul}
+% Describing selfexplanatory macros is so boring!
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textul{\SOUL@ulsetup\SOUL@}
@@ -3585,6 +3670,8 @@
 % \begin{macro}{\setul}
 % \begin{macro}{\SOUL@uldepth}
 % \begin{macro}{\SOUL@ulthickness}
+% Set the underlining dimensions. Either value may be omitted and
+% lets the respective macro keep its contents.
 %
 %    \begin{macrocode}
 \def\setul#1#2{%
@@ -3605,6 +3692,7 @@
 %
 %
 % \begin{macro}{\resetul}
+% Set reasonable default values that fit most latin fonts.
 %
 %    \begin{macrocode}
 \def\resetul{\setul{.65ex}{.1ex}}
@@ -3621,6 +3709,9 @@
 %
 %
 % \begin{macro}{\setuldepth}
+% This macro sets all designated ``letters'' (\cs{\catcode=11}) or the
+% given material in box and sets the underlining dimensions according
+% to the box depth.
 %
 %    \begin{macrocode}
 \def\setuldepth#1{{%
@@ -3720,6 +3811,10 @@
 %
 % \begin{macro}{\SOUL@stcolor}
 % \begin{macro}{\setstcolor}
+% Set the overstiking color. This won't be used often, but is required
+% in cases, where the underlines are colored. You wouldn't want to
+% overstrike in the same color. Note that overstriking lines are
+% drawn \emph{beneath} the text, hence light colors won't look good.
 %
 %    \begin{macrocode}
 \let\SOUL@stcolor\relax
@@ -3743,6 +3838,8 @@
 %
 %
 % \subsection{The \hl{highlighting} driver}
+% 
+% This is nothing else than overstiking with very thick lines.
 %
 % \begin{macro}{\SOUL@hlpreamble}
 %
@@ -3764,6 +3861,8 @@
 %
 %
 % \begin{macro}{\SOUL@hlsetup}
+% No need to re-invent the wheel. Just use the overstriking setup
+% with a different preamble.
 %
 %    \begin{macrocode}
 \def\SOUL@hlsetup{%
@@ -3784,6 +3883,9 @@
 % \begin{macro}{\texthl}
 % \begin{macro}{\sethlcolor}
 % \begin{macro}{\SOUL@hlcolor}
+% Define the highlighing macro and the color setting macro with a 
+% simple default color. Yellow isn't really pleasing, but it's already
+% predefined by the \package{color} package.
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\texthl{\SOUL@hlsetup\SOUL@}
