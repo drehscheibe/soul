@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1919}
+% \CheckSum{1908}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1456,6 +1456,18 @@
 % None of the commands are made `robust', so they have to be
 % explicitly protected in fragile environments like in \cs{\write}
 % statements.
+% 
+% To make use of colored underlines or highlighting you have to
+% use the \package{color} package wrapper from \caps{CTAN}^^A
+% \footnote{\texttt{CTAN:/macros/plain/graphics/\char`\{miniltx.tex,color.tex\char`\}}},
+% instead of the \package{color} package directly:
+%
+% \begin{example}
+% |\input color|\\
+% |\input soul.sty|\\
+% |\hl{highlighted}|\\
+% |\bye|\\
+% \end{example}
 % 
 % 
 % 
@@ -4126,8 +4138,8 @@
 %
 %
 % \noindent
-% When used in an environment other than \LaTeX\ we disable any command
-% that uses color and let the highlighting macro just set an underline.
+% When used in an environment other than \LaTeX\ and the \package{german}
+% package was already loaded, define the double quotes as accent.
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
@@ -4135,10 +4147,6 @@
     \else
         \soulaccent{"}%
     \fi
-    \def\setulcolor#1{}
-    \let\setstcolor\setulcolor
-    \let\sethlcolor\setulcolor
-    \let\hl\ul
     \catcode`\@=\atcode
 %    \end{macrocode}
 %
