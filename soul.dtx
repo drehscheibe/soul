@@ -164,7 +164,7 @@
 % \fi
 %
 %
-% \CheckSum{1080}
+% \CheckSum{1085}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -246,7 +246,7 @@
 %   typesetting, sending me dozens of error reports, and, finally, providing the
 %   `example.cfg' configuration file. Without his help the package would only be half 
 %   as good. And, no, he had nothing to do with \so{minuscules letterspacing,}
-%   \ul{underlining}, and such\dots},
+%   \ul{underlining}, and such \dots},
 %^^A%%
 % which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining},
 % and some derivatives such as \caps{majuscules letterspacing} that
@@ -261,7 +261,7 @@
 % Plain \TeX\ and with other packages, too.
 % By the way, the package name |soul|
 % is only a combination of the two macro names |\so| (\emph{space out})
-% and |\ul| (\emph{underline})---nothing poetic at all\dots^^A   :-( 
+% and |\ul| (\emph{underline})---nothing poetic at all \dots^^A   :-( 
 % \end{abstract}
 %
 %
@@ -385,7 +385,8 @@
 % \verb+\capssave\cs+\Ast&\textit{save} \verb+\caps+ \textit{data set under name} \verb+\cs+\\
 % \verb+\setul{1ex}{2ex}+&\textit{set} \verb+\ul+ \textit{dimensions}\\
 % \verb+\resetul+& \textit{reset} \verb+\ul+ \textit{dimensions}\\
-% \verb+\setuldepth{y}+& \textit{set underline depth to depth of} \verb+y+\\[1.5ex]\hline
+% \verb+\setuldepth{y}+& \textit{set underline depth to depth of} \verb+y+\\
+% \verb+\setulcolor{y}+\Ast& \textit{set underline color to} \verb+y+\\[1.5ex]\hline
 % \end{tabular}}
 %
 %
@@ -676,7 +677,7 @@
 % Such a macro could only set one paragraph at once, it would be subject
 % to the same restrictions as mentioned in section
 % \ref{sec:restrictions}, so it would really be a dirty trick rather than a
-% glorious novelty\dots
+% glorious novelty \dots
 %
 %
 %
@@ -1009,7 +1010,7 @@
 % 
 % It's of course not necessary to reinvent the wheel. The following example uses
 % the \ul{underlining} interface with a modified \st{striking out} preamble.\\
-% Guess what it does\dots\hspace{\fill}\texttt{;-)}
+% Guess what it does \dots\hspace{\fill}\texttt{;-)}
 % 
 %\begin{verbatim}
 %    \DeclareRobustCommand*\censor{%
@@ -2077,6 +2078,19 @@
 %
 %
 %
+% \begin{macro}{\setulcolor}
+% Set the argument as underline color. This requires the
+% |color| package to be loaded.
+%
+%    \begin{macrocode}
+\def\setulcolor#1{\def\SOUL@ulcolor{\textcolor{#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%
 %
 %
 %
@@ -2096,7 +2110,7 @@
 %
 %
 % \begin{macro}{\SOUL@stpreamble}
-% \dots only the lines have to be raised 0.5\,ex.
+% \dots\ only the lines have to be raised 0.5\,ex.
 %
 %    \begin{macrocode}
 \def\SOUL@stpreamble{%
