@@ -250,7 +250,7 @@
 % }
 %
 % \newenvironment{syntax}{^^A
-%   \par\medskip\def\<##1>{$\langle$\textit{##1}$\rangle$}^^A
+%   \par\medskip\def\<##1>{$\langle$\syn{##1}$\rangle$}^^A
 %       \indent\begin{tabular}{l}^^A
 %   }{^^A
 %       \end{tabular}^^A
@@ -272,6 +272,7 @@
 %^^A  analyze syllables--described somewhere below 
 % 
 % \DeclareRobustCommand*\sy{^^A
+%   \SOUL@setup 
 %   \def\SOUL@preamble{\lefthyphenmin0\righthyphenmin0}^^A
 %   \def\SOUL@everyspace##1{##1\space}^^A
 %   \let\SOUL@postamble\relax
@@ -281,10 +282,10 @@
 %           \SOUL@setkern\SOUL@charkern
 %           \char\hyphenchar\font
 %       }{}{^^A
-%           \hbox{\kern.5pt$\cdot$\kern.5pt}^^A
+%           \hbox{-}^^A
 %      }^^A
 %    }^^A
-%    \let\SOUL@everysyllable\relax
+%    \def\SOUL@everyexhyphen{$=$}^^A
 %    \def\SOUL@everytoken{\the\SOUL@token\SOUL@setkern\SOUL@charkern}^^A
 %    \SOUL@}
 %
@@ -350,6 +351,7 @@
 % \def\package#1{{\normalfont\texttt{#1}}}
 % \let\program\texttt
 % \let\bibtitle\textit
+% \let\syn\textit
 %
 % ^^A\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}
 % \sodef\person{\scshape}{0.06em}{0.45em}{0.4em}
@@ -724,11 +726,11 @@
 % \label{sec:somacros}
 %
 % The base macro for letterspacing is called \describemacro{\so}.
-% It typesets the given argument with \emph{inter-letter space}
-% between every two characters, \emph{inner space} between words
-% and \emph{outer space} before and after the spaced out text.
-% If we let ``$\cdot$'' stand for \emph{inter-letter space}, ``$\ast$''
-% for \emph{inner spaces} and ``$\bullet$'' for \emph{outer
+% It typesets the given argument with \syn{inter-letter space}
+% between every two characters, \syn{inner space} between words
+% and \syn{outer space} before and after the spaced out text.
+% If we let ``$\cdot$'' stand for \syn{inter-letter space}, ``$\ast$''
+% for \syn{inner spaces} and ``$\bullet$'' for \syn{outer
 % spaces,} then the input on the left side of the follwing table
 % will yield the schematic output on the right side:
 %
@@ -750,11 +752,11 @@
 % they aren't following or followed by a space: they omit outer space around
 % \package{soul} command. Case~2 is what you'll mostly need---letterspaced
 % text amidst running text. Following and leading space gets replaced by
-% \emph{outer space}. It doesn't matter if there are opening brace before
+% \syn{outer space}. It doesn't matter if there are opening brace before
 % or closing braces afterwards. \package{soul} can see though both of them (case~3).
 % Note that leading space has to be at least |5sp| wide to be accepted as
 % space, because \LaTeX\ uses tiny spaces with |\hskip1sp| internally as marker.
-% Case~3 shows how to enforce normal spaces instead of \emph{outer spaces:}
+% Case~3 shows how to enforce normal spaces instead of \syn{outer spaces:}
 % Preceding space can be hidden by any token or |\kern0pt|. Following space
 % can also be hidden by any token, but note that a typical macro name
 % like \cs{\relax} or \cs{\null} would also hide the space after.
@@ -864,9 +866,9 @@
 % \subsection[Typesetting \caps{caps-and-small-caps} fonts]
 %       {Typesetting capitals-and-small-capitals fonts}
 %
-% There is a special letterspacing command called \describemacro{\caps}.
-% It differs from \cs{\so} in that it switches to caps-and-small-caps
-% font shape, defines only slight spacing and can select spacing
+% There is a special letterspacing command called \describemacro{\caps},
+% which differs from \cs{\so} in that it switches to caps-and-small-caps
+% font shape, defines only slight spacing and is able to select spacing
 % value sets from a database. This is a requirement for high-quality
 % typesetting \cite{Tschichold}. The following lines show the effect
 % of \cs{\caps} in comparison with the normal textfont and with
@@ -881,12 +883,11 @@
 % \end{tabular}
 %
 % \medbreak\noindent 
-% The \LaTeX\ version is slightly more complicated. It uses a small list as a 
-% `database' to hold sets of standard values for different
-% fonts, shapes, etc., which are then selected automatically.
-%
-% New fonts may be added to this list using the \describemacro{\capsdef} command,
-% which takes five arguments. The first argument describes the font with
+% The \cs{\caps} font database is by default empty, i.\,e.: it contains
+% just a single default entry, which yields the result as shown in the
+% above example. 
+% New font entries may be added on top of this list using the \describemacro{\capsdef}
+% command, which takes five arguments: The first argument describes the font with
 % \emph{encoding, family, series, shape,} and \emph{size,} each optionally
 % (e.\,g.~|OT1/cmr/m/n/10| for this very font, or only |/ppl///12| for all
 % \emph{palatino} fonts at size 12\,pt). The \emph{size} entry may also contain
@@ -904,22 +905,25 @@
 % |\capsdef{T1/ppl/m/n/5-15}{\scshape}{.16em}{.4em}{.2em}|
 % \end{example}
 %
-% The \LaTeX\ \cs{\caps} command goes through the data list and takes the first
-% matching set, so the order of definition is essential.
-% There's only one default set for all font combinations predefined, 
-% which can be overridden.
+% The \cs{\caps} command goes through the data list from top to bottom
+% and takes the first matching set, so the order of definition is essential.
+% The last added entry is examined at first, while the pre-defined default entry
+% will be examined last and match any font, if no entry was taken before.
 %
-% The \describemacro{\capsreset} command
-% deletes all font sets except the default set,
-% which can be overridden with a \cs{\capsdef} command using the
-% default identifier |{////}|. This entry should be defined first, because
-% it matches any font, so that no entry behind can ever be reached.
-% The current \cs{\caps} settings can be saved in a command sequence using the
-% \describemacro{\capssave} command. This allows to predefine different groups 
-% of \cs{\caps} sets.
+% To override the default values, just define a new default entry that
+% matches any font. This is done by using the identifier |{////}|.
+% This entry should be defined first, because no entry after it
+% can be reached.
+%
+% The \cs{\caps} database can be cleared with the \describemacro{\capsreset}
+% command. It will only contain the default entry thereafter. The
+% \describemacro{\capssave} command saves the whole current database
+% and assigns it to a macro name. This allows to predefine different
+% groups of \cs{\caps} sets:
 %
 % \begin{example}
 % |\capsreset|\\
+% |\capsdef{/cmss///12}{}{12pt}{23pt}{34pt}|\\
 % |\capsdef{/cmss///}{}{10pt}{20pt}{30pt}|\\
 % |...|\\
 % |\capssave\widecaps|\\
@@ -940,11 +944,12 @@
 % |}|\\
 % \end{example}
 %
+% See the `|example.cfg|' file for a fairly complete example.
 % If you have defined a bunch of sets for different fonts and sizes,
 % you may lose control over what fonts are used by the package. With the
-% package option \DescribeOption{capsdefault}\textsf{capsdefault} selected, 
+% package option \DescribeOption{capsdefault}\option{capsdefault} selected, 
 % \cs{\caps} prints its argument underlined, if no set was specified for a
-% particular font and the default set had to be used. 
+% particular font and the default set had to be used.
 %
 %
 %
@@ -1003,7 +1008,7 @@
 % paragraphs aren't especially beautiful\<.}
 %
 % \begin{quote}
-% \batchmode     ^^A  we don't want to see all these overfull boxes...
+% \batchmode     ^^A  we don't want to see all these overfull boxes ...
 % \leavevmode\hspace{0ptplus1fil}
 % \hbox{\parindent0pt\plainsetup\let\<\relax
 %   \vtop{\hsize6pc\magstylepar\sampletext}\hskip1em
@@ -1034,7 +1039,7 @@
 %
 % \subsubsection{Underline depth and thickness}
 %
-% The predefined \textit{underline depth} and \textit{thickness}
+% The predefined \syn{underline depth} and \syn{thickness}
 % work well with most fonts. They can be changed using the macro \describemacro{\setul}.
 %
 % \begin{syntax}
@@ -1047,9 +1052,8 @@
 % grow and shrink with the respective fonts.
 % The \describemacro{\resetul} command restores the standard values.
 %
-% \describemacro{\setuldepth}
-% Another way to set the \textit{underline depth} is to use the macro
-% \cs{\setuldepth}. It sets the depth such that the
+% Another way to set the \syn{underline depth} is to use the macro
+% \describemacro{\setuldepth}. It sets the depth such that the
 % underline's upper edge lies 1\,pt beneath the given argument's
 % deepest depth. If the argument is empty, all
 % letters---i.\,e.\ all characters whose \cs{\catcode} currently
@@ -1068,7 +1072,7 @@
 % \describemacro{\setulcolor}
 % The underlines are by default black. The color can be changed by
 % using the \cs{\setulcolor} command. It takes one argument that can be any
-% of the color specifiers as described in the |color| package, which
+% of the color specifiers as described in the |color| package. This package
 % has to be loaded explicitly.
 %
 % \indent
@@ -1092,8 +1096,11 @@
 % The colors for overstriking lines and highlighting are likewise set
 % with \describemacro{\setstcolor} (default: black) and \describemacro{\sethlcolor}
 % (default: yellow). If the \package{color} package wasn't loaded
-% underlining and overstriking color are set to black, while highlighting
+% underlining and overstriking color are black, while highlighting
 % is replaced by underlining.
+%
+%
+%
 %
 %
 %
@@ -1249,7 +1256,7 @@
 % analyzer won't see them. This is necessary because they
 % have no representation in the |cmtt10| font and would
 % hence cause a reconstruction error.
-% See~\ref{par:Material without cmtt10 representation}.)
+% See~\ref{par:Material without cmtt10 representation}.
 %
 % \begin{example}
 % |\S, \textregistered, \copyright, \TeX, \LaTeX|\\
@@ -1312,33 +1319,28 @@
 %
 % \subsection{Using \package{soul} with other flavors of \TeX}
 %
-% The |soul| package has a \LaTeXe\ mode, which is selected if the |\documentclass|
-% command can be found, and a \emph{plain} \TeX\ mode, which is selected otherwise. These
-% modes differ in some points:
+% This documentation describes how to use \package{soul} together
+% with \LaTeXe, for which it is optimized. It work's, however, with
+% all other flavors of \TeX, too. There are just some minor restrictions
+% for Non-\LaTeX\ use:
 %
-% In \emph{plain} \TeX\ mode the \cs{\caps} command is
-% simply defined with \cs{\sodef}. It executes a command \cs{\capsfont} that 
+% The \cs{\caps} command doesn't use a database, it is only a dumb
+% definition with fixed values. It switches to \cs{\capsfont}, which---unless
+% defined explicitly like in the following example---won't really change
+% the used font at all. The commands \cs{\capsreset} and \cs{\capssave}
+% do nothing.
 %
 % \begin{example}
 % |\font\capsfont=cmcsc10|\\
 % |\caps{Tschichold}|\\
 % \end{example}
 %
-%
-% This mode provides a package option \textsf{capsdefault} (see section \ref{sec:somacros}) and 
-% two package options \textsf{nooverlap} and \textsf{overlap},
-% where the latter is selected by default. These options deal with the way underlines
-% are typeset. They are described in section \ref{sec:dvips}, but you'll hardly
-% ever need to know about them. The \LaTeXe\ mode provides an intelligent |\caps| command
-% and makes commands `robust' where it is desired. Furthermore, it tries to load
-% a file `soul.cfg', where local stuff is to be placed in. (See the
-% file `example.cfg', which implements a fairly complete |\caps| data base.)
-%
-%
-% This mode implements the respective options as commands |\overlap| and |\nooverlap|,
-% and provides a simplified |\caps| command. The `fragile' commands
-% |\so|, |\caps|, |\ul|, and~|\st| are to be protected by the user, 
-% if they are used in expanding environments such as |\write| arguments.
+% None of the commands are made `robust', so they have to be
+% explicitly protected in fragile environments like in \cs{\write}
+% statements.
+% 
+% 
+% 
 % 
 %
 %
@@ -1371,11 +1373,11 @@
 %
 % Letterspacing commands like \cs{\so} and \cs{\caps} have to
 % check whether they are followed by white space, in which case
-% they replace that space by \emph{outer space}. Note that \package{soul}
+% they replace that space by \syn{outer space}. Note that \package{soul}
 % does look through closing braces. Hence you can conveniently bury
 % a \package{soul} command within another macro like in the following
-% example. Use any other token to hide following space, e.\,g. the
-% \cs{\null} macro.
+% example. Use any other token to hide following space if necessary,
+% e.\,g.~the \cs{\null} macro.
 %
 % \begin{example}
 % |\DeclareRobustCommand*\versal[1]{%|\\
@@ -1390,6 +1392,7 @@
 %
 %
 % \subsection{Typesetting long words in narrow columns}
+% \label{sec:sloppyword}
 %
 % Narrow columns are best set |flushleft|, because not even the best
 % hyphenation algorithm can guarantee acceptable line breaks without
@@ -1511,7 +1514,7 @@
 % The \cs{\periodafter} macro takes one argument which isn't needed
 % in this example and thus fed with \cs{\relax}. We could
 % have written |{\periodafter\so}|, though, to add a dot that would get spaced
-% out with the section title. 
+% out with the section title, but wouldn't appear in the table of contents. 
 %
 % \indent
 % \begin{example}
@@ -1748,11 +1751,13 @@
 % A big thank you goes to \person{Stefan Ulrich} for his tips and bug reports
 % during the development of versions 1.* and for his lessons on high quality
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
-% suggestions. Thanks to \person{Alexander Shibakov}, who sent me a couple
-% of bug reports and finally encouraged me to (almost) completely rewrite
-% \package{soul}. His `nitpicking' made \package{soul} much less worse than
-% it would have become otherwise. And finally thank you to \person{Frank Mittelbach},
-% for never being satisfied with a particular development version.
+% suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach},
+% who sent me a couple of bug reports and feature requests, and finally encouraged
+% me to (almost) completely rewrite \package{soul}. \person{Rowland McDonnel}
+% gave useful hints for how to improve the documentation, but I'm afraid
+% he will still not be satisfied. And rightfully so. \texttt{:-)}
+%
+%
 %
 %
 %
@@ -2752,7 +2757,7 @@
 %
 % \begin{macro}{\SOUL@sopreamble}
 % If letterspacing (\cs{\so} or \cs{\caps}) follows a white space, we
-% repace it with our \emph{outer space}. \LaTeX\ uses a |\hskip1sp| as
+% repace it with our \syn{outer space}. \LaTeX\ uses a |\hskip1sp| as
 % marker in tabular entries, so we ignore tiny skips.
 %
 %    \begin{macrocode}
@@ -2777,7 +2782,7 @@
 % \begin{macro}{\SOUL@sopostamble}
 % Remove the last letter skip with its high penalty and start the
 % look-ahead scanner \cs{\SOUL@socheck} outside the \cs{\SOUL@}
-% scope. That's why we make the \emph{outer space} globally available in
+% scope. That's why we make the \syn{outer space} globally available in
 % \cs{\skip@}.
 %
 %    \begin{macrocode}
@@ -2802,7 +2807,7 @@
 % \begin{macro}{\SOUL@sodoouter}
 % Read the next token after the \package{soul} command into \cs{\SOUL@@}
 % and have a look at it. If it's some kind of space, remove that and set
-% our \emph{outer space} with the appropriate penalty, else if it's
+% our \syn{outer space} with the appropriate penalty, else if it's
 % a closing brace, keep on scanning. If it is neither: do nothing.
 %
 %    \begin{macrocode}
@@ -2844,7 +2849,10 @@
 %
 %
 % \begin{macro}{\SOUL@soeverytoken}
-% 
+% Typeset the token and put an unbreakabel inter-character skip
+% after. If the token is \cs{\<} then remove the last skip instead.
+% Gets the character kerning value between the actual and the
+% next token in \cs{\SOUL@charkern}.
 %
 %    \begin{macrocode}
 \def\SOUL@soeverytoken{%
@@ -2869,6 +2877,13 @@
 %
 %
 % \begin{macro}{\SOUL@soeveryspace}
+% This makro sets an \syn{inner space}. The argument may contain
+% panalties and is used for the |~| command. This construction was
+% needed to make colored underlines work, without having to put
+% any of the coloring commands into the core. |\kern\z@| prevents
+% in subsequent \cs{\so} commands that the second discards the
+% \syn{outer space} of the first. To remove the space simply
+% use |\unkern\unskip|
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryspace#1{%
@@ -2890,8 +2905,11 @@
 %
 %
 % \begin{macro}{\SOUL@soeveryhyphen}
+% Sets implicit hyphens. The kerning value between the current token
+% and the hyphen character is passed in \cs{\SOUL@hyphkern}. The last
+% token can be seen in \cs{\SOUL@lasttoken} and the next one could be
+% fetched with \cs{\SOUL@gettoken}.
 %
-% gets the last token in |\SOUL@lasttoken|
 %    \begin{macrocode}
 \def\SOUL@soeveryhyphen{%
     \discretionary{%
@@ -2915,6 +2933,7 @@
 %
 %
 % \begin{macro}{\SOUL@soeveryexhyphen}
+% Sets the explicit hyphen that is passed as argument.
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryexhyphen#1{%
@@ -2934,6 +2953,9 @@
 %
 %
 % \begin{macro}{\SOUL@soeverylowerthan}
+% Let \cs{\<} remove the last inter-letter skip. Set the kerning value
+% between the token before and that after the \cs{\<} command.
+% 
 %
 %    \begin{macrocode}
 \def\SOUL@soeverylowerthan{%
@@ -2953,6 +2975,8 @@
 %
 %
 % \begin{macro}{\SOUL@sosetup}
+% Override all interface macros by our letterspacing versions. The
+% only unused macro is \cs{\SOUL@everysyllable}.
 %
 %    \begin{macrocode}
 \def\SOUL@sosetup{%
@@ -2977,6 +3001,7 @@
 %
 %
 % \begin{macro}{\SOUL@setso}
+% A handy macro for internal use.
 %
 %    \begin{macrocode}
 \def\SOUL@setso#1#2#3{%
@@ -2996,6 +3021,9 @@
 %
 %
 % \begin{macro}{\sodef}
+% This macro assigns the letterspacing skips as well as an optional
+% font switching command to a command sequence name. \cs{\so} itself
+% will be defined using this macro.
 %
 %    \begin{macrocode}
 \def\sodef#1#2#3#4#5{%
@@ -3020,6 +3048,7 @@
 %
 %
 % \begin{macro}{\resetso}
+% Let \cs{\resetso} define reasonable default values for letterspacing.
 %
 %    \begin{macrocode}
 \def\resetso{%
@@ -3039,6 +3068,10 @@
 %
 %
 % \begin{macro}{\sloppyword}
+% Set up a letterspacing macro that inserts slightly stretchable
+% space between the characters. This can be used to typeset long
+% words in narrow columns, where ragged paragraphs are undesirable.
+% See section~\ref{sec:sloppyword}.
 %
 %    \begin{macrocode}
 \sodef\sloppyword{%
@@ -3065,6 +3098,9 @@
 % \subsection{The \caps{caps} driver}
 %
 % \begin{macro}{\caps}
+% Unless run under \LaTeX, make \cs{\caps} just another simple letterspacing
+% macro that selects a font \cs{\capsfont} (defaulting to \cs{\relax}) but
+% doesn't have any special capabilities.
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
@@ -3088,6 +3124,10 @@
 %
 %
 % \begin{macro}{\capsreset}
+% \dots\ ... else, if run under \LaTeX\ prepare a set of macros that
+% maintain a database with certain letterspacing values for different
+% fonts. \cs{\capsreset} clears the database and puts a default rule
+% in.
 %
 %    \begin{macrocode}
 \else
