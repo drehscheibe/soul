@@ -1397,7 +1397,7 @@
 % |\ttfamily, \mdseries, \upshape, \slshape, \itshape,|\\
 % |\scshape, \normalfont, \tiny, \scriptsize, \footnotesize,|\\
 % |\small, \normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
-% |\MakeUppercase, \textsuperscript, \footnote|\\
+% |\MakeUppercase, \textsuperscript, \footnote,|\\
 % |\textfrak, \textswab, \textgoth, \frakfamily,|\\
 % |\swabfamily, \gothfamily|\\
 % \end{example}
@@ -1861,7 +1861,7 @@
 %
 % \noindent
 % If you need to underline section titles, you can easily
-% do it using the \package{titlesec} package. The following
+% do it with the help of the \package{titlesec} package. The following
 % example underlines the section title, but not the section
 % number:
 %
@@ -1876,7 +1876,7 @@
 % \noindent
 % The \cs{\titlefont} command is provided by the \caps{``\small{KOMA}}~script''
 % package. You can write |\normalfont\sffamily\bfseries| instead.
-% The following example does also underline the section number:
+% The following example does additionally underline the section number:
 %
 % \begin{example}
 % |\titleformat{\section}|\\
@@ -2457,8 +2457,7 @@
 %
 % \begin{macro}{\SOUL@expand}
 % If the first token after the \soul\ command was an opening
-% brace we set up some counters and start scanning. The \cs{\bgroup} will
-% be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
+% brace we start scanning. Otherwise,
 % if the first token was a macro name, we expand that macro and
 % call \cs{\SOUL@} with its contents again. Unfortunately, we have to
 % exclude some macros therein from expansion.
@@ -2543,8 +2542,7 @@
 % \begin{macro}{\SOUL@eval}
 % And here it is: the scanner's heart. It cares for quotes and dashes
 % ligatures and handles all commands that must not be fed to the
-% analyzer. Note the \cs{\egroup} branch. It makes \cs{\egroup}s of
-% font switching commands transparent and quits the scanner else.
+% analyzer.
 %
 %    \begin{macrocode}
 \def\SOUL@eval{%
@@ -2752,7 +2750,9 @@
 % Here we deal with commands that were registered with \cs{\soulregister}
 % or \cs{\soulaccent} or were already predefined in \cs{\SOUL@cmds}.
 % Commands with identifier |9| are accents that are put in a
-% group with their argument. The others are mostly (but not necessarily)
+% group with their argument. Identifier |8| is reserved for the \cs{\footnote}
+% command, and |7| for the \cs{\textsuperscript} or similar commands.
+% The others are mostly (but not necessarily)
 % font switching commands, which may (|1|) or may not (|0|) take
 % an argument. A registered command leads to the current word
 % buffer being flushed to the analyzer, after which the command
@@ -2887,6 +2887,8 @@
 % cannot handle, so the scanner has to look after them. Every
 % entry consists of a handle (\cs{\\}), an identifier and the
 % macro name. The class identifier can be |9| for accents,
+% |8| for the \cs{\footnote} command, |7| for the
+% \cs{\textsuperscript} command,
 % |0| for commands without arguments and |1| for commands that
 % take one argument. Commands with two or more arguments are
 % not supported.
