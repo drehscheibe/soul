@@ -321,15 +321,15 @@
 %^^A  The package has not been found, so we're providing some dummies, just
 %^^A  to avoid all these `Undefined command sequence' messages.
 % 
-%   \def\SOUL@X#1{\textbf{??}}%
-%   \let\so\SOUL@X
-%   \let\caps\SOUL@X
-%   \let\ul\SOUL@X
-%   \let\st\SOUL@X
-%   \let\sy\SOUL@X
-%   \let\an\SOUL@X
-%   \let\magstylepar\SOUL@X
-%   \def\sodef#1#2#3#4{\SOUL@X}%
+%   \def\SOUL@@@X#1{\textbf{??}}%
+%   \let\so\SOUL@@@X
+%   \let\caps\SOUL@@@X
+%   \let\ul\SOUL@@@X
+%   \let\st\SOUL@@@X
+%   \let\sy\SOUL@@@X
+%   \let\an\SOUL@@@X
+%   \let\magstylepar\SOUL@@@X
+%   \def\sodef#1#2#3#4{\SOUL@@@X}%
 % \fi
 %
 % \newcommand*\path{^^A
@@ -406,11 +406,11 @@
 % \end{abstract}
 %
 %
-%
-%
-%
 % {\setlength\parskip{0pt}\tableofcontents }
 % \addtocontents{toc}{\protect\begin{multicols}{2}}
+%
+%
+%
 %
 %
 %
@@ -480,6 +480,10 @@
 %
 %
 %
+%
+%
+%
+%
 % \section{Short introduction and common rules}
 %
 % The \package{soul} package provides five commands that are aimed at emphasizing
@@ -490,18 +494,19 @@
 % {\catcode`\|=12
 % \begin{center}    
 % \begin{tabular}{r@{\hspace{1.5em}}l}
-% ^^A\hline\\[-1ex]
 % \verb+\so{letterspacing}+&\so{letterspacing}\\
 % \verb+\caps{CAPITALS, Small Capitals}+&\caps{CAPITALS, Small Capitals}\\
 % \verb+\ul{underlining}+&\ul{underlining}\\
 % \verb+\st{overstriking}+&\st{overstriking}\\
-% \verb+\hl{highlighting}+&\hl{highlighting}\\[1.5ex]^^A\hline
+% \verb+\hl{highlighting}+&\hl{highlighting}\\
 % \end{tabular}
 % \end{center}
 % }
 %
 % \noindent
 % The |\hl| command does only highlight if the \package{color} package has
+% \DescribeMacro{\setstcolor}\label{cmd:setstcolor}^^A
+% \DescribeMacro{\sethlcolor}\label{cmd:sethlcolor}^^A
 % been loaded, otherwise it falls back to underlining. The highlighting
 % color is by default lightblue, underlines and overstriking lines are by
 % default black. The colors can be changed using the following commands:
@@ -509,10 +514,9 @@
 % {\catcode`\|=12
 % \begin{center}    
 % \begin{tabular}{r@{\hspace{1.5em}}l}
-% ^^A\hline\\[-1ex]
 % \verb+\setulcolor{red}+&set underlining color\\
 % \verb+\setstcolor{green}+&set overstriking color\\
-% \verb+\sethlcolor{blue}+&set highlighting color\\[1.5ex]^^A\hline
+% \verb+\sethlcolor{blue}+&set highlighting color\\
 % \end{tabular}
 % \end{center}
 % }
@@ -641,6 +645,10 @@
 % above rules, but rather show some low-level problems that \TeX\ has detected.
 % \texttt{`Incomplete }\cs{\ifcat}\texttt{'} in a line with a \package{soul}
 % command is such a message.
+%
+%
+%
+%
 %
 %
 %
@@ -841,7 +849,7 @@
 %
 %
 %
-% \subsection[Typesetting \caps{capitals-and-small-capitals}\\fonts]
+% \subsection[Typesetting \caps{caps-and-small-caps}fonts]
 %       {Typesetting capitals-and-small-capitals fonts}
 %
 % There is a special letterspacing command called \describemacro{\caps}.
@@ -1284,6 +1292,71 @@
 %
 %
 %
+% \section{Customization}
+%
+% \subsection{Adding accents}
+% \label{sec:soulaccent}
+%
+% The \package{soul} scanner generally sees every input token separately.
+% It has to be taught that some tokens belong together. For accents this is done
+% by registering them via the \describemacro{\soulaccent} macro.
+%
+% \begin{syntax}
+% |\soulaccent{|\<accent command>|}|
+% \end{syntax}
+%
+% The standard accents, however, are already pre-registered:
+% |\`|, |\'|, |\^|, |\"|, |\~|, |\=|, |\.|, |\u|, |\v|, |\H|, |\t|,
+% |\c|, |\d| and |\b|. If used together with the \package{german}
+% package, \package{soul} automatically adds the |"| command.
+% Let's assume you have defined |\%e| to produce some weird accent on
+% an `e'. Simply put the following line into your |soul.cfg|:
+%
+% \begin{example}
+% |\soulaccent{\%}|
+% \end{example}
+%
+%
+%
+%
+%
+%
+% \subsection{Adding font commands}
+% \label{sec:soulfont}
+%
+% To convince \package{soul} not to feed font switching
+% commands to the analyzer, but rather to execute these immediately,
+% they have to be registered, too. The \describemacro{\soulfont} macro
+% takes the name of the font switching command and either
+% |0| or |1| as the number of arguments:
+% 
+% \begin{syntax}
+% |\soulfont{|\<font command>|}{|\<number of arguments>|}|
+% \end{syntax}
+%
+% The standard commands of \TeX\ and \LaTeX\, as well as the
+% \package{yfonts} commands are already pre-registered:
+% 
+% \begin{example}
+% |\em, \rm, \bf, \it, \tt, \emph, \textrm, \textsf,|\\
+% |\texttt, \textmd, \textbf, \textup, \textsl, \textit,|\\
+% |\textsc, \textnormal, \rmfamily, \sffamily, \ttfamily,|\\
+% |\mdseries, \upshape, \slshape, \itshape, \scshape,|\\
+% |\normalfont, \tiny, \scriptsize, \footnotesize, \small|\\
+% |\normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
+% |\textfrak, \textswab, \textgoth, \frakfamily,|\\
+% |\swabfamily, \gothfamily|\\
+% \end{example}
+%
+%
+% \S \textregistered \copyright
+%
+%
+%
+%
+%
+%
+%
 % \subsection{The configuration file}
 % \label{sec:config}
 %
@@ -1321,10 +1394,6 @@
 %
 % You can safely use the |\SOUL@@@| namespace for internal macros---it
 % won't be used by the \package{soul} package in the future.
-%
-%
-%
-%
 %
 %
 %
@@ -1621,7 +1690,8 @@
 %
 % \noindent
 % Fake some of the \LaTeX\ commands if we were loaded by another flavor
-% of \TeX.
+% of \TeX. This might break some previously loaded packages, though,
+% if e.\,g.~\cs{\mbox} was already in use.
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
@@ -1658,8 +1728,8 @@
 % |soul| tries to be a good \LaTeX\ citizen if used under \LaTeX\ and
 % declares itself properly. Most command sequences in the package
 % are protected by the |SOUL@| namespace, all other macros are first
-% defined to be empty. This will give us an error message if one of
-% were already defined by a previously loaded package.
+% defined to be empty. This will give us an error message \emph{now}
+% if one of those was already used by another package.
 %
 %    \begin{macrocode}
 \else
@@ -1776,8 +1846,8 @@
 % \subsection{The kernel}
 %
 % \begin{macro}{\SOUL@}
-% This macro is the entry to the \package{soul} package. It does only make
-% sense if it was called after up a \package{soul} driver. \cs{\SOUL@@}
+% This macro is the entry to \package{soul}. Using it does only make
+% sense if it was called after setting up a \package{soul} driver. \cs{\SOUL@@}
 % will swallow the first token after a \package{soul} command. This is
 % either an opening brace or the name of a macro that contains text.
 %
@@ -1799,7 +1869,7 @@
 %
 % \begin{macro}{\SOUL@expand}
 % If the first token after the \package{soul} command was an opening
-% brace we set up some things and start scanning. The \cs{\bgroup} will
+% brace we set up some counters and start scanning. The \cs{\bgroup} will
 % be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
 % if the first token was a macro name, then we expand that macro and
 % call \cs{\SOUL@} with its contents again. Unfortunately, we have to
@@ -1845,8 +1915,8 @@
 %
 % \begin{macro}{\SOUL@scan}
 % This is the entry point for the scanner. It calls \cs{\SOUL@eval}
-% and will in turn be called by \cs{\SOUL@eval} again whenever a
-% new token should be read in.
+% and will in turn be called by \cs{\SOUL@eval} again for every
+% new token to be scanned.
 %
 %    \begin{macrocode}
 \def\SOUL@scan{%
@@ -1948,7 +2018,7 @@
             \SOUL@everyspace{\linebreak}%
         \else\ifcat\bgroup\noexpand\SOUL@@
             \def\SOUL@n*{\SOUL@addgroup{}}%
-        \else\ifcat$\noexpand\SOUL@@
+        \else\ifcat$\noexpand\SOUL@@            
             \def\SOUL@n*{\SOUL@addmath}%
         \else
             \def\SOUL@n*{\SOUL@dotoken}%
@@ -1958,6 +2028,7 @@
 }
 %    \end{macrocode}
 % \end{macro}
+% \iffalse$\fi          ^^A:  fool vim
 %
 %
 %
@@ -2140,18 +2211,18 @@
 %
 % \begin{macro}{\soulfont}
 % \begin{macro}{\soulaccent}
-% Register a font switching command (or even some other command) to the
-% scanner. The first argument is the number of arguments (|0| or |1|),
-% the second is the macro name. Example: |\soulfont{0}{\bold}|.
+% Register a font switching command (or some other command) to the
+% scanner. The first argument is the macro name, the second is
+% the number of arguments (|0| or |1|). Example: |\soulfont{\bold}{0}|.
 % \cs{\soulaccent} has only one argument---the accent macro name.
-% Example: |\soulaccent{\~}|. It is a shortcut for |\soulfont{9}{\~}|.
+% Example: |\soulaccent{\~}|. It is a shortcut for |\soulfont{\~}{9}|.
 %
 %    \begin{macrocode}
 \def\soulfont#1#2{{%
     \edef\x{\global\SOUL@cmds={\the\SOUL@cmds
-        \noexpand\\#1\noexpand#2}}\x
+        \noexpand\\#2\noexpand#1}}\x
 }}
-\def\soulaccent#1{\soulfont9{#1}}
+\def\soulaccent#1{\soulfont{#1}9}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -3566,13 +3637,6 @@
 %
 %
 %
-% ^^A ?????
-% \describemacro{\setstcolor}\par
-% \describemacro{\sethlcolor}\par
-% \describemacro{\soulaccent}\par
-% \describemacro{\soulfont}\par
-% \label{sec:soulaccent}
-% \label{sec:soulfont}
 % \Finale
 % 
 %                                     
