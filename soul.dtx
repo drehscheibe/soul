@@ -164,7 +164,7 @@
 % \fi
 %
 %
-% \CheckSum{1074}
+% \CheckSum{1080}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -587,8 +587,8 @@
 % \soultest{The \texttt{\string\~}-command inhibits line breaks.
 %   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
 %   to mark the word boundaries}
-%   |\so{unbreakable\~ space}|
-%   {\so{unbreakable\~ space}}
+%   |\so{unbreakable~ space}|
+%   {\so{unbreakable~ space}}
 %
 % \soultest{\texttt{\string\\} works as usual. Additional arguments
 %   like \texttt{*} or vertical space are not accepted. Mind the space}
@@ -750,8 +750,8 @@
 % \soultest{The \texttt{\string\~}-command inhibits line breaks.
 %   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
 %   to mark the word boundaries}
-%   |\ul{unbreakable\~ space}|
-%   {\ul{unbreakable\~ space}}
+%   |\ul{unbreakable~ space}|
+%   {\ul{unbreakable~ space}}
 %  
 % \soultest{The braces keep \TeX\ from discarding
 %   the space}  
@@ -1248,7 +1248,7 @@
 %
 %    \begin{macrocode}
 \def\SOUL@#1{\bgroup
-  \def\~{\gdef\SOUL@penalty{\penalty\@M}}%
+  \def~{\gdef\SOUL@penalty{\penalty\@M}}%
   \def\break{\gdef\SOUL@penalty{\penalty-\@M}}%
   \def\\{\gdef\SOUL@penalty{\hfill\penalty-\@M}}%
   \def\|{\kern-\lastkern}%
@@ -1264,7 +1264,7 @@
   \def\SOUL@material{#1 }%
   \SOUL@preamble
   \SOUL@donext
-  \expandafter\SOUL@postamble\egroup}
+  \SOUL@postamble\egroup}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1638,6 +1638,7 @@
 % to horizontal mode, and add an \textit{outer space} in case
 % it comes right after a space.
 % \changes{1999/05/15}{v1.3}{changed minimum skip to quarter em}
+% \changes{????/??/??}{v1.4}{changed minimum skip to .1em}
 %
 %    \begin{macrocode}
 \def\SOUL@sopreamble{%
@@ -1645,7 +1646,7 @@
   \skip@=\SOUL@soskip
   \let\<\empty
   \leavevmode
-  \ifdim\lastskip>.25em
+  \ifdim\lastskip>.1em
     \unskip\hskip\SOUL@soouter
   \fi}
 %    \end{macrocode}
@@ -1922,6 +1923,7 @@
 %
 % \begin{macro}{\SOUL@ulbody}
 % \begin{macro}{\ul}
+% \begin{macro}{\SOUL@ulcolor}
 % Set up the underlining interface and define the
 % |\ul| command.
 %
@@ -1934,7 +1936,9 @@
   \let\SOUL@everysyllable\relax
   \let\SOUL@everytoken\SOUL@uleverytoken}
 \DeclareRobustCommand*\ul{\SOUL@ulbody\SOUL@}
+\let\SOUL@ulcolor\relax
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1964,7 +1968,7 @@
 % Spaces are expandable and shrinkable, underlined skips.
 %
 %    \begin{macrocode}
-\def\SOUL@ulinterword{\SOUL@ulleaders\hskip\spaceskip}
+\def\SOUL@ulinterword{\SOUL@ulcolor{\SOUL@ulleaders\hskip\spaceskip}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1981,12 +1985,12 @@
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
     \dimen@ii\wd\z@
-    \unhbox\z@\llap{\SOUL@ulleaders\hskip\dimen@ii}}}}
+    \unhbox\z@\llap{\SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@ii}}}}}
 \DeclareOption{overlap}{%
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
     \dimen@ii\wd\z@\advance\dimen@ii\p@
-    \unhbox\z@\llap{\SOUL@ulleaders\hskip\dimen@ii\kern-.5\p@}}}}
+    \rlap{\SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@ii\kern-.5\p@}}\unhbox\z@}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2003,8 +2007,8 @@
 \def\SOUL@uleveryhyphen{\discretionary
   {\advance\dimen3-\dimen@\ifdim\dimen3=\z@\else\kern\dimen3\fi
   \setbox4\hbox{\unhcopy\tw@}%
-  \rlap{\SOUL@ulleaders\hskip\wd4}\box4}{}%
-  {\hbox{\SOUL@ulleaders\hskip\dimen@}}}
+  \rlap{\SOUL@ulcolor{\SOUL@ulleaders\hskip\wd4}}\box4}{}%
+  {\hbox{\SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@}}}}
 %    \end{macrocode}
 % \end{macro}
 %
