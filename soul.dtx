@@ -775,7 +775,7 @@
 % the \soul\ package, that actually describes the underlying problem. All other
 % messages are generated directly by \TeX\ and show the low-level
 % commands that \TeX\ wasn't happy with. They'll hardly point you
-% to the violated rule as described in the above paragraphs.
+% to the violated rule as described in the paragraphs above.
 % If you get such a mysterious error message for a line that contains
 % a \soul\ statement, then comment that statement out and see if the message
 % still appears.
@@ -982,7 +982,7 @@
 % \medbreak\noindent 
 % The \cs{\caps} font database is by default empty, i.\,e., it contains
 % just a single default entry, which yields the result as shown in the
-% above example. 
+% example above. 
 % New font entries may be added \emph{on top} of this list using the \describemacro{\capsdef}
 % command, which takes five arguments: The first argument describes the font with
 % \emph{encoding, family, series, shape,} and \emph{size,}^^A
@@ -1499,7 +1499,7 @@
 %
 % It's generally a bad idea to use font style commands like \cs{\textsc}
 % in running text. There should always be some reasoning behind changing
-% the style, such as ``names of persons shall be typeset in a caps-an-small-caps
+% the style, such as ``names of persons shall be typeset in a caps-and-small-caps
 % font''. So you declare in your text just that some words are the name of a
 % person, while you define in the preamble or, even better, in a separate
 % style file how to deal with persons:
@@ -1524,7 +1524,7 @@
 % does look through closing braces. Hence you can conveniently bury
 % a \soul\ command within another macro like in the following
 % example. Use any other token to hide following space if necessary,
-% e.\,g.~the \cs{\null} macro.
+% for example the \cs{\null} macro.
 %
 % \begin{example}
 % |\DeclareRobustCommand*\versal[1]{%|\\
@@ -1541,10 +1541,10 @@
 % \begin{example}
 % |\newcommand*\somsg[1]{\so{#1}\message{#1}}|\\
 % |...|\\
-% |foo \somsg{bar} baz|\\
+% |foo \somsg{bar} baz       % wrong spacing!|\\
 % \end{example}
 %
-% In this case you won't get the trailing space replaced by \emph{outer space}
+% In this case you won't get the following space replaced by \emph{outer space}
 % because when \soul\ tries to look ahead, it only sees the token
 % \cs{\message} and consequently decides that there is no space to replace.
 % You can get around this by explicitly calling the space scanner again.
@@ -1561,10 +1561,93 @@
 % However, \cs{\SOUL@socheck} can't be used directly, because it would discard
 % any normal space. \cs{\\} doesn't have this problem.
 % The additional pair of braces avoids that its definition leaks out
-% of this macro. In the above example you could, of course, simply
+% of this macro. In the example above you could, of course, simply
 % have put \cs{\message} in front, so you hadn't needed to
 % use the scanner macro \cs{\SOUL@socheck} at all.
 %
+% Many packages do already offer logical markup commands that default
+% to some standard \LaTeX\ font commands or to \cs{\relax}. One example
+% is the \package{jurabib} package~\cite{jurabib}, which makes the use of
+% \soul\ a challenge. This package implements lots of
+% formatting macros. Let's have a look at one of them, \cs{\jbauthorfont},
+% which is used to typeset author names in citations.
+% The attempt to simply
+% define |\let\jbauthorfont\caps| fails, because the macro isn't directly
+% applied to the author name as in |\jbauthorfont{Don Knuth}|, but
+% to another command sequence: |\jbauthorfont{\jb@@author}|. Not even
+% \cs{\jb@@author} contains the name, but instead further commands that
+% at last yield the requested name. That's why we have to expand
+% the contents first. This is quite tricky, because we must not
+% expand too much, either. Fortunately, we can offer the contents
+% wrapped up in yet another macro, so that \soul\ knows that it has to
+% use its own macro expansion mechanism:
+% 
+% \begin{example}
+% |\renewcommand*\jbauthorfont[1]{{%|\\
+% |    \def\x{#1}%|\\
+% |    \caps\x|\\
+% |}}|\\
+% \end{example}
+%
+% Some additional kerning after |\caps\x| wouldn't hurt, because
+% the look-ahead scanner is blinded by further commands that follow
+% in the \package{jurabib} package. Now we run into the next problem:
+% cited names may contain commands
+% that must not get expanded. We have to register them as font
+% switching commands (even though they aren't):
+%
+% \begin{example}
+% |\soulfont\jbbtasep{0}|\\
+% |...|\\
+% \end{example}
+%
+% But such registered commands bypass \soul's kernel and we don't
+% get the correct spacing before and afterwards. So we end up
+% redefining \cs{\jbbtasep}, whereby you should, of course, use
+% variables instead of numbers: 
+%
+% \begin{example}
+% |\renewcommand*\jbbtasep{%|\\
+% |    \kern.06em|\\
+% |    \slash|\\
+% |    \hskip.06em|\\
+% |    \allowbreak|\\
+% |}|\\
+% \end{example}
+%
+% Another problem arises: bibliography entries that must not get
+% ripped apart are supposed to be enclosed in additional braces.
+% This, however, won't work with \soul\ because of
+% \ref{par:Grouping hyphenatable material}. A simple trick will
+% get you around that problem: define a dummy command that only
+% outputs its argument, and register that command:
+% 
+% \begin{example}
+% |\newcommand*\together[1]{#1}|\\
+% |\soulfont\together{1}|\\
+% \end{example}
+%
+% Now you can write ``|Author = {\together{Don Knuth}}|'' and
+% \package{jurabib} won't dare to reorder the parts of the name.
+% And what if some name shouldn't get letterspaced at all? Overriding
+% a conventional font style like \cs{\textbf} that was globally
+% set is trivial, you just have to specify the style that you
+% prefer in that very bibliography entry. In our example, if we
+% wanted to keep \soul\ from letterspacing a particular entry,
+% although they are all formatted by our \cs{\jbauthorfont}
+% and hence fed to \cs{\caps}, we'd use the following construction:
+%
+% \begin{example}
+% |Author = {\soulomit{\normalfont\huge Donald E. Knuth}}|\\
+% \end{example}
+%
+% The \package{jurabib} package is probably one of the more
+% demanding packages to collaborate with \soul. Everything else
+% can just become easier.
+% 
+%
+%
+% 
 %
 %
 %
@@ -1731,10 +1814,6 @@
 % 1.\qquad|\newcommand*\periodafter[2]{#1{#2.}}|\\
 % 2.\qquad|\newcommand*\periodafter[2]{#1{#2}.}|\\
 % \end{example}
-%
-%
-%
-% \subsection{A real-world example}
 %
 %
 %
@@ -2046,6 +2125,8 @@
 % \begin{thebibliography}{00}
 % \raggedright
 %
+% \bibitem{jurabib}{\person{Berger, Jens:} \bibtitle{The jurabib package.} \CTAN-Archive, 2002, v0.52h.}
+%    
 % \bibitem{titlesec}{\person{Bezos, Javier:} \bibtitle{The titlesec and titletoc package.}
 %   \CTAN-Archive, 1999, v2.1.}
 %
