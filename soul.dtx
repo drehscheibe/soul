@@ -3814,7 +3814,8 @@
     \dimen@i=\SOUL@uloverlap
     \advance\dimen@2\dimen@i
     \rlap{%
-        \null\kern-\dimen@i
+        \null
+        \kern-\dimen@i
         \SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@}%
     }%
     \unhcopy\z@
@@ -4097,7 +4098,7 @@
                 \advance\count@\@ne
             \repeat
         \else
-        #1%
+            #1%
         \fi
     }%
     \dimen@\dp\z@
