@@ -399,7 +399,7 @@
 % which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
 % and some derivatives such as \st{overstriking} and \hl{highlighting}.
 % Although the package is optimized for \LaTeXe, it also works with
-% Plain \TeX\ and with other flavors of \TeX.
+% Plain \TeX\ and with other flavors of \TeX, for instance Con{\TeX}t.
 % By the way, the package name |soul|
 % is only a combination of the two macro names |\so| (\emph{space out})
 % and |\ul| (\emph{underline})---nothing poetic at all.^^A  :-( 
@@ -1198,6 +1198,55 @@
 % if they are used in expanding environments such as |\write| arguments.
 % 
 %
+%
+%
+%
+%
+% \subsection{Using \package{soul} commands in logical markup}
+%
+% It's generally a bad idea to use font style commands like \cs{\textsc}
+% in running text. There should always be some reasoning behind changing
+% the style, such as ``names of persons shall be typeset in a caps-an-small-caps
+% font''. Then you declare in your text just that some words are the name of a
+% person, while you define in the preamble or even better in a separate
+% style file how to deal with persons:
+%
+% \begin{example}
+% |\newcommand*\person{\textsc}|\\
+% |...|\\
+% |``I think it's a beautiful day to go to the zoo and feed|\\
+% |the ducks. To the lions.'' --~\person{Brian Kantor}|\\
+% \end{example}
+%
+% It's quite simple to use \package{soul} commands that way:
+%
+% \begin{example}
+% |\newcommand\comment*{\ul}             % or \let\comment=\ul|\\
+% |\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}|\\
+% \end{example}
+%
+% A problem arises, though, if you want to use one of the
+% letterspacing commands \cs{\so} and \cs{\caps} within another
+% macro such that it can not look ahead, because there is
+% e.\,g.\ a closing brace in the way. In this case you have
+% to repeat the look-ahead macro \cs{\SOUL@socheck} as last
+% command, so that it can check if the expression is followed
+% by white space. Otherwise \package{soul} couldn't set the
+% \emph{outer space} appropriately:
+%
+% \begin{example}
+% |\DeclareRobustCommand*\versal[1]{%|\\
+% |    \MakeUppercase{\SOUL@@@versal{#1}}%|\\
+% |    \SOUL@socheck|\\
+% |}|\\
+% |\sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}|\\
+% \end{example}
+%
+%
+%
+% \subsection{Typesetting long words in narrow columns}
+%
+% \describemacro{\sloppyword}
 %
 %
 % \subsection{Using \package{soul} commands in section headings}
@@ -2346,6 +2395,8 @@
 %
 %
 %
+% \begin{macro}{\SOUL@nexttoken}
+%
 %    \begin{macrocode}
 \def\SOUL@nexttoken{%
     \edef\x{\the\SOUL@word}%
@@ -2356,6 +2407,7 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2364,6 +2416,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@splittoken}
 %
 %    \begin{macrocode}
 \def\SOUL@splittoken#1#2\SOUL@stop{%
@@ -2371,6 +2425,7 @@
     \global\SOUL@word={#2}%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2379,6 +2434,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@getkern}
 %
 %    \begin{macrocode}
 \def\SOUL@getkern#1#2#3{%
@@ -2388,6 +2445,7 @@
     \advance#2-\wd\tw@
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2396,10 +2454,13 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@setkern}
 %
 %    \begin{macrocode}
 \def\SOUL@setkern#1{\ifdim#1=\z@\else\kern#1\fi}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2408,6 +2469,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@error}
 %
 %    \begin{macrocode}
 \def\SOUL@error{%
@@ -2422,6 +2485,7 @@
     }%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2432,6 +2496,8 @@
 %
 %
 % \subsection{The \so{letterspacing} driver}
+%
+% \begin{macro}{\SOUL@setup}
 %
 %    \begin{macrocode}
 \def\SOUL@setup{%
@@ -2446,6 +2512,7 @@
 }
 \SOUL@setup
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2454,10 +2521,13 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@sosetletterskip}
 %
 %    \begin{macrocode}
 \def\SOUL@sosetletterskip{\nobreak\hskip\SOUL@soletterskip}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2466,6 +2536,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@sopreamble}
 %
 %    \begin{macrocode}
 \def\SOUL@sopreamble{%
@@ -2476,6 +2548,7 @@
     \spaceskip\SOUL@soinnerskip
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2484,6 +2557,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@sopostamble}
 %
 %    \begin{macrocode}
 \def\SOUL@sopostamble{%
@@ -2493,6 +2568,7 @@
     \aftergroup\SOUL@socheck
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2501,12 +2577,15 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@socheck}
 %
 %    \begin{macrocode}
 \def\SOUL@socheck{%
     \futurelet\SOUL@@\SOUL@sodoouter
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2515,6 +2594,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@sodoouter}
 %
 %    \begin{macrocode}
 \def\SOUL@sodoouter{%
@@ -2535,6 +2616,7 @@
     \SOUL@n*%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2543,6 +2625,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@soeverytoken}
 %
 %    \begin{macrocode}
 \def\SOUL@soeverytoken{%
@@ -2556,6 +2640,7 @@
     \fi    
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2564,6 +2649,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@soeveryspace}
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryspace#1{%
@@ -2574,6 +2661,7 @@
     \kern\z@
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2582,6 +2670,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@soeveryhyphen}
 %
 % gets the last token in |\SOUL@lasttoken|
 %    \begin{macrocode}
@@ -2596,6 +2686,7 @@
     }{}{}%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2604,6 +2695,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@soeveryexhyphen}
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryexhyphen#1{%
@@ -2612,6 +2705,7 @@
     \SOUL@sosetletterskip
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2620,6 +2714,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@soeverylowerthan}
 %
 %    \begin{macrocode}
 \def\SOUL@soeverylowerthan{%
@@ -2628,6 +2724,7 @@
     \SOUL@setkern\SOUL@charkern
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2636,6 +2733,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@sosetup}
 %
 %    \begin{macrocode}
 \def\SOUL@sosetup{%
@@ -2649,6 +2748,7 @@
     \let\SOUL@everylowerthan\SOUL@soeverylowerthan
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2657,6 +2757,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@setso}
 %
 %    \begin{macrocode}
 \def\SOUL@setso#1#2#3{%
@@ -2665,6 +2767,7 @@
     \def\SOUL@soouterskip{#3}%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2673,6 +2776,8 @@
 %
 %
 %
+%
+% \begin{macro}{\sodef}
 %
 %    \begin{macrocode}
 \def\sodef#1#2#3#4#5{%
@@ -2686,6 +2791,7 @@
     }%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2694,6 +2800,8 @@
 %
 %
 %
+%
+% \begin{macro}{\resetso}
 %
 %    \begin{macrocode}
 \def\resetso{%
@@ -2702,6 +2810,7 @@
 }
 \resetso
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2710,6 +2819,8 @@
 %
 %
 %
+%
+% \begin{macro}{\sloppyword}
 %
 %    \begin{macrocode}
 \sodef\sloppyword{%
@@ -2723,6 +2834,7 @@
     {.33em\@plus.11em\@minus.11em}%
     {.33em\@plus.11em\@minus.11em}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2733,6 +2845,8 @@
 %
 %
 % \subsection{The \caps{caps} driver}
+%
+% \begin{macro}{\caps}
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
@@ -2745,6 +2859,7 @@
     {.37em\@plus.1667em\@minus.111em}%
     {.37em\@plus.1em\@minus.14em}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2753,6 +2868,8 @@
 %
 %
 %
+%
+% \begin{macro}{\capsreset}
 %
 %    \begin{macrocode}
 \else
@@ -2761,6 +2878,7 @@
     \SOUL@capsdefault
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2769,6 +2887,8 @@
 %
 %
 %
+%
+% \begin{macro}{\capsdef}
 %
 %    \begin{macrocode}
 \def\capsdef#1#2#3#4#5{{%
@@ -2777,6 +2897,7 @@
     \xdef\SOUL@capsbase{\the\toks\z@\the\toks\tw@}%
 }}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2785,6 +2906,8 @@
 %
 %
 %
+%
+% \begin{macro}{\capssave}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\capssave[1]{%
@@ -2795,6 +2918,7 @@
         \csname SOUL@@\string#1\endcsname}%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2803,6 +2927,9 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@capsfind}
+% \begin{macro}{\SOUL@caps}
 %
 %    \begin{macrocode}
 \def\SOUL@capsfind#1/#2/#3/#4/#5/#6/#7/#8/#9/{%
@@ -2822,6 +2949,8 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -2830,6 +2959,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@chk}
 %
 %    \begin{macrocode}
 \def\SOUL@chk#1#2{%
@@ -2840,6 +2971,7 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2848,6 +2980,9 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@dimchk}
+% \begin{macro}{\SOUL@rangechk}
 %
 %    \begin{macrocode}
 \def\SOUL@dimchk#1#2{\if$#1$\else\SOUL@rangechk{#2}#1--\@ne\@@\fi}
@@ -2863,6 +2998,8 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -2871,6 +3008,8 @@
 %
 %
 %
+%
+% \begin{macro}{\textcaps}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textcaps{{%
@@ -2879,6 +3018,7 @@
     \aftergroup\SOUL@caps
 }}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2887,6 +3027,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@capsdefault}
 %
 %    \begin{macrocode}
 \def\SOUL@capsdefault{%
@@ -2900,6 +3042,7 @@
 \capsreset
 \fi
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2911,6 +3054,8 @@
 %
 % \subsection{The \ul{underlining} driver}
 %
+% \begin{macro}{\SOUL@ulleaders}
+%
 %    \begin{macrocode}
 \newdimen\SOUL@uldp
 \newdimen\SOUL@ulht
@@ -2918,6 +3063,7 @@
     \leaders\hrule\@depth\SOUL@uldp\@height\SOUL@ulht\relax
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2926,6 +3072,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@ulunderline}
 %
 %    \begin{macrocode}
 \def\SOUL@ulunderline#1{{%
@@ -2940,6 +3088,7 @@
     \unhcopy\z@
 }}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2948,6 +3097,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@ulpreamble}
 %
 %    \begin{macrocode}
 \def\SOUL@ulpreamble{%
@@ -2958,6 +3109,7 @@
         \@minus\fontdimen4\font
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2966,6 +3118,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@uleverysyllable}
 %
 %    \begin{macrocode}
 \def\SOUL@uleverysyllable{%
@@ -2975,6 +3129,7 @@
     }%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2983,6 +3138,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@uleveryspace}
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryspace#1{%
@@ -2993,6 +3150,7 @@
     }%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3001,6 +3159,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@uleveryhyphen}
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryhyphen{%
@@ -3015,6 +3175,7 @@
     }{}{}%
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3023,6 +3184,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@uleveryexhyphen}
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryexhyphen#1{%
@@ -3030,6 +3193,7 @@
     \penalty\exhyphenpenalty
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3038,6 +3202,9 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@ulcolor}
+% \begin{macro}{\setulcolor}
 %
 %    \begin{macrocode}
 \let\SOUL@ulcolor\relax
@@ -3049,6 +3216,8 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -3057,11 +3226,16 @@
 %
 %
 %
+%
+% \begin{macro}{\setuloverlap}
+% \begin{macro}{\SOUL@uloverlap}
 %
 %    \begin{macrocode}
 \def\setuloverlap#1{\def\SOUL@uloverlap{#1}}
 \setuloverlap{.5pt}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -3070,6 +3244,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@ulsetup}
 %
 %    \begin{macrocode}
 \def\SOUL@ulsetup{%
@@ -3081,6 +3257,7 @@
     \let\SOUL@everyexhyphen\SOUL@uleveryexhyphen
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3089,10 +3266,13 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@textul}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textul{\SOUL@ulsetup\SOUL@}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3101,6 +3281,10 @@
 %
 %
 %
+%
+% \begin{macro}{\setul}
+% \begin{macro}{\SOUL@uldepth}
+% \begin{macro}{\SOUL@ulthickness}
 %
 %    \begin{macrocode}
 \def\setul#1#2{%
@@ -3108,6 +3292,9 @@
     \if$#2$\else\def\SOUL@ulthickness{#2}\fi
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -3116,11 +3303,14 @@
 %
 %
 %
+%
+% \begin{macro}{\resetul}
 %
 %    \begin{macrocode}
 \def\resetul{\setul{.65ex}{.1ex}}
 \resetul
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3129,6 +3319,8 @@
 %
 %
 %
+%
+% \begin{macro}{\setuldepth}
 %
 %    \begin{macrocode}
 \def\setuldepth#1{{%
@@ -3151,6 +3343,7 @@
     \xdef\SOUL@uldepth{\the\dimen@}%
 }}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3162,6 +3355,8 @@
 %
 % \subsection{The \st{overstriking} driver}
 %
+% \begin{macro}{\SOUL@stpreamble}
+%
 %    \begin{macrocode}
 \def\SOUL@stpreamble{%
     \dimen@\SOUL@ulthickness
@@ -3172,6 +3367,7 @@
     \SOUL@ulpreamble
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3180,6 +3376,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@stsetup}
 %
 %    \begin{macrocode}
 \def\SOUL@stsetup{%
@@ -3187,6 +3385,7 @@
     \let\SOUL@preamble\SOUL@stpreamble
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3195,10 +3394,13 @@
 %
 %
 %
+%
+% \begin{macro}{\textst}
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textst{\SOUL@stsetup\SOUL@}
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3207,6 +3409,9 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@stcolor}
+% \begin{macro}{\setstcolor}
 %
 %    \begin{macrocode}
 \let\SOUL@stcolor\relax
@@ -3218,6 +3423,8 @@
     \fi
 }    
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -3229,6 +3436,8 @@
 %
 % \subsection{The \hl{highlighting} driver}
 %
+% \begin{macro}{\SOUL@hlpreamble}
+%
 %    \begin{macrocode}
 \def\SOUL@hlpreamble{%
     \setul{}{2.5ex}%
@@ -3236,6 +3445,7 @@
     \SOUL@stpreamble
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3244,6 +3454,8 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@hlsetup}
 %
 %    \begin{macrocode}
 \def\SOUL@hlsetup{%
@@ -3251,6 +3463,7 @@
     \let\SOUL@preamble\SOUL@hlpreamble    
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -3260,11 +3473,18 @@
 %
 %
 %
+% \begin{macro}{\texthl}
+% \begin{macro}{\sethlcolor}
+% \begin{macro}{\SOUL@hlcolor}
+%
 %    \begin{macrocode}
 \DeclareRobustCommand*\texthl{\SOUL@hlsetup\SOUL@}
 \def\sethlcolor#1{\if$#1$\else\def\SOUL@hlcolor{\textcolor{#1}}\fi}
 \sethlcolor{yellow}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -3276,6 +3496,12 @@
 %
 % \subsection{The package postamble}
 %
+% \begin{macro}{\so}
+% \begin{macro}{\ul}
+% \begin{macro}{\st}
+% \begin{macro}{\hl}
+% \begin{macro}{\caps}
+%
 %    \begin{macrocode}
 \let\so\textso
 \let\ul\textul
@@ -3283,6 +3509,11 @@
 \let\hl\texthl
 \let\caps\textcaps
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -3351,7 +3582,6 @@
 % \describemacro{\soulaccent}\par
 % \describemacro{\soulfont}\par
 % \describemacro{\setuloverlap}\par
-% \describemacro{\sloppyword}\par
 %
 % \Finale
 % 
