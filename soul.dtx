@@ -2129,7 +2129,7 @@
 % kerning values, because \TeX\ takes care of that.
 %
 % \begin{example}
-% |    \def\SOUL@everysyllable{\the\SOUL@syllable}|\\
+% |    \def\SOUL@everysyllable{\the\SOUL@syllable}%|\\
 % \end{example}
 %
 % The \TeX\ primitive \cs{\discretionary}
@@ -2159,7 +2159,7 @@
 % |        \discretionary{}{}{%|\\
 % |            \SOUL@setkern\SOUL@charkern|\\
 % |        }%|\\
-% |    }|%\\
+% |    }%|\\
 % \end{example}
 %
 % Now that the interface macros are defined, we can start the scanner.
