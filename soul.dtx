@@ -128,7 +128,7 @@
 %
 %
 %
-% \CheckSum{1813}
+% \CheckSum{1814}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -253,15 +253,18 @@
 %   \par\medskip\def\<##1>{$\langle$\textit{##1}$\rangle$}^^A
 %       \indent\begin{tabular}{l}^^A
 %   }{^^A
-%       \end{tabular}\noindentafter\medbreak
+%       \end{tabular}^^A
+%       \noindentafter\medbreak
 %   }
 %    
 %
 % \newenvironment{example}[1][.9\textwidth]
-%   {\par\medskip\begin{tabular}{p{#1}l}}
+%   {\par\medskip\indent\begin{tabular}{p{#1}l}}
 %   {\end{tabular}\noindentafter\medbreak}
 %
-% \newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}    
+% ^^A\newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}    
+% \newcommand*\noindentafter{^^A
+%   \global\everypar{{\setbox\z@\lastbox}\everypar{}}}
 %
 % \newcommand*\errsquare{\leavevmode\vrule height.8em depth.2em width1em\relax}
 %
@@ -345,7 +348,7 @@
 %
 % \let\cs\path
 % \let\option\textsf
-% \let\package\texttt
+% \def\package#1{{\normalfont\texttt{#1}}}
 % \let\program\texttt
 %
 % \sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}
@@ -392,12 +395,7 @@
 % \begin{abstract}
 % This article describes the \package{soul} package^^A
 %^^A%%
-%   \footnote{This file has version number \fileversion, last revised \filedate.\\
-%   I'd like to thank \person{Stefan Ulrich} for teaching me much about high quality
-%   typesetting, sending me dozens of error reports, and, finally, providing the
-%   `example.cfg' configuration file. Without his help the package would only be half 
-%   as good. And, no, he had nothing to do with \so{minuscules letterspacing,}
-%   \ul{underlining}, and such \dots},
+%   \footnote{This file has version number \fileversion, last revised \filedate.},
 %^^A%%
 % which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
 % and some derivatives such as \st{overstriking} and \hl{highlighting}.
@@ -694,37 +692,47 @@
 % 
 % \section{\so{Letterspacing}}
 % 
-% \subsection{The macros}
+% \subsection{How it works}
 % \label{sec:somacros}
 %
 % The base macro for letterspacing is called \describemacro{\so}.
-% It typesets the given argument with \textit{inter-letter space} ($\cdot$)
-% between every two characters, \textit{inner space} ($\sqcup$) between words
-% and \textit{outer space} ($\bigtriangleup$) before and after the spaced out text.
+% It typesets the given argument with \emph{inter-letter space}
+% between every two characters, \emph{inner space} between words
+% and \emph{outer space} before and after the spaced out text.
+% If we let ``$\cdot$'' stand for \emph{inter-letter space}, ``$\ast$''
+% for \emph{inner spaces} and ``$\bullet$'' for \emph{outer
+% spaces,} then the input on the left side of the follwing table
+% will yield the schematic output on the right side:
 %
-% \bigbreak
-% \bgroup
+% \begin{center}
 % \def\.{$\cdot$}
-% \def\_{~$\sqcup$~}
-% \def\*{~$\bigtriangleup$~}
-% |xxxx \so{aaaa bbbb cccc} yyyy|\par
-% xxxx \so{aaaa bbbb cccc} yyyy\par
-% {\large xxxx\*a\.a\.a\.a\_b\.b\.b\.b\_c\.c\.c\.c\*yyyy}\par
-% \bigbreak
-% in case there is a space
-% preceding and following. All kerning values are automatically
-% inserted at the right places.
-% \bigbreak
-% |xxxx\so{aaaa bbbb cccc}yyyy|\par
-% xxxx\so{aaaa bbbb cccc}yyyy\par
-% {\large xxxxa\.a\.a\.a\_b\.b\.b\.b\_c\.c\.c\.c\*yyyy}\par
-% \bigbreak
-% \egroup
+% \def\-{\,$\ast$\,}
+% \def\*{\,$\bullet$\,}
+% \def\_{\texttt{\char"20}}
+% \begin{tabular}{ccc}
+% 1.& \verb*|XX \so{aaa bbb ccc} YY|&         XX\*a\.a\.a\-b\.b\.b\-c\.c\.c\*YY\\
+% 2.& \verb*|XX\so{aaa bbb ccc}YY|&           XXa\.a\.a\-b\.b\.b\-c\.c\.cYY\\[1.5ex]
+% 3.& \verb*|XX \null\so{aaa bbb ccc}{} YY|&  XX\_a\.a\.a\-b\.b\.b\-c\.c\.c\_YY\\
+% 4.& \verb*|XX {\so{aaa bbb ccc}} YY|&       XX\*a\.a\.a\-b\.b\.b\-c\.c\.c\_YY\\
+% \end{tabular}
+% \end{center}
 %
-% To enforce normal spaces instead of 
-% \textit{outer spaces}, you can `hide' preceding spaces with a 
-% \cs{\null} before the \cs{\so} command, and following spaces with any other
-% token such as \cs{\relax} or just an opening or closing brace afterwards.
+% Case~1 is what you'll need in most cases. The spaced out text is surrounded
+% by spaces whose width lies between the width of a normal space and
+% that of \emph{inner space}. Case~2 shows that only preceding and following
+% spaces in the input really lead to \emph{outer space}, whereby the preceding
+% space has to be more than |5sp| wide, because some \LaTeX\ macros use
+% |\hskip1sp| as marker.
+% Case~3 shows how to enforce normal spaces instead of \emph{outer spaces:}
+% Preceding space can be hidden by any token or |\kern0pt|. Following space
+% can also be hidden by any token, but note that a typical macro name
+% like |\relax| would also hide the space after. |{}| is safe, though.
+% The last case shows that braces around the \package{soul} statement
+% don't hide the preceding space, but they do hide the following. This,
+% however, is hardly what you desire if you put the statement in braces
+% because it is part of a macro like |\newcommand*\soup[1]{{\upshape\so{#1}}}|.
+% See section \ref{sec:markup} for a solution.
+%
 %
 % The values are predefined for typesetting facsimiles mainly with
 % \emph{Fraktur} fonts.
@@ -732,34 +740,108 @@
 % macros or overwrite the original \cs{\so} meaning using the macro
 % \describemacro{\sodef}:
 %
-% \medskip\noindent
-% |\sodef|^^A
-% $\langle$\textit{cmd}$\rangle$^^A
-% |{|$\langle$\textit{font}$\rangle$|}|^^A
-% |{|$\langle$\textit{inter-letter space}$\rangle$|}|^^A
-% |{|$\langle$\textit{inner space}$\rangle$|}|^^A
-% |{|$\langle$\textit{outer space}$\rangle$|}|
-% \medbreak
+% \begin{syntax}
+% |\sodef|\<cmd>|{|\<font>|}{|\<inter-letter space>|}{|\<inner space>|}{|\<outer space>|}|
+% \end{syntax}
 %
-% \noindent
 % The space dimensions, all of which are mandatory, should be defined in terms of |em|
 % letting them grow and shrink with the respective fonts.
 %
-% \medskip\noindent
-% Example: |\sodef\an{}{.2em}{1em plus1em}{2em plus.1em minus.1em}|
+% \begin{example}
+% |\sodef\an{}{.2em}{1em plus1em}{2em plus.1em minus.1em}|
+% \end{example}
 %
-% \medbreak\noindent
 % after which you can type `|\an{example}|' to get
 % {\sodef\an{}{.2em}{1em plus1em}{2em plus.1em minus.1em}^^A
 % `\an{example}'.}
 % The \describemacro{\resetso} command resets \cs{\so}
-% to its original meaning.
+% to the default values.
 %
 %
-% For typesetting caps or caps-and-small-caps fonts there are
-% two different \describemacro{\caps} commands predefined with only
-% slight spacing, which are mainly thought to be used in running text
-% (see section \ref{sec:theory}). The following lines show the effect
+%
+%
+% \subsection{Some examples}
+%
+%^^A=====================================================
+% \begin{examples}
+%
+% \soultest{Ordinary text}
+%   |\so{electrical industry}|
+%   {\so{electrical industry}}
+%
+% \soultest{Use \texttt{\string\-} to mark hyphenation points}  
+%   |\so{man\-u\-script}|
+%   {\so{man\-u\-script}}
+%
+% \soultest{Accents are recognized}
+%   |\so{le th\'e\^atre}|
+%   {\so{le th\'e\^atre}}
+%
+% \soultest{\texttt{\string\mbox} and \texttt{\string\hbox} protect material that
+%   contains hyphenation points. The contents are treated as one, unbreakable entity}
+%   |\so{just an \mbox{example}}|
+%   {\so{just an \mbox{example}}}
+%  
+% \soultest{Punctuation marks are spaced out, if they are
+%   put into the group}
+%   |\so{inside.} \& \so{outside}.|
+%   {\so{inside.} \& \so{outside}.}
+% 
+% \soultest{Spaceout skips may be removed by typing \texttt{\string\<}.
+% It's, however, desirable to put the quotation marks out of
+% the argument}
+%   |\so{``\<Pennsylvania\<''}|
+%   {\so{``\<Pennsylvania\<''}}
+% 
+% \soultest{Numbers should never be spaced out}
+%   |\so{1\<3 December {1995}}|
+%   {\so{1\<3 December {1995}}}
+%
+% \soultest{Explicit hyphens like |-|, |--| and |---| are recognized.
+%   \texttt{\string\slash} outputs a slash with the possibility to break the line
+%   afterwards}
+%   |\so{input\slash output}|
+%   {\so{input\slash output}}
+%
+% \soultest{To keep \TeX\ from breaking lines between the hyphen and `jet'
+%   you have to protect the hyphen. This is no \package{soul} restriction
+%   but normal \TeX\ behaviour}  
+%   |\so{\dots and \mbox{-}jet}|
+%   {\so{\dots and \mbox{-}jet}}
+%
+% \soultest{The \texttt{\~} command inhibits line breaks}
+%   |\so{unbreakable~space}|
+%   {\so{unbreakable~space}}
+%
+% \soultest{\texttt{\string\\} works as usual. Additional arguments
+%   like \texttt{*} or vertical space are not accepted, though}
+%   |\so{broken\\line}|
+%   {\so{broken\\line}}
+%  
+% \soultest{\texttt{\string\break} breaks the line without filling it with white space}
+%   |\so{pretty awful\break test}|
+%   {\so{pretty awful\break test}}
+%
+% \end{examples}
+%^^A=====================================================
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+% \subsection{Typesetting \caps{capitals and small capitals} fonts}
+%
+% There is a special letterspacing command called \describemacro{\caps}.
+% It differs from \cs{\so} in that it switches to caps-and-small-caps
+% font shape, defines only slight spacing and can select spacing
+% value sets from a database. This is a requirement for high-quality
+% typesetting \cite{Tschichold}. The following lines show the effect
 % of \cs{\caps} in comparison with the normal textfont and with
 % small-capitals shape: 
 %
@@ -770,14 +852,6 @@
 % |\scshape|&{\scshape\sampletext}\\
 % |\caps|&\null\expandafter\caps\expandafter{\sampletext}
 % \end{tabular}
-%
-% \medbreak\noindent
-% In \emph{plain} \TeX\ mode the \cs{\caps} command is
-% simply defined with \cs{\sodef}. It executes a command \cs{\capsfont} that 
-% is ignored by default and may be used to select a particular font.
-%
-% \medskip\noindent
-% Example: |\font\capsfont=cmcsc10 \caps{Tschichold}|
 %
 % \medbreak\noindent 
 % The \LaTeX\ version is slightly more complicated. It uses a small list as a 
@@ -799,16 +873,15 @@
 % it may as well be empty or contain debugging commands (e.\,g.~|\message{*}|).
 % The remaining three, non-optional arguments are the spaces as described above.
 %
-% \medskip\noindent
-% Example: |\capsdef{T1/ppl/m/n/5-15}{\scshape}{.16em}{.4em}{.2em}|
+% \begin{example}
+% |\capsdef{T1/ppl/m/n/5-15}{\scshape}{.16em}{.4em}{.2em}|
+% \end{example}
 %
-% \medbreak\noindent
 % The \LaTeX\ \cs{\caps} command goes through the data list and takes the first
 % matching set, so the order of definition is essential.
 % There's only one default set for all font combinations predefined, 
 % which can be overridden.
 %
-% \medskip
 % The \describemacro{\capsreset} command
 % deletes all font sets except the default set,
 % which can be overridden with a \cs{\capsdef} command using the
@@ -818,25 +891,28 @@
 % \describemacro{\capssave} command. This allows to predefine different groups 
 % of \cs{\caps} sets.
 %
-% \medskip\noindent
-% Example:
-%\begin{verbatim}
-%    \capsreset
-%    \capsdef{/cmss///}{}{10pt}{20pt}{30pt}
-%    ...
-%    \capssave\widecaps
-%    %---
-%    \capsreset
-%    \capsdef{/cmss///}{}{.1pt}{.2pt}{.3pt}
-%    ...
-%    \capssave\narrowcaps
-%    %---
-%    {\widecaps
-%    \title{\caps{Yet Another Silly Example}}
-%    } 
-%\end{verbatim}
+% \begin{example}
+% |\capsreset|\\
+% |\capsdef{/cmss///}{}{10pt}{20pt}{30pt}|\\
+% |...|\\
+% |\capssave\widecaps|\\
+% \end{example}
 %
-% \medbreak
+% \indent
+% \begin{example}
+% |\capsreset|\\
+% |\capsdef{/cmss///}{}{.1pt}{.2pt}{.3pt}|\\
+% |...|\\
+% |\capssave\narrowcaps|\\
+% \end{example}
+% 
+% \indent
+% \begin{example}
+% |{\widecaps|\\
+% |\title{\caps{Yet Another Silly Example}}|\\
+% |}|\\
+% \end{example}
+%
 % If you have defined a bunch of sets for different fonts and sizes,
 % you may lose control over what fonts are used by the package. With the
 % package option \DescribeOption{capsdefault}\textsf{capsdefault} selected, 
@@ -844,77 +920,6 @@
 % particular font and the default set had to be used. 
 %
 %
-%
-%
-%
-% \subsection{Some examples}
-%
-%^^A=====================================================
-% \begin{examples}
-%
-% \soultest{Ordinary text can be typed in as usual}
-%   |\so{electrical industry}|
-%   {\so{electrical industry}}
-%
-% \soultest{\texttt{\string\-} works as usual}  
-%   |\so{man\-u\-script}|
-%   {\so{man\-u\-script}}
-%
-% \soultest{Tokens that belong together have to be grouped, text inside  
-%   groups is not spaced out. Grouped text must not contain hyphenation points}
-%   |\so{le th\'e\^atre}|
-%   {\so{le th\'e\^atre}}
-%
-% \soultest{To prevent material \emph{with} hyphenation points from being
-%   spaced out, you have to put it in an \texttt{\string\hbox}
-%   (\texttt{\string\mbox}) with two pairs of braces around it.
-%   However, it's better to end \so{spacing out} before and 
-%   restart it afterwards}
-%   |\so{just an \mbox{example}}|
-%   {\so{just an \mbox{example}}}
-%  
-% \soultest{Punctuation marks are spaced out, if they are
-%   put into the group}
-%   |\so{inside.} \&\ \so{outside}.|
-%   {\so{inside.} \&\ \so{outside}.}
-% 
-% \soultest{Spaceout skips may be removed by typing \texttt{\string\<}.
-% It's, however, desirable to put the quotation marks out of
-% the argument}
-%   |\so{``\<Pennsylvania\<''}|
-%   {\so{``\<Pennsylvania\<''}}
-% 
-% \soultest{Numbers should never be spaced out}  
-%   |\so{1\<3 December {1995}}|
-%   {\so{1\<3 December {1995}}}
-%
-% \soultest{\texttt{\string\slash}, \texttt{\string\hyphen},
-%   \texttt{\string\endash}, and \texttt{\string\emdash} allow 
-%   hyphenation before and after the break point}
-%   |\so{input\slash output}|
-%   {\so{input\slash output}}
-%
-% \soultest{\texttt{\string\hyphen} must not be used for leading hyphens}  
-%   |\so{\dots and \mbox{-}jet}|
-%   {\so{\dots and \mbox{-}jet}}
-%
-% \soultest{The \texttt{\string\~}-command inhibits line breaks.
-%   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
-%   to mark the word boundaries}
-%   |\so{unbreakable~space}|
-%   {\so{unbreakable~space}}
-%
-% \soultest{\texttt{\string\\} works as usual. Additional arguments
-%   like \texttt{*} or vertical space are not accepted. Mind the space}
-%   |\so{broken\\line}|
-%   {\so{broken\\line}}
-%  
-% \soultest{The braces keep \TeX\ from discarding the space}
-%   |\so{pretty awful\break test}|
-%   {\so{pretty awful\break test}}
-%
-% \end{examples}
-%^^A=====================================================
 %
 %
 %
@@ -936,10 +941,10 @@
 % the ligatures |ch|, |ck|, |sz|~(\ss), and~|tz| have to remain unbroken in spaced out
 % \emph{Fraktur} text.  This may look strange at first glance, but you'll get used to it:
 % 
-% \medskip\noindent
-% Example: |\textfrak{\so{S{ch}u{tz}vorri{ch}tung}}|
+% \begin{example}
+% |\textfrak{\so{S{ch}u{tz}vorri{ch}tung}}|
+% \end{example}
 %
-% \medbreak\noindent
 % You already know that grouping keeps the |soul| mechanism from separating such ligatures.
 % This is quite important for |s:|, |a*|, and~|"a|. As hyphenation is stronger than
 % grouping, especially the |sz| may cause an error, if hyphenation happens to occur between
@@ -998,21 +1003,18 @@
 % striking out macro \describemacro{\st}, which is in fact derived from the former. 
 %
 % \subsection{Settings}
-% \describemacro{\setul}
 % The predefined \textit{underline depth} and \textit{thickness}
-% work well with most fonts. They can be changed using the macro \cs{\setul}.
+% work well with most fonts. They can be changed using the macro \describemacro{\setul}.
 %
-% \medskip\noindent
-% |\setul{|$\langle$\textit{underline depth}$\rangle$^^A
-% |}{|$\langle$\textit{underline thickness}$\rangle$|}|
+% \begin{syntax}
+% |\setul{|\<underline depth>|}{|\<underline thickness>|}|
+% \end{syntax}
 % 
-% \medbreak\noindent
 % Either dimension can be omitted, in which case there has to be
 % an empty pair of braces.
 % Both values should be defined in terms of |ex|, letting them 
 % grow and shrink with the respective fonts.
-% \describemacro{\resetul}
-% The \cs{\resetul} command restores the standard values.
+% The \describemacro{\resetul} command restores the standard values.
 %
 % \describemacro{\setuldepth}
 % Another way to set the \textit{underline depth} is to use the macro
@@ -1022,31 +1024,32 @@
 % letters---i.\,e.\ all characters whose \cs{\catcode} currently
 % equals 11---are taken:
 %
-% \medskip\noindent
-% Examples: |\setuldepth{ygp}|, |\setuldepth\strut|,
-% |\setuldepth{}|
+% \begin{example}
+% |\setuldepth{ygp}|, |\setuldepth\strut|,
+% \end{example}
 %
-%
-% \medskip\noindent
 % \describemacro{\setulcolor}
 % The underlines are by default black. The color can be changed by
 % using the \cs{\setulcolor} command. It takes one argument that can be any
 % of the color specifiers as described in the |color| package, which
 % has to be loaded explicitly.
 %
-%\begin{verbatim}
-%\documentclass{article}
-%\usepackage{color,soul}
-%\definecolor{darkblue}{rgb}{0,0,0.5}
-%\setulcolor{darkblue}
-%
-%\begin{document}
-%...
-%\ul{Cave: remove all the underlines!}
-%...
-%\end{document}
-%
-%\end{verbatim}
+% \indent
+% \begin{example}
+% |\documentclass{article}|\\
+% |\usepackage{color,soul}|\\
+% |\definecolor{darkblue}{rgb}{0,0,0.5}|\\
+% |\setulcolor{darkblue}|\\
+% \end{example}
+% 
+% \indent
+% \begin{example}
+% |\begin{document}|\\
+% |...|\\
+% |\ul{Cave: remove all the underlines!}|\\
+% |...|\\
+% |\end{document}|\\
+% \end{example}
 %
 %
 %
@@ -1057,27 +1060,60 @@
 %^^A=====================================================
 % \begin{examples}
 %
-% \soultest{Ordinary text can be typed in as usual}
+% \soultest{Ordinary text}
 %   |\ul{electrical industry}|
 %   {\ul{electrical industry}}
-%  
-% \soultest{\texttt{\string\-} works as usual}  
+%
+% \soultest{Use \texttt{\string\-} to mark hyphenation points}  
 %   |\ul{man\-u\-script}|
 %   {\ul{man\-u\-script}}
-%  
-% \soultest{Tokens that belong together have to be grouped.
-%   Grouped text must not contain hyphenation points}  
+%
+% \soultest{Accents are recognized}
 %   |\ul{le th\'e\^atre}|
 %   {\ul{le th\'e\^atre}}
+%
+% \soultest{\texttt{\string\mbox} and \texttt{\string\hbox} protect material that
+%   contains hyphenation points. The contents are treated as one, unbreakable entity}
+%   |\ul{just an \mbox{example}}|
+%   {\ul{just an \mbox{example}}}
 %  
-% \soultest{The \texttt{\string\~}-command inhibits line breaks.
-%   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
-%   to mark the word boundaries}
+% \soultest{Punctuation marks are spaced out, if they are   ^^A ????? remove that after fixing the bug
+%   put into the group}
+%   |\ul{inside.} \& \ul{outside}.|
+%   {\ul{inside.} \& \ul{outside}.}
+% 
+% \soultest{Spaceout skips may be removed by typing \texttt{\string\<}.
+% It's, however, desirable to put the quotation marks out of
+% the argument}
+%   |\ul{``\<Pennsylvania\<''}|
+%   {\ul{``\<Pennsylvania\<''}}
+% 
+% \soultest{Numbers should never be spaced out}             ^^A ????? remove that after fixing the bug
+%   |\ul{1\<3 December {1995}}|
+%   {\ul{1\<3 December {1995}}}
+%
+% \soultest{Explicit hyphens like |-|, |--| and |---| are recognized.
+%   \texttt{\string\slash} outputs a slash with the possibility to break the line
+%   afterwards}
+%   |\ul{input\slash output}|
+%   {\ul{input\slash output}}
+%
+% \soultest{To keep \TeX\ from breaking lines between the hyphen and `jet'
+%   you have to protect the hyphen. This is no \package{soul} restriction
+%   but normal \TeX\ behaviour}  
+%   |\ul{\dots and \mbox{-}jet}|
+%   {\ul{\dots and \mbox{-}jet}}
+%
+% \soultest{The \texttt{\~} command inhibits line breaks}
 %   |\ul{unbreakable~space}|
 %   {\ul{unbreakable~space}}
+%
+% \soultest{\texttt{\string\\} works as usual. Additional arguments
+%   like \texttt{*} or vertical space are not accepted, though}
+%   |\ul{broken\\line}|
+%   {\ul{broken\\line}}
 %  
-% \soultest{The braces keep \TeX\ from discarding
-%   the space}  
+% \soultest{\texttt{\string\break} breaks the line without filling it with white space}
 %   |\ul{pretty awful\break test}|
 %   {\ul{pretty awful\break test}}
 %
@@ -1237,6 +1273,15 @@
 %
 %
 %
+% \section{\TeX\ mode}
+%
+% In \emph{plain} \TeX\ mode the \cs{\caps} command is
+% simply defined with \cs{\sodef}. It executes a command \cs{\capsfont} that 
+% is ignored by default and may be used to select a particular font.
+%
+% \begin{example}
+% |\font\capsfont=cmcsc10 \caps{Tschichold}|
+% \end{example}
 %
 %
 %
@@ -1284,7 +1329,7 @@
 % \rule{\hsize}{.4pt}\par
 % \tabline{\string\SOUL@preamble}{$P$}
 %   {executed once at the beginning}
-% \tabline{\string\SOUL@interword}{\texttt{\char`\ }}
+% \tabline{\string\SOUL@everyspace}{\texttt{\char`\ }}
 %   {executed between every two words}
 % }
 % \tabline{\string\SOUL@everyhyphen}{$H$}    
@@ -1446,15 +1491,20 @@
 %
 %
 %
-% 
+% \section{Acknowledgement}
 %
+% I'd like to thank \person{Stefan Ulrich} for teaching me much about high quality
+% typesetting, sending me dozens of error reports, and, finally, providing the
+% `example.cfg' configuration file. Without his help the package would only be half 
+% as good. And, no, he had nothing to do with \so{minuscules letterspacing,}
+% \ul{underlining}, and such \dots
 %
 %
 %
 %
 %
 % \begin{thebibliography}{0}
-% ^^A\hbadness10000
+% \hbadness3000
 % \bibitem{color}{\person{Carlisle, D. P.}. The color package. CTAN-Archive, 1997, v1.0d.}
 %    
 % \bibitem{Duden}{Duden, Volume 1. \textit{Die Rechtschreibung.} Bibliographisches Institut, 
@@ -1667,7 +1717,7 @@
 % \begin{macro}{\SOUL@hyphenhintm}
 % These macros are used as markers. To be able to check for such a
 % marker with \cs{\ifx} we have also to create a macro that contains
-% the marker. \cs{\SOUL@spac} should contain a normal space with a
+% the marker. \cs{\SOUL@spc} shall contain a normal space with a
 % \cs{\catcode} of~10.
 %
 %    \begin{macrocode}
@@ -1697,9 +1747,9 @@
 % \subsection{The kernel}
 %
 % \begin{macro}{\SOUL@}
-% This macro is the entry to the \package{soul} package. It should only be
-% executed \emph{after} setting up a \package{soul} driver. \cs{\SOUL@@}
-% will swallow the first token after the \package{soul} command. This is
+% This macro is the entry to the \package{soul} package. It does only make
+% sense if it was called after up a \package{soul} driver. \cs{\SOUL@@}
+% will swallow the first token after a \package{soul} command. This is
 % either an opening brace or the name of a macro that contains text.
 %
 %    \begin{macrocode}
@@ -1891,9 +1941,10 @@
 % \begin{macro}{\SOUL@dotoken}
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
 % to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
-% which whill be fed to the analyzer after completing a word. The
+% which will be fed to the analyzer every time a word is completed. The
 % two branches are necessary to check for active characters as well
-% as for `normal' macro names.
+% as for `normal' macro names. (The \package{german} package uses
+% |"| as an active character that takes one argument.)   
 %
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%
@@ -1925,6 +1976,15 @@
 %
 %
 %
+% \begin{macro}{\SOUL@docmd}
+% Here we deal with commands that were registered with \cs{\soulaccent}
+% or \cs{\soulfont} or were already predefined in \cs{\SOUL@cmds}.
+% Commands with the |9| identifier are accents that are put in a
+% group with their argument. The others are mostly (but not necessarily)
+% font switching commands, which may (|1|) or may not (|0|) take
+% an argument. They let the current word be typeset and are simply
+% executed.
+%
 %    \begin{macrocode}
 \def\SOUL@docmd#1#2{%
     \ifx9#1%
@@ -1940,6 +2000,7 @@
     \SOUL@@
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -1948,6 +2009,13 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@dofont}
+% Font switching commands which take an argument need special
+% treatment: They need to increment the level counter, so that
+% \cs{\SOUL@eval} knows where to stop scanning. Furthermore the
+% scanner has to be enabled to see the next token after the opening
+% brace.
 %
 %    \begin{macrocode}
 \def\SOUL@dofont#1{%
@@ -1958,6 +2026,7 @@
     \let\SOUL@
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -1966,6 +2035,13 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@addgroup}
+% \begin{macro}{\SOUL@addmath}
+% \begin{macro}{\SOUL@addprotect}
+% \begin{macro}{\SOUL@addtoken}
+% The macro names say it all. Each of these macros adds some
+% token to \cs{\SOUL@word}.
 %
 %    \begin{macrocode}
 \def\SOUL@addgroup#1#2{%
@@ -1976,7 +2052,6 @@
     \edef\x{\SOUL@word={\the\SOUL@word{{\hbox{$#1$}}}}}\x
     \SOUL@scan
 }    
-
 \def\SOUL@addprotect#1#2{%
     \edef\x{\SOUL@word={\the\SOUL@word{{\hbox{#2}}}}}\x
     \SOUL@scan
@@ -1986,6 +2061,10 @@
     \SOUL@scan
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -1994,6 +2073,15 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@cmds}
+% Here is a list of pre-registered commands that the analyzer
+% cannot handle, so the scanner has to look after them. Every
+% entry consists of a handle (\cs{\\}), an identifier and the
+% macroname. The class identifier can be |9| for accents,
+% |0| for commands without arguments and |1| for commands that
+% take one argument. Commands with two or more arguments are
+% not dealt with.
 %
 %    \begin{macrocode}
 \SOUL@cmds={%
@@ -2011,6 +2099,7 @@
     \\0\frakfamily\\0\swabfamily\\0\gothfamily
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2020,6 +2109,14 @@
 %
 %
 %
+% \begin{macro}{\soulfont}
+% \begin{macro}{\soulaccent}
+% Register a font switching command (or even some other command) to the
+% scanner. The first argument is the number of arguments (|0| or |1|),
+% the second is the macro name. Example: |\soulfont{0}{\bold}|.
+% \cs{\soulaccent} has only one argument---the accent macro name.
+% Example: |\soulaccent{\~}|. It is a shortcut for |\soulfont{9}{\~}|.
+%
 %    \begin{macrocode}
 \def\soulfont#1#2{{%
     \edef\x{\global\SOUL@cmds={\the\SOUL@cmds
@@ -2027,6 +2124,8 @@
 }}
 \def\soulaccent#1{\soulfont9{#1}}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -2041,7 +2140,7 @@
 % \begin{macro}{\SOUL@doword}
 % The only way to find out, where a given word can be broken into
 % syllables, is to let \TeX\ actually typeset the word under conditions
-% that force every possible hyphenation. The result is a box with one
+% that enforce every possible hyphenation. The result is a box with one
 % line for every syllable.
 %
 %    \begin{macrocode}
@@ -2111,8 +2210,8 @@
 % are no syllables left, we return from the recursion and pick syllable
 % after syllable from the stack again---this time from top to bottom---and
 % hand the syllable width |\SOUL@syllgoal| over to |\SOUL@dosyllable|.
-% All but the last syllable end with the hyphen character, whose
-% width has to be subtracted.
+% All but the last syllable end with the hyphen character, hence
+% we subtract the hyphen width.
 %
 %    \begin{macrocode}
 \def\SOUL@analyze{{%
@@ -2151,6 +2250,12 @@
 %
 %
 %
+% \begin{macro}{\SOUL@dosyllable}
+% This macro typesets token after token from \cs{\SOUL@word} (fetched
+% by \cs{\SOUL@gettoken}) until \cs{\SOUL@syllwidth} has reached
+% the requested width \cs{\SOUL@syllgoal}. Furthermore the kerning
+% values are prepared in case \cs{\SOUL@everytoken} needs them.
+%
 %    \begin{macrocode}
 \def\SOUL@dosyllable{%
     \SOUL@gettoken
@@ -2188,6 +2293,7 @@
     \SOUL@
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2196,6 +2302,9 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@gettoken}
+% Read a token from the buffer or fetch a new one.
 %
 %    \begin{macrocode}
 \def\SOUL@gettoken{%
@@ -2208,6 +2317,7 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2216,6 +2326,14 @@
 %
 %
 %
+%
+% \begin{macro}{\SOUL@puttoken}
+% The possibility to put tokens back makes the scanner design much
+% cleaner. There's only room for one token, though, so we issue
+% an error message if \cs{\SOUL@puttoken} is told to put a token
+% back while the buffer is still in use. Note the \cs{\SOUL@debug}
+% is actually undefined. This won't hurt as it can only happen
+% during driver design. No user will ever see this message.
 %
 %    \begin{macrocode}
 \def\SOUL@puttoken{%
@@ -2228,6 +2346,7 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %
@@ -2289,7 +2408,6 @@
 %
 %
 %    \begin{macrocode}
-
 \def\SOUL@setkern#1{\ifdim#1=\z@\else\kern#1\fi}
 %    \end{macrocode}
 %
@@ -2880,6 +2998,7 @@
 \def\SOUL@uleveryspace#1{%
     \SOUL@ulcolor{%
         #1%
+        \penalty0
         \SOUL@ulleaders
         \hskip\spaceskip
     }%
