@@ -1485,7 +1485,8 @@
 % |\bye|\\
 % \end{example}
 % 
-% 
+% The \option{capsdefault} package option is mapped to a simple command
+% \cs{\capsdefault}.
 % 
 % 
 %
@@ -3481,7 +3482,7 @@
 %
 %    \begin{macrocode}
 \else
-\DeclareRobustCommand\capsreset{%
+\DeclareRobustCommand*\capsreset{%
     \let\SOUL@capsbase\empty
     \SOUL@capsdefault
 }
