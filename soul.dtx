@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1896} ^^A very tempting to add four meaningless \relax somewhere ... ;-)
+% \CheckSum{1917}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1470,7 +1470,6 @@
 % None of the commands are made `robust', so they have to be
 % explicitly protected in fragile environments like in \cs{\write}
 % statements.
-% 
 % To make use of colored underlines or highlighting you have to
 % use the \package{color} package wrapper from \caps{CTAN}^^A
 % \footnote{\texttt{CTAN:/macros/plain/graphics/\char`\{miniltx.tex,color.tex\char`\}}},
@@ -2019,9 +2018,7 @@
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
 % suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach,}
 % who sent me a couple of bug reports and feature requests, and finally encouraged
-% me to (almost) completely rewrite \soul. Thanks to \person{Axel Reichert,}\show\urks
-% \person{Anshuman Pandey,} \person{Peter Kreynin,} and \person{Thorsten Mangold}
-% for bringing nasty bugs to my attention that had crept into \soul\ 2.1.
+% me to (almost) completely rewrite \soul. 
 % \person{Rowland McDonnel} gave useful hints for how to improve the documentation,
 % but I'm afraid he will still not be satisfied, and rightfully so. If only documentation
 % writing weren't that boring.\qquad\texttt{;-)}
@@ -2485,6 +2482,9 @@
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
 % to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
 % which will be fed to the analyzer every time a word is completed.
+% The mysterious second and third \cs{\if} branch checks for
+% formerly robust commands that lost their robust-ness due to
+% expansion as in |{\let\protect\noexpand| |\xdef\x{\foo}}||\so\x|.
 %
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%
@@ -2492,7 +2492,17 @@
     \def\\##1##2{%
         \ifx#1##2%
             \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
-        \fi
+        \else\ifx\@undefined##2%
+        \else
+            \def\SOUL@n{#1}%
+            \bgroup
+                \let\protect\noexpand
+                \xdef\SOUL@x{##2}%
+            \egroup
+            \ifx\SOUL@n\SOUL@x
+                \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
+            \fi
+        \fi\fi
     }%
     \the\SOUL@cmds
     \SOUL@@    
@@ -3133,7 +3143,7 @@
     \ifx\egroup\SOUL@@
         \unkern
         \egroup
-        \def\SOUL@n*{\afterassignment\SOUL@socheck\let\SOUL@@=}%
+        \def\SOUL@n*{\afterassignment\SOUL@socheck\let\SOUL@n=}%
     \else\ifx\SOUL@spc\SOUL@@
         \def\SOUL@n* {\hskip\skip@}%
     \else\ifx~\SOUL@@
@@ -3242,7 +3252,7 @@
 % \cs{\SOUL@soeventuallyskip} equals \cs{\SOUL@sosetletterskip},
 % except when a \cs{\<} had been detected. This is necessary because
 % \cs{\SOUL@soeveryexhyphen} wouldn't know otherwise, that it
-% follows a \cs{\<}.
+% follows a~\cs{\<}.
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryexhyphen#1{%
