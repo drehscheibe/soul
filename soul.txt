@@ -1,18 +1,22 @@
 soul.sty
 ========
 
-provides hyphenateable spacing out (letterspacing), underlining, 
-and some derivatives. All features are based upon a common mechanism 
-that allows to typeset text syllable by syllable, where TeX's excellent
-hyphenation algorithm is used to find the proper hyphenation points.
+This article describes the `soul' package, which
+provides hyphenateable letterspacing (spacing out),
+underlining, and some derivatives.
+All features are based upon a common mechanism 
+that allows to typeset text syllable by syllable,
+where the excellent TeX hyphenation algorithm is
+used to find the proper hyphenation points.
 Two examples show how to use the provided interface to
 implement things such as `an-a-lyz-ing syl-la-bles'.
-Although the package is optimized for LaTeX2e, it works with 
-Plain TeX and with other packages, too.
+Although the package is optimized for LaTeX2e,
+it works with Plain TeX and with other
+packages, too.
 
 author          = "Melchior FRANZ"
-version         = "1.3"
-date            = "15 May 1999"
+version         = "2.0"
+date            = "3 January 2002"
 address         = "Melchior FRANZ
                    Rieder Hauptstrasse 52
                    A-5212 SCHNEEGATTERN
@@ -21,7 +25,8 @@ telephone       = "++43 7746 3109"
 URL             = "http://www.unet.univie.ac.at/~a8603365/"
 email           = "a8603365@unet.univie.ac.at"
 codetable       = "ISO/ASCII"
-keywords        = "spacing out, letterspacing, underlining, striking out"
+keywords        = "spacing out, letterspacing, underlining, striking out,
+                   highlighting"
 supported       = "yes"
 
 
@@ -37,16 +42,17 @@ in the file macros/latex/base/lppl.txt on any CTAN archive server.
 Extracting the package & processing the documentation
 =====================================================
 
- (1)  run `soul.dtx' through LaTeX to get `soul.ins',
-      (if you don't already have it)
+on Unix/Linux just run "make" to get the style file and the documentation;
+else generate the driver soul.ins (if you don't already have it):
 
- (2)  run `soul.ins' through (La)TeX to get
-      the package `soul.sty'
+    $ latex soul.dtx
 
-      [or use `docstrip', and extract `soul.sty' from `soul.dtx'
-       using option `package']
+You'll probably get an error message that you may ignore. Now generate
+the style file:
 
- (3)  now run `soul.dtx' three times through LaTeX
-      to get the documentation file `soul.dvi'
+    $ tex soul.ins
 
+And finally to produce the documentation run LaTeX three times:
 
+    $ latex soul.dtx
+    
