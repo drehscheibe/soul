@@ -420,9 +420,9 @@
 % and some derivatives such as \st{overstriking} and \hl{highlighting}.
 % Although the package is optimized for \LaTeXe, it also works with
 % Plain \TeX\ and with other flavors of \TeX\ like, for instance, \ConTeXt.
-% By the way, the package name |soul|
-% is only a combination of the two macro names \cs{\so} (\emph{space out})
-% and \cs{\ul} (\emph{underline})---nothing poetic at all.^^A  :-( 
+% By the way, the package name |soul| was originally only a combination
+% of the two macro names \cs{\so} (\emph{space out}) and \cs{\ul}
+% (\emph{underline})---nothing poetic at all.^^A  :-( 
 % \end{abstract}
 %
 %
@@ -449,7 +449,7 @@
 % \subsection*{Theory \dots}
 % \label{sec:theory}
 % 
-% To understand the expert's arguments we have to know about the 
+% To understand the experts' arguments we have to know about the 
 % conception of \emph{page greyness.} The sum of all characters on 
 % a page represents a certain amount of greyness, provided that
 % the letters are printed black onto white paper.
@@ -465,7 +465,7 @@
 % Other, less restrictive typographers \cite{Willberg} call this kind of emphasizing
 % `integrated' or `aesthetic', while they describe `active' emphasizing apart from it,
 % which actually \emph{has} to catch the reader's eye. To the latter group belong commonly
-% despised things like letterspacing, demibold face type and even underlined and colored text!
+% despised things like letterspacing, demibold face type and even underlined and colored text.
 %
 % On the other hand, \person{Tschichold} suggests
 % to space out caps and caps-and-small-caps fonts on title pages, headings and running headers from
@@ -490,7 +490,7 @@
 % \emph{Punctuation marks are spaced out like letters, except quotation marks and periods.
 % Numbers are never spaced out. The German syllable \mbox{\emph{-sche}} is not spaced
 % out in cases like \emph{``der {\so{Virchow{sche}}} Versuch''}\footnote{the \person{Virchow} experiment}. 
-% In the old German \emph{Fraktur} fonts the ligatures \emph{|ch|, |ck|, |sz|~(\ss),} and~\emph{|tz|} are
+% In the old German \emph{Fraktur} fonts the ligatures \emph{|ch|, |ck|, |sz|~(\ss)} and~\emph{|tz|} are
 % not broken within spaced out text.}
 %
 % While some books follow all these rules \cite{Muszynski}, others don't
@@ -560,14 +560,13 @@
 %
 %
 %
-% \bigskip ^^A why is this needed? bug in \LaTeX?
 % \subsection[Some things work]{Some things work \dots}
 %
-% The following examples may look redundant, because they describe
-% nothing else than common \LaTeX\ notation, but this is only the half story:
-% The \package{soul} package has to pre-process the argument before it
-% can split it into characters and syllables, and all described
-% constructs are only allowed because the package actively provides them.
+% The following examples may look boring and redundant, because they describe
+% nothing else than common \LaTeX\ notation with a few exceptions, but this is
+% only the half story: The \package{soul} package has to pre-process the argument
+% before it can split it into characters and syllables, and all described
+% constructs are only allowed because the package explicitly provides them.
 %
 % \begin{verblist}{1}
 % \item[Quotes: \so{``quotes''}]
@@ -589,33 +588,35 @@
 % \item[Newlines: \so{new\\line}]
 %   The |\\|~command fills the current line with white space
 %   and starts a new line. Unlike the original \LaTeX\ command
-%   \package{soul}'s version does not handle an optional parameter
+%   \package{soul}'s version does not handle optional parameters
 %   like in |\\[1ex]|.
+% \item[Breaking lines: \so{foo\linebreak bar}]
+%   The |\linebreak| command also breaks the line without
+%   filling it with white space at the end. \package{soul}'s version
+%   does not handle optional parameters like in |\linebreak[1]|.
+%   |\break| can be used as a synonym.
 % \item[Unbreakable spaces: \so{don't~break}]
 %   The |~|~command sets an unbreakable space.
-% \item[Breaking lines: \so{a\linebreak b}]
-%   The |\linebreak| command also breaks the line without
-%   filling it with white space at the end. |\break| can be
-%   used as a synonym.
 % \item[Grouping: \so{Virchow{sche}}]
 %   A pair of braces can be used to let a group of characters
 %   be seen as one item, so that \package{soul} does
-%   for instance not space it out. The character must, however,
-%   not contain a possible hyphenation point! (See~\ref{par:Protecting})
-% \item[Protecting: \so{a \mbox{little} b}]
+%   for instance not space it out. The contents must, however,
+%   not contain potential hyphenation points. (See~\ref{par:Protecting})
+% \item[Protecting: \so{foo \mbox{little} bar}]
 %   An |\mbox| does also keep \package{soul} from
-%   breaking up the contents, but it may even contain
-%   hyphenation points. |\hbox| can be used as a synonym.
+%   breaking up the contents, but they may even contain
+%   breakable material. |\hbox| can be used as a synonym.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
-%   All standard \LaTeX\ font switching commands are allowed, as
+%   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
 %   well as the \package{yfonts} package font commands like \cs{\textfrak} etc.\
 %   Further commands have to be registered using the \cs{\soulfont}
-%   command (see section \ref{sec:soulfont}).
-% \item[Breaking up ligatures: \ul{f{}inally}]
-%   Break up ligatures like `fi' in |\ul|, |\st| and |\hl|.
-%   |\so| and |\caps| break up every unprotected (ungrouped/unboxed)
-%   ligature, anyway, and would just add undesirable extra space around
-%   braces.
+%   command (see section~\ref{sec:soulfont}).
+% \item[Breaking up ligatures: \ul{Auf{}lage}]
+%   Use |{}| or \cs{\null} to break up ligatures like `fl' in |\ul|, |\st| and |\hl|
+%   arguments.
+%   This won't work conveniently for |\so| and |\caps|, because they break up
+%   every unprotected (ungrouped\slash unboxed) ligature, anyway, and would
+%   then just add undesirable extra space around the additional item.
 % \end{verblist}
 %
 %
@@ -624,9 +625,9 @@
 % \subsection{\dots\ others don't}
 %
 % Although the new \package{soul} is much more robust and forgiving than
-% versions prior to 2.0 were, there are
+% versions prior to~2.0, there are
 % still some things that are not allowed in \package{soul} arguments.
-% This is due its quite complex engine, which has to read and inspect every
+% This is due to the complex engine, which has to read and inspect every
 % character before it can hand it over to \TeX's paragraph builder.
 %
 % \begin{verblist}{20}
@@ -634,17 +635,17 @@
 %   Grouped characters must not contain hyphenation points. Instead of
 %   |\so{foo {little}}| write |\so{foo \mbox{little}}|. You get a
 %   \texttt{`Reconstruction failed'} error and a black square like
-%   \errsquare\ in the document where you violated this rule.
+%   \errsquare\ in the \caps{DVI} file where you violated this rule.
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
-%   The input text must not contain discretionary hyphens. Thus you have to
+%   The argument must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
 % \item[Material without cmtt10 representation: \so{foo \TeX\ bar}]
-%   Every token that can't be typeset with just one character in
+%   Every token that can't be typeset with just one character of
 %   the |cmtt10| font leads to a reconstruction error. This can be
 %   avoided by grouping the token, e.\,g.~|\so{foo {\TeX} bar}|, or registering
 %   it as font, e.\,g.~|\soulfont{\TeX}{0}| |\so{foo \TeX\ bar}|. It doesn't matter
-%   that it isn't really a font at all. |\TeX| is actually a bad example.
-%   because it \emph{is} already pre-registered as font.
+%   if it isn't really a font at all. |\TeX| is actually a bad example,
+%   because it \emph{is} already pre-registered as font switching command.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
 %   \package{soul} commands must not be nested. If you really
 %   need such, put the inner stuff in a box and use this box.\\
@@ -660,16 +661,16 @@
 %   |\if|, |\else|, |\fi|, |\ifcase|, etc.
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
 %   They also must not contain \LaTeX\ environments, command definitions,
-%   and tricky stuff like |\vadjust|. As long as you are writing simple, `horizontal'
-%   material, you are on the safe side.
+%   and fancy stuff like |\vadjust|. As long as you are writing simple,
+%   ordinary `horizontal' material, you are on the safe side.
 % \end{verblist}
 %
 % \noindent
 % Note that with the exception of \ref{par:Grouping hyphenateable material}
 % you may get error messages that do not indicate that you violated one of the
-% above rules, but rather show some low-level problems that \TeX\ has detected.
+% above rules. Instead they may show some low-level problems that \TeX\ has detected.
 % \texttt{`Incomplete }\cs{\ifcat}\texttt{'} in a line with a \package{soul}
-% command is such a message.
+% command is such a non-obvious message.
 %
 %
 %
@@ -679,13 +680,12 @@
 %
 % \begin{table}
 % \begin{center}
-% {\catcode`\|=12
+% \catcode`\|=12
 % \newcommand*\pref[1]{{\footnotesize\pageref{cmd:#1}}}
 % \newcommand*\Ast{\rlap{$^\ast$}}
 % \let\m\cs
 % \let\ti\textit
 % \begin{tabular}{r@{\hspace{.6em}}c@{\hspace{.6em}}l}
-% ^^A\hline\\[-1ex]
 % &\hbox to0pt{\hss\footnotesize page\hss}&\\[.5ex]
 % \verb+\so{letterspacing}+&                \pref{so}           &\so{letterspacing}\\
 % \verb+\caps{CAPITALS, Small Capitals}+&   \pref{caps}         &\caps{CAPITALS, Small Capitals}\\
@@ -694,14 +694,14 @@
 % \verb+\hl{highlighting}+&                 \pref{hl}           &\hl{highlighting}\\
 % \\
 % \verb+\soulaccent{\cs}+&                  \pref{soulaccent}   &\ti{add accent} \cs{\cs} \ti{to accent list}\\
-% \verb+\soulfont{\cs}+&                    \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
-% \verb+\sloppyword{text}+&                 \pref{sloppyword}   &\ti{typset} \m{text} \ti{with stretchable spaces}\\
+% \verb+\soulfont{\cs}{0}+&                 \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
+% \verb+\sloppyword{text}+&                 \pref{sloppyword}   &\ti{typeset} \m{text} \ti{with stretchable spaces}\\
 % \\
 % \verb+\sodef\cs{1em}{2em}{3em}+&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
 % \verb+\resetso+&                          \pref{resetso}      &\ti{reset} \m{\so} \ti{dimensions}\\
-% \verb+\capsreset+\Ast&                    \pref{capsreset}    &\ti{clear caps data set}\\
 % \verb+\capsdef{////}{1em}{2em}{3em}+\Ast& \pref{capsdef}      &\ti{define (default)} \m{\caps} \ti{data entry}\\
-% \verb+\capssave\cs+\Ast&                  \pref{capssave}     &\ti{save} \m{\caps} \ti{data set under name} \rlap{\texttt{\string\cs}}\\
+% \verb+\capssave\cs+\Ast&                  \pref{capssave}     &\ti{save} \m{\caps} \ti{database under name} \rlap{\texttt{\string\cs}}\\
+% \verb+\capsreset+\Ast&                    \pref{capsreset}    &\ti{clear caps database}\\
 % \verb+\setul{1ex}{2ex}+&                  \pref{setul}        &\ti{set} \m{\ul} \ti{dimensions}\\
 % \verb+\resetul+&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
 % \verb+\setuldepth{y}+&                    \pref{setuldepth}   &\ti{set underline depth to depth of} \m{y}\\
@@ -709,11 +709,12 @@
 % \verb+\setulcolor{y}+\Ast&                \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
 % \verb+\setstcolor{y}+\Ast&                \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
 % \verb+\sethlcolor{y}+\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\^^A[1.5ex]\hline
-% \end{tabular}}
+% \end{tabular}
 % \caption{List of all available commands. The number points to the
-%          page where the command is described. Those that are marked
+%          page where the command is described. Those marked
 %          with a little asterisk are only available when the package
-%          is used together with \LaTeX.}
+%          is used together with \LaTeX, because they rely on the
+%          \emph{New Font Selection Scheme (NFSS)} used in \LaTeX.}
 % \label{tab:survey}
 % \end{center}
 % \end{table}
@@ -732,7 +733,7 @@
 % \section{\so{Letterspacing}}
 % 
 % \subsection{How it works}
-% \label{sec:somacros}
+% \label{sec:so}
 %
 % The base macro for letterspacing is called \describemacro{\so}.
 % It typesets the given argument with \syn{inter-letter space}
@@ -908,21 +909,21 @@
 % ($5\,\mbox{pt}\le size<15\,\mbox{pt}$).
 % The second argument may contain font switching commands such as \cs{\scshape}, 
 % it may as well be empty or contain debugging commands (e.\,g.~|\message{*}|).
-% The remaining three, non-optional arguments are the spaces as described above.
+% The remaining three, mandatory arguments are the spaces as described in
+% section~\ref{sec:so}.
 %
 % \begin{example}
 % |\capsdef{T1/ppl/m/n/5-15}{\scshape}{.16em}{.4em}{.2em}|
 % \end{example}
 %
 % The \cs{\caps} command goes through the data list from top to bottom
-% and takes the first matching set, so the order of definition is essential.
-% The last added entry is examined at first, while the pre-defined default entry
+% and picks up the first matching set, so the order of definition is essential.
+% The last added entry is examined first, while the pre-defined default entry
 % will be examined last and match any font, if no entry was taken before.
 %
-% To override the default values, just define a new default entry that
-% matches any font. This is done by using the identifier |{////}|.
-% This entry should be defined first, because no entry after it
-% can be reached.
+% To override the default values, just define a new default entry using
+% the identifier |{////}|. This entry should be defined first, because no
+% entry after it can be reached.
 %
 % The \cs{\caps} database can be cleared with the \describemacro{\capsreset}
 % command. It will only contain the default entry thereafter. The
@@ -1405,32 +1406,32 @@
 %
 % Narrow columns are best set |flushleft|, because not even the best
 % hyphenation algorithm can guarantee acceptable line breaks without
-% overly streched spaces.
+% overly stretched spaces.
 % However, in some rare cases one may be \emph{forced} to typeset
 % block aligned. When typesetting in languages like German, where
 % there are really long words, the \describemacro{\sloppyword} macro
 % might help a little bit. It adds enough stretchability between the
 % single characters to make the hyphenation algorithm happy, but 
 % is still not as ugly as the example in section~\ref{sec:dirtytricks}
-% demonstrates. In the following example the right column is typeset
+% demonstrates. In the following example the left column was typeset
 % as ``|Die \sloppyword{Donau...novelle} wird ...|'':   
 %
 % \begin{center}
 % \def\word{Do\-nau\-dampf\-schiff\-fahrts\-ge\-sell\-schafts\-^^A
 %   ka\-pi\-t\"ans\-wit\-wen\-pen\-si\-ons\-ge\-setz\-no\-vel\-le}
-% \batchmode
-% \begin{minipage}{1.5in}
-% \plainsetup
-% Die \word\ wird mit sofortiger Wirkung au\ss er Kraft gesetzt.
-% \end{minipage}
-% \errorstopmode
-% \hspace{2em}
 % \begin{minipage}{1.5in}
 % \plainsetup
 % Die 
 % \expandafter\sloppyword\expandafter{\word}
 % wird mit sofortiger Wirkung au\ss er Kraft gesetzt.
 % \end{minipage}
+% \hspace{1em}
+% \batchmode
+% \begin{minipage}{1.5in}
+% \plainsetup
+% Die \word\ wird mit sofortiger Wirkung au\ss er Kraft gesetzt.
+% \end{minipage}
+% \errorstopmode
 % \end{center}
 % 
 %
@@ -1442,7 +1443,7 @@
 % \subsection{Using \package{soul} commands in section headings}
 %
 % Letterspacing was often used for section titles in the past,
-% mostly centered and with a closing dot. The following example
+% mostly centered and with a closing period. The following example
 % shows how to achieve such using the \package{titlesec}
 % package \cite{titlesec}.
 % 
@@ -1522,7 +1523,7 @@
 % \noindent
 % The \cs{\periodafter} macro takes one argument which isn't needed
 % in this example and thus fed with \cs{\relax}. We could
-% have written |{\periodafter\so}|, though, to add a dot that would get spaced
+% have written |{\periodafter\so}|, though, to add a period that would get spaced
 % out with the section title, but wouldn't appear in the table of contents. 
 %
 % \indent
@@ -3144,8 +3145,7 @@
 % \begin{macro}{\capsreset}
 % \dots\ else, if run under \LaTeX\ prepare a set of macros that
 % maintain a database with certain letterspacing values for different
-% fonts. \cs{\capsreset} clears the database and puts a default rule
-% in.
+% fonts. \cs{\capsreset} clears the database and inserts a default rule.
 %
 %    \begin{macrocode}
 \else
@@ -3165,6 +3165,9 @@
 %
 %
 % \begin{macro}{\capsdef}
+% Add an entry to the database, which is of course nothing else than
+% a \TeX\ macro. See section ``List macros'' of appendix~D in the
+% \TeX{}book~\cite{DEK} for details.
 %
 %    \begin{macrocode}
 \def\capsdef#1#2#3#4#5{{%
@@ -3184,6 +3187,9 @@
 %
 %
 % \begin{macro}{\capssave}
+% Save the current database in a macro within the |SOUL@| namespace
+% and let the given argument be a `robust' command that restores this
+% database.
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\capssave[1]{%
@@ -3206,6 +3212,10 @@
 %
 % \begin{macro}{\SOUL@capsfind}
 % \begin{macro}{\SOUL@caps}
+% Go through the database entries and pick the first entry that matches
+% the currently active font. Then define an internal macro that uses
+% the respective spacing values in a macro that is equivalent to the
+% the \cs{\textso} command.
 %
 %    \begin{macrocode}
 \def\SOUL@capsfind#1/#2/#3/#4/#5/#6/#7/#8/#9/{%
@@ -3237,6 +3247,8 @@
 %
 %
 % \begin{macro}{\SOUL@chk}
+% Sets the \cs{\SOUL@match} flag if both parameters are equal.
+% This is used for all \caps{NFSS} elements except the font size.
 %
 %    \begin{macrocode}
 \def\SOUL@chk#1#2{%
@@ -3259,6 +3271,13 @@
 %
 % \begin{macro}{\SOUL@dimchk}
 % \begin{macro}{\SOUL@rangechk}
+% We do not only want to check if a given font size |#1| matches |#2|,
+% but also if it fits into a given range. An omitted lower boundary
+% is replaced by \cs{\z@} and an omitted upper boundary by \cs{\maxdimen}.
+% The first of a series of \cs{\SOUL@chk} and \cs{\SOUL@dimchk}
+% statements, which detects that the arguments don't match, sets the
+% \cs{\SOUL@match} flag to zero. A value of~1 indicates that an
+% entry in the font database matches the currently used font.
 %
 %    \begin{macrocode}
 \def\SOUL@dimchk#1#2{\if$#1$\else\SOUL@rangechk{#2}#1--\@ne\@@\fi}
@@ -3286,6 +3305,8 @@
 %
 %
 % \begin{macro}{\textcaps}
+% Find a matching entry in the database and start the letterspacing
+% mechanism with the given spacing values.
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textcaps{{%
@@ -3305,6 +3326,7 @@
 %
 %
 % \begin{macro}{\SOUL@capsdefault}
+% Define a default database entry and a default font.
 %
 %    \begin{macrocode}
 \def\SOUL@capsdefault{%
@@ -3331,6 +3353,7 @@
 % \subsection{The \ul{underlining} driver}
 %
 % \begin{macro}{\SOUL@ulleaders}
+% 
 %
 %    \begin{macrocode}
 \newdimen\SOUL@uldp
