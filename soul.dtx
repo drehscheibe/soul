@@ -130,7 +130,7 @@
 %
 %
 %
-% \CheckSum{1843}
+% \CheckSum{1860}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -157,9 +157,8 @@
 %
 %^^A=====================================================
 %
-%^^A  These slightly complicated macros allow to typeset the `example' sections
-%^^A  conveniently. You'd better ignore them, since they are quite messy and
-%^^A  of bad style.    :-)
+%^^A  These messy macros allow to typeset the `example' sections
+%^^A  conveniently. You'd better ignore them.    :-)
 %
 % \makeatletter
 %
@@ -2877,11 +2876,17 @@
 \def\SOUL@soeverytoken{%
     \edef\x{\the\SOUL@token}%
     \ifx\x\SOUL@lowerthanM
-        \unskip
     \else    
+        \global\let\SOUL@soeventuallyskip\SOUL@sosetletterskip
         \the\SOUL@token
-        \SOUL@setkern\SOUL@charkern
-        \SOUL@sosetletterskip
+        \SOUL@gettoken
+        \edef\x{\the\SOUL@token}%
+        \ifx\x\SOUL@stopM
+        \else
+            \SOUL@setkern\SOUL@charkern
+            \SOUL@sosetletterskip
+            \SOUL@puttoken
+        \fi
     \fi    
 }
 %    \end{macrocode}
@@ -2905,13 +2910,7 @@
 % use |\unkern\unskip|
 %
 %    \begin{macrocode}
-\def\SOUL@soeveryspace#1{%
-    \unskip
-    \unpenalty
-    #1%
-    \space
-    \kern\z@
-}
+\def\SOUL@soeveryspace#1{#1\space\kern\z@}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2956,6 +2955,7 @@
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryexhyphen#1{%
+    \SOUL@soeventuallyskip
     #1%
     \penalty\exhyphenpenalty
     \SOUL@sosetletterskip
@@ -2980,6 +2980,7 @@
 \def\SOUL@soeverylowerthan{%
     \unskip
     \unpenalty
+    \global\let\SOUL@soeventuallyskip\relax
     \SOUL@setkern\SOUL@charkern
 }
 %    \end{macrocode}
