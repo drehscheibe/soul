@@ -1,0 +1,12 @@
+2.4:
+
+ - \inputenc{latin9}\uppercase{\so{Êﬂ}}
+
+ - However, if I introduce a spacing macro immediately
+   after the \hfill\caps{}, \medskip for example, extra
+   spacing is inserted after the small caps text, eg.
+
+   \hfill\caps{some text}
+   \medskip
+
+   (Anshuman PANDEY)
