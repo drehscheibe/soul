@@ -178,7 +178,7 @@
 %
 % \def\soultttest#1{\hbox{\vtop{\hsize.4\hsize\hbadness\@M
 %   \leavevmode\llap{\squarebull\hspace{.4em}}#1}}%
-%   \egroup$\hspace{1.5em}\parbox[t]{1cm}{\hyphenpenalty-\@M
+%   \egroup$\hspace{1.5em}\parbox[t]{1mm}{\hyphenpenalty-\@M
 %   \exhyphenpenalty-\@M\hbadness\@M\hfuzz\maxdimen
 %   \strut\llap{\squarebull\hspace{.4em}}#1}%
 %   \goodbreak\vspace{2ex}
@@ -262,7 +262,6 @@
 %   {\par\medskip\indent\begin{tabular}{p{#1}l}}
 %   {\end{tabular}\noindentafter\medbreak}
 %
-% ^^A\newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}    
 % \newcommand*\noindentafter{^^A
 %   \global\everypar{{\setbox\z@\lastbox}\everypar{}}}
 %
@@ -337,8 +336,8 @@
 %   \bgroup
 %   \let\do\@makeother
 %   \dospecials
-%   \catcode`{=1
-%   \catcode`}=2
+%   \catcode`\{=1
+%   \catcode`\}=2
 %   \def\{{\char"7B}^^A
 %   \def\}{\char"7D}^^A
 %   \SOUL@@@code
@@ -585,6 +584,11 @@
 %   An |\mbox| does also keep \package{soul} from
 %   breaking up the contents, but it may even contain
 %   hyphenation points. |\hbox| can be used as a synonym.
+% \item[Font switching commands: \so{foo \texttt{bar}}]
+%   All standard \LaTeX\ font switching commands are allowed, as
+%   well as the \package{yfonts} package commands \cs{\textfrak} etc.\
+%   Further commands have to be registered using the \cs{\soulfont}
+%   command (see section \ref{sec:soulfont}).
 % \item[Breaking up ligatures: \ul{f{}inally}]
 %   Break up ligatures like `fi' in |\ul|, |\st| and |\hl|.
 %   |\so| and |\caps| break up every unprotected (ungrouped/unboxed)
@@ -935,10 +939,11 @@
 % The old German fonts^^A
 %^^A%%
 %   \footnote{See the great old German fonts, which \caps{Yannis Haralambous} 
-%   kindly provided, and the |oldgerm| and |yfonts| package as their \LaTeX\ interfaces.}
+%   kindly provided, and the \package{oldgerm} and \package{yfonts} package
+%   as their \LaTeX\ interfaces.}
 %^^A%%
 % deserve some additional considerations. As stated above,
-% the ligatures |ch|, |ck|, |sz|~(\ss), and~|tz| have to remain unbroken in spaced out
+% the ligatures |ch|, |ck|, |sz|~(\cs{\ss}), and~|tz| have to remain unbroken in spaced out
 % \emph{Fraktur} text.  This may look strange at first glance, but you'll get used to it:
 % 
 % \begin{example}
@@ -950,9 +955,9 @@
 % grouping, especially the |sz| may cause an error, if hyphenation happens to occur between
 % the letters |s| and~|z|. (\TeX\ hyphenates the German word |auszer| wrongly like
 % |aus-zer| instead of like |au-szer|, because the German hyphenation patterns
-% do, for good reason, not see |sz| as `\ss'.) In such cases you can protect tokens with the 
-% weird sequence e.\,g.~|{\mbox{sz}}| or a properly defined command. The |\ss| command,
-% which is defined by the |yfonts| package, and similar commands will suffice as well.
+% do, for good reason, not see |sz| as `\cs{\ss}'.) In such cases you can protect tokens with the 
+% sequence e.\,g.~|\mbox{sz}| or a properly defined command. The \cs{\ss} command,
+% which is defined by the \package{yfonts} package, and similar commands will suffice as well.
 % 
 % 
 %
@@ -998,9 +1003,10 @@
 %
 % \section{\ul{Underlining}}
 %
-% The underlining macros are my answer to Prof.~\person{Knuth}'s exercise 18.26 from his 
+% The underlining macros are my answer to Prof.~\person{Knuth{\normalfont's}} exercise 18.26 from his 
 % \TeX{}book.~\texttt{:-)} All said about the macro \describemacro{\ul} is also true of the
-% striking out macro \describemacro{\st}, which is in fact derived from the former. 
+% striking out macro \describemacro{\st} and the highlighting macro \describemacro{\hl},
+% both of which are in fact derived from the former.
 %
 % \subsection{Settings}
 % The predefined \textit{underline depth} and \textit{thickness}
@@ -1025,7 +1031,9 @@
 % equals 11---are taken:
 %
 % \begin{example}
-% |\setuldepth{ygp}|, |\setuldepth\strut|,
+% |\setuldepth{ygp}|\\
+% |\setuldepth\strut|\\
+% |\setuldepth{}|\\
 % \end{example}
 %
 % \describemacro{\setulcolor}
@@ -1077,21 +1085,6 @@
 %   |\ul{just an \mbox{example}}|
 %   {\ul{just an \mbox{example}}}
 %  
-% \soultest{Punctuation marks are spaced out, if they are   ^^A ????? remove that after fixing the bug
-%   put into the group}
-%   |\ul{inside.} \& \ul{outside}.|
-%   {\ul{inside.} \& \ul{outside}.}
-% 
-% \soultest{Spaceout skips may be removed by typing \texttt{\string\<}.
-% It's, however, desirable to put the quotation marks out of
-% the argument}
-%   |\ul{``\<Pennsylvania\<''}|
-%   {\ul{``\<Pennsylvania\<''}}
-% 
-% \soultest{Numbers should never be spaced out}             ^^A ????? remove that after fixing the bug
-%   |\ul{1\<3 December {1995}}|
-%   {\ul{1\<3 December {1995}}}
-%
 % \soultest{Explicit hyphens like |-|, |--| and |---| are recognized.
 %   \texttt{\string\slash} outputs a slash with the possibility to break the line
 %   afterwards}
@@ -1168,6 +1161,23 @@
 % command can be found, and a \emph{plain} \TeX\ mode, which is selected otherwise. These
 % modes differ in some points:
 %
+%
+%
+%
+%
+% In \emph{plain} \TeX\ mode the \cs{\caps} command is
+% simply defined with \cs{\sodef}. It executes a command \cs{\capsfont} that 
+% is ignored by default and may be used to select a particular font.
+%
+%
+%
+%
+%
+%
+% \begin{example}
+% |\font\capsfont=cmcsc10|\\
+% |\caps{Tschichold}|\\
+% \end{example}
 %
 % \subsubsection{\LaTeXe\ mode}
 %
@@ -1248,6 +1258,7 @@
 % required configuration files, too! That's how such a file
 % could look like:                                                                                                           
 %
+% \indent
 % \begin{example}
 % |% define macros for logical markup|\\
 % |\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}|\\
@@ -1259,8 +1270,10 @@
 % |}|\\
 % \end{example}
 %
-% \begin{example}[.95\textwidth]
-% |% load the color package and set a different highlighting color|\\
+% \indent
+% \begin{example}
+% |% load the color package and set|\\
+% |a different highlighting color|\\
 % |\RequirePackage{color}|\\
 % |\definecolor{lightblue}{rgb}{.90,.95,1}|\\
 % |\sethlcolor{lightblue}|\\
@@ -1273,15 +1286,6 @@
 %
 %
 %
-% \section{\TeX\ mode}
-%
-% In \emph{plain} \TeX\ mode the \cs{\caps} command is
-% simply defined with \cs{\sodef}. It executes a command \cs{\capsfont} that 
-% is ignored by default and may be used to select a particular font.
-%
-% \begin{example}
-% |\font\capsfont=cmcsc10 \caps{Tschichold}|
-% \end{example}
 %
 %
 %
@@ -1293,10 +1297,10 @@
 % \section{How the package works}
 %
 % \subsection{The kernel}
-% \so{Letterspacing,} \ul{underlining}, and \st{striking out} use the same kernel
-% mechanism. It typesets the given material in a 1\,sp wide |\vbox| which
-% provides that every possible hyphenation point leads to a new line whithin
-% this box. After the number of all lines (i.\,e.~syllables) is counted, and 
+% \so{Letterspacing,} \ul{underlining}, \st{striking out} and \hl{highlighting}
+% use the same kernel mechanism. It splits the given argument into words and
+% typesets each in a 1\,sp wide |\vbox|, so that \TeX\ is encouraged to
+% break lines at every possible hyphenation point. After the number of all lines (i.\,e.~syllables) is counted, and 
 % the respective lengths are stored (pass one: \emph{analyzing}), the tokens are 
 % scanned again, and their length is added to a register. Always if the length of the 
 % next stored syllable is obtained (pass two: \emph{reconstruction}), the 
@@ -1491,13 +1495,16 @@
 %
 %
 %
-% \section{Acknowledgement}
+% \section{Acknowledgements}
 %
-% I'd like to thank \person{Stefan Ulrich} for teaching me much about high quality
-% typesetting, sending me dozens of error reports, and, finally, providing the
-% `example.cfg' configuration file. Without his help the package would only be half 
-% as good. And, no, he had nothing to do with \so{minuscules letterspacing,}
-% \ul{underlining}, and such \dots
+% A big thank you goes to \person{Stefan Ulrich} for his tips and bug reports
+% during the development of versions 1.* and for his lessons on high quality
+% typesetting. The \cs{\caps} mechanism was very much influenced by his
+% suggestions. Thanks to \person{Alexander Shibakov}, who sent me a couple
+% of bug reports and finally encouraged me to (almost) completely rewrite
+% \package{soul}. His `nitpicking' made \package{soul} much less worse than
+% it would have become otherwise. And finally thank you to \person{Frank Mittelbach},
+% for never being satisfied with a particular development version.
 %
 %
 %
@@ -1505,7 +1512,7 @@
 %
 % \begin{thebibliography}{0}
 % \hbadness3000
-% \bibitem{color}{\person{Carlisle, D. P.}. The color package. CTAN-Archive, 1997, v1.0d.}
+% \bibitem{color}{\person{Carlisle, D. P.} \textit{The color package.} CTAN-Archive, 1997, v1.0d.}
 %    
 % \bibitem{Duden}{Duden, Volume 1. \textit{Die Rechtschreibung.} Bibliographisches Institut, 
 %   Mannheim--Wien--Z\"urich, 1986, 19th~edition.}
@@ -1523,7 +1530,8 @@
 %   \textit{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{titlesec}{\person{Bezos, Javier}. The titlesec and titletoc package. CTAN-Archive, 1999, v2.1.}
+% \bibitem{titlesec}{\person{Bezos, Javier}. \textit{The titlesec and titletoc package.}
+%   CTAN-Archive, 1999, v2.1.}
 %    
 % \bibitem{Tschichold}{\person{Tschichold, Jan}. \textit{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
@@ -1544,10 +1552,13 @@
 %
 %
 %
-%^^A--------------------------------------------------------------------
 %^^A max 72 columns
+%^^A--------------------------------------------------------------------
 %
-% \section{The macros}
+%
+%
+%
+% \section{The implementation}
 %
 % \subsection{The package preamble}
 %
@@ -1570,16 +1581,30 @@
 %
 %
 % \noindent
-% Because we need to know if we were loaded by \LaTeX\ on several
-% places in the package, we define a handy \cs{\if} switch.
+% Fake some of the \LaTeX\ commands if we were loaded by another flavor
+% of \TeX.
 %
 %    \begin{macrocode}
-\newif\if@SOUL@latex
 \expandafter\ifx\csname documentclass\endcsname\relax
-    \@SOUL@latexfalse
-\else
-    \@SOUL@latextrue
-\fi
+    \chardef\SOULatcode=\catcode`@
+    \catcode`\@=11
+    \def\DeclareRobustCommand*{\def}
+    \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
+    \def\PackageError#1#2#3{{%
+        \newlinechar`^^J%
+        \errorcontextlines\z@
+        \edef\\{\errhelp{#3}}\\%
+        \errmessage{Package #1 error: #2}%
+    }}
+    \def\@height{height}
+    \def\@depth{depth}
+    \def\@width{width}
+    \def\@plus{plus}
+    \def\@minus{minus}
+    \font\SOUL@tt=cmtt10
+    \let\@xobeysp\space
+    \let\linebreak\break
+    \let\mbox\hbox
 %    \end{macrocode}
 %
 %
@@ -1598,7 +1623,7 @@
 % were already defined by a previously loaded package.
 %
 %    \begin{macrocode}
-\if@SOUL@latex
+\else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
         [2001/99/99 v2.0 letterspacing/underlining  (mf)]
@@ -1629,41 +1654,6 @@
     \newcommand*\caps{}
     \newcommand*\soulaccent{}
     \newcommand*\soulfont{}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \noindent
-% Fake some of the \LaTeX\ commands if we were loaded by another flavor
-% of \TeX.
-%
-%    \begin{macrocode}
-\else
-    \chardef\SOUL@atcode=\catcode`@
-    \catcode`\@=11
-    \def\DeclareRobustCommand*{\def}
-    \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
-    \def\PackageError#1#2#3{{%
-        \newlinechar`^^J%
-        \errorcontextlines\z@
-        \edef\\{\errhelp{#3}}\\%
-        \errmessage{Package #1 error: #2}%
-    }}
-    \def\@height{height}
-    \def\@depth{depth}
-    \def\@width{width}
-    \def\@plus{plus}
-    \def\@minus{minus}
-    \font\SOUL@tt=cmtt10
-    \let\@xobeysp\space
-    \let\linebreak\break
-    \let\mbox\hbox
 \fi
 %    \end{macrocode}
 %
@@ -2745,7 +2735,27 @@
 % \subsection{The \caps{caps} driver}
 %
 %    \begin{macrocode}
-\if@SOUL@latex
+\expandafter\ifx\csname documentclass\endcsname\relax
+\let\capsfont\relax
+\let\capsreset\relax
+\def\capsdef#1#2#3#4#5{}
+\def\capssave#1{}
+\sodef\caps{\capsfont}
+    {.028em\@plus.005em\@minus.01em}%
+    {.37em\@plus.1667em\@minus.111em}%
+    {.37em\@plus.1em\@minus.14em}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\else
 \DeclareRobustCommand\capsreset{%
     \let\SOUL@capsbase\empty
     \SOUL@capsdefault
@@ -2811,6 +2821,7 @@
             \SOUL@}%
     \fi
 }
+\fi
 %    \end{macrocode}
 %
 %
@@ -2888,27 +2899,6 @@
 }
 \let\SOUL@capsdfltfnt\scshape
 \capsreset
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\else
-\let\capsfont\relax
-\let\capsreset\relax
-\def\capsdef#1#2#3#4#5{}
-\def\capssave#1{}
-\sodef\caps{\capsfont}
-    {.028em\@plus.005em\@minus.01em}%
-    {.37em\@plus.1667em\@minus.111em}%
-    {.37em\@plus.1em\@minus.14em}
-\fi
 %    \end{macrocode}
 %
 %
@@ -2998,7 +2988,6 @@
 \def\SOUL@uleveryspace#1{%
     \SOUL@ulcolor{%
         #1%
-        \penalty0
         \SOUL@ulleaders
         \hskip\spaceskip
     }%
@@ -3304,7 +3293,28 @@
 %
 %
 %    \begin{macrocode}
-\if@SOUL@latex
+\expandafter\ifx\csname documentclass\endcsname\relax
+    \expandafter\ifx\csname mdqoff\endcsname\relax
+    \else
+        \soulaccent{"}%
+    \fi
+    \def\setulcolor#1{}
+    \let\setstcolor\setulcolor
+    \let\sethlcolor\setulcolor
+    \let\hl\ul
+    \catcode`\@=\SOULatcode
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\else
     \AtBeginDocument{%
         \@ifundefined{color}{%
             \let\SOUL@color\relax
@@ -3323,6 +3333,8 @@
     \InputIfFileExists{soul.cfg}%
         {\PackageInfo{soul}{Local config file soul.cfg used}}{}
     \ProcessOptions
+\fi
+\endinput
 %    \end{macrocode}
 %
 %
@@ -3333,31 +3345,12 @@
 %
 %
 %
-%    \begin{macrocode}
-\else
-    \expandafter\ifx\csname mdqoff\endcsname\relax
-    \else
-        \soulaccent{"}%
-    \fi
-    \def\setulcolor#1{}
-    \let\setstcolor\setulcolor
-    \let\sethlcolor\setulcolor
-    \let\hl\ul
-    \catcode`\@=\SOUL@atcode
-\fi
-\endinput
-%    \end{macrocode}
-%
-%
-%
-%
 % ^^A ?????
 % \describemacro{\setstcolor}\par
 % \describemacro{\sethlcolor}\par
 % \describemacro{\soulaccent}\par
 % \describemacro{\soulfont}\par
 % \describemacro{\setuloverlap}\par
-% \describemacro{\hl}\par
 % \describemacro{\sloppyword}\par
 %
 % \Finale
