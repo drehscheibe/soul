@@ -1,4 +1,5 @@
 # $Id$
+
 NAME=soul
 ARCHNAME=$(NAME).tar.gz
 ARCHIVE=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
@@ -14,6 +15,8 @@ print: $(NAME).ps
 	@ read key
 	psbook $(NAME).ps|psnup -2|psselect -o -r|lpr
 
+ps: $(NAME).ps
+
 %.ps: %.dvi
 	dvips $(DVIPSOPT) $< -o $@
 
@@ -28,7 +31,7 @@ archive:
 	@ echo $(ARCHNAME)
 
 clean: 
-	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
+	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins,out}
 
 distclean: clean
 	rm -f $(NAME).{ps,sty,pdf} $(ARCHNAME)
