@@ -3044,22 +3044,22 @@
     \SOUL@eventuallyexhyphen{\the\SOUL@token}%
     \edef\x{\the\SOUL@token}%
     \ifx\x\SOUL@hyphenhintM
-        \let\SOUL@r\SOUL@dosyllable
+        \let\SOUL@n\SOUL@dosyllable
     \else\ifx\x\SOUL@lowerthanM
         \SOUL@gettoken
         \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
             {\the\SOUL@token}%
         \SOUL@everylowerthan
         \SOUL@puttoken
-        \let\SOUL@r\SOUL@dosyllable
+        \let\SOUL@n\SOUL@dosyllable
     \else\ifdim\SOUL@syllwidth=\SOUL@syllgoal
         \SOUL@everysyllable
         \SOUL@puttoken
-        \let\SOUL@r\relax
+        \let\SOUL@n\relax
     \else\ifx\x\SOUL@stopM
         \SOUL@errmsg
         \global\let\SOUL@errmsg\relax
-        \let\SOUL@r\relax
+        \let\SOUL@n\relax
     \else
         \setbox\tw@\hbox{\SOUL@tt\the\SOUL@token}%
         \advance\SOUL@syllwidth\wd\tw@
@@ -3071,9 +3071,9 @@
         \global\SOUL@token=\SOUL@lasttoken
         \SOUL@everytoken
         \edef\x{\SOUL@syllable={\the\SOUL@syllable\the\SOUL@token}}\x
-        \let\SOUL@r\SOUL@dosyllable
+        \let\SOUL@n\SOUL@dosyllable
     \fi\fi\fi\fi
-    \SOUL@r
+    \SOUL@n
 }
 %    \end{macrocode}
 % \end{macro}
