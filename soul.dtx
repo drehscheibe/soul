@@ -2485,6 +2485,7 @@
 % The mysterious second and third \cs{\if} branch checks for
 % formerly robust commands that lost their robust-ness due to
 % expansion as in |{\let\protect\noexpand| |\xdef\x{\foo}}||\so\x|.
+% The empty braces are there for commands that take an argument.
 %
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%
@@ -2494,10 +2495,10 @@
             \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
         \else\ifx\@undefined##2%
         \else
-            \def\SOUL@n{#1}%
+            \def\SOUL@n{#1{}}%
             \bgroup
                 \let\protect\noexpand
-                \xdef\SOUL@x{##2}%
+                \xdef\SOUL@x{##2{}}%
             \egroup
             \ifx\SOUL@n\SOUL@x
                 \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
