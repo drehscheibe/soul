@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1926}
+% \CheckSum{1917}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -2319,9 +2319,10 @@
             \def\copyright{\noexpand\copyright}%
             \def\TeX{\noexpand\TeX}%
             \def\LaTeX{\noexpand\LaTeX}%
-            \xdef\SOUL@x{\SOUL@@}%
+            \let\protect\noexpand
+            \xdef\SOUL@x{{\SOUL@@}}%
         \egroup%
-        \def\SOUL@n{\expandafter\SOUL@\expandafter{\SOUL@x}}%
+        \def\SOUL@n{\expandafter\SOUL@\SOUL@x}%
     \fi
     \SOUL@n
 }
@@ -2482,27 +2483,16 @@
 % \begin{macro}{\SOUL@dotoken}
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
 % to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
-% which will be fed to the analyzer every time a word is completed. The
-% two branches are necessary to check for active characters as well
-% as for `normal' macro names. (The \package{german} package uses
-% |"| as an active character that takes one argument.)   
+% which will be fed to the analyzer every time a word is completed.
 %
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%
     \def\SOUL@@{\SOUL@addtoken{#1}}%
-    \ifcat\noexpand#1\noexpand\SOUL@dotoken
-        \def\\##1##2{%
-            \ifx##2#1%
-                \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
-            \fi
-        }%
-    \else
-        \def\\##1##2{%
-            \if\noexpand#1\noexpand##2%
-                \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
-            \fi
-        }%
-    \fi
+    \def\\##1##2{%
+        \ifx#1##2%
+            \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
+        \fi
+    }%
     \the\SOUL@cmds
     \SOUL@@    
 }
@@ -4211,16 +4201,19 @@
 %
 %    \begin{macrocode}
 \else
-    \AtBeginDocument{%
-        \@ifundefined{color}{%
-            \let\SOUL@color\relax
-            \let\setulcolor\@gobble
-            \let\setstcolor\@gobble
-            \let\sethlcolor\@gobble
-            \let\hl\ul
-        }{}
-        \@ifundefined{mdqoff}{}{\soulaccent{"}}
-    }
+    \bgroup
+        \catcode`\"\active
+        \AtBeginDocument{%
+            \@ifundefined{color}{%
+                \let\SOUL@color\relax
+                \let\setulcolor\@gobble
+                \let\setstcolor\@gobble
+                \let\sethlcolor\@gobble
+                \let\hl\ul
+            }{}
+            \@ifundefined{mdqoff}{}{\soulaccent{"}}
+        }
+    \egroup
     \DeclareOption{capsdefault}{%
         \AtBeginDocument{%
             \def\SOUL@capsdfltfnt#1{\SOUL@ulsetup\SOUL@ulpreamble}%
