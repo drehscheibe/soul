@@ -138,7 +138,7 @@
 %
 %
 %
-% \CheckSum{1940}
+%^^A \CheckSum{1940}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -2510,20 +2510,18 @@
         \SOUL@ignorespacesfalse
     \fi
     \ifnum\SOUL@minus=\thr@@
-        \SOUL@doword
-        \SOUL@eventuallyexhyphen{-}%
-        \SOUL@exhyphen{---}%
-        \SOUL@minus\z@
+        \SOUL@flushminus
     \else\ifnum\SOUL@comma=\tw@
-        \edef\x{\SOUL@word={\the\SOUL@word{{,,}}}}\x
-        \SOUL@comma\z@
+        \SOUL@flushcomma
     \else\ifnum\SOUL@apo=\tw@
-        \edef\x{\SOUL@word={\the\SOUL@word{{''}}}}\x
-        \SOUL@apo\z@
+        \SOUL@flushapo
     \else\ifnum\SOUL@grave=\tw@
-        \edef\x{\SOUL@word={\the\SOUL@word{{``}}}}\x
-        \SOUL@grave\z@
+        \SOUL@flushgrave
     \fi\fi\fi\fi
+    \ifx\SOUL@@-\else\SOUL@flushminus\fi
+    \ifx\SOUL@@,\else\SOUL@flushcomma\fi
+    \ifx\SOUL@@'\else\SOUL@flushapo\fi
+    \ifx\SOUL@@`\else\SOUL@flushgrave\fi
     \ifx\SOUL@@-%
         \advance\SOUL@minus\@ne
     \else\ifx\SOUL@@,%
@@ -2533,26 +2531,10 @@
     \else\ifx\SOUL@@`%
         \advance\SOUL@grave\@ne
     \else
-        \ifnum\SOUL@minus=\tw@
-            \SOUL@doword
-            \SOUL@eventuallyexhyphen{-}%
-            \SOUL@exhyphen{--}%
-            \SOUL@minus\z@
-        \else\ifnum\SOUL@minus=\@ne
-            \SOUL@doword
-            \SOUL@eventuallyexhyphen{-}%
-            \SOUL@exhyphen{-}%
-            \SOUL@minus\z@
-        \else\ifnum\SOUL@comma=\@ne
-            \edef\x{\SOUL@word={\the\SOUL@word,}}\x
-            \SOUL@comma\z@
-        \else\ifnum\SOUL@apo=\@ne
-            \edef\x{\SOUL@word={\the\SOUL@word'}}\x
-            \SOUL@apo\z@
-        \else\ifnum\SOUL@grave=\@ne
-            \edef\x{\SOUL@word={\the\SOUL@word`}}\x
-            \SOUL@grave\z@
-        \fi\fi\fi\fi\fi
+        \SOUL@flushminus
+        \SOUL@flushcomma
+        \SOUL@flushapo
+        \SOUL@flushgrave
         \ifcat\egroup\noexpand\SOUL@@
             \SOUL@doword
             \ifnum\SOUL@level>\z@
@@ -2610,6 +2592,51 @@
         \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
     \fi\fi\fi\fi
     \SOUL@n*%
+}
+\def\SOUL@flushminus{%
+    \ifnum\SOUL@minus=\thr@@
+        \SOUL@doword
+        \SOUL@eventuallyexhyphen{-}%
+        \SOUL@exhyphen{---}%
+        \SOUL@minus\z@
+    \else\ifnum\SOUL@minus=\tw@
+        \SOUL@doword
+        \SOUL@eventuallyexhyphen{-}%
+        \SOUL@exhyphen{--}%
+        \SOUL@minus\z@
+    \else\ifnum\SOUL@minus=\@ne
+        \SOUL@doword
+        \SOUL@eventuallyexhyphen{-}%
+        \SOUL@exhyphen{-}%
+        \SOUL@minus\z@
+    \fi\fi\fi
+}
+\def\SOUL@flushcomma{%
+    \ifnum\SOUL@comma=\tw@
+        \edef\x{\SOUL@word={\the\SOUL@word{{,,}}}}\x
+        \SOUL@comma\z@
+    \else\ifnum\SOUL@comma=\@ne
+        \edef\x{\SOUL@word={\the\SOUL@word,}}\x
+        \SOUL@comma\z@
+    \fi\fi
+}
+\def\SOUL@flushapo{%
+    \ifnum\SOUL@apo=\tw@
+        \edef\x{\SOUL@word={\the\SOUL@word{{''}}}}\x
+        \SOUL@apo\z@
+    \else\ifnum\SOUL@apo=\@ne
+        \edef\x{\SOUL@word={\the\SOUL@word'}}\x
+        \SOUL@apo\z@
+    \fi\fi
+}
+\def\SOUL@flushgrave{%
+    \ifnum\SOUL@grave=\tw@
+        \edef\x{\SOUL@word={\the\SOUL@word{{``}}}}\x
+        \SOUL@grave\z@
+    \else\ifnum\SOUL@grave=\@ne
+        \edef\x{\SOUL@word={\the\SOUL@word`}}\x
+        \SOUL@grave\z@
+    \fi\fi
 }
 %    \end{macrocode}
 % \end{macro}
