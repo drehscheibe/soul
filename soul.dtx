@@ -1307,6 +1307,10 @@
 %   |\ul{pretty awful\break test}|
 %   {\ul{pretty awful\break test}}
 %
+% \soultest{Italic correction needs to be set manually}
+%   |\ul{foo \emph{bar\/} baz}|
+%   {\ul{foo \emph{bar\/} baz}}
+%
 % \end{examples}
 %^^A=====================================================
 %
@@ -2428,16 +2432,12 @@
         \bgroup
             \def\\##1##2{\def##2{\noexpand##2}}%
             \the\SOUL@cmds
-            \def\\{\noexpand\\}%
-            \def~{\noexpand~}%
-            \def\,{\noexpand\,}%
-            \def\S{\noexpand\S}%
-            \def\slash{\noexpand\slash}%
-            \def\textregistered{\noexpand\textregistered}%
-            \def\textcircled{\noexpand\textcircled}%
-            \def\copyright{\noexpand\copyright}%
-            \def\TeX{\noexpand\TeX}%
-            \def\LaTeX{\noexpand\LaTeX}%
+            \SOUL@buffer={\\\TeX\\\LaTeX\\\soulomit\\\mbox\\\hbox
+                \\\slash\\\textregistered\\\textcircled\\\copyright
+                \\\S\\\,\\\<\\\>\\~\\\\
+            }
+            \def\\##1{\def##1{\noexpand##1}}%
+            \the\SOUL@buffer
             \let\protect\noexpand
             \xdef\SOUL@n##1{\noexpand\SOUL@start{\SOUL@@}}%
         \egroup
@@ -2446,7 +2446,7 @@
 }
 \def\SOUL@start#1{{%
     \let\<\SOUL@lowerthan
-    \let\>\relax
+    \let\>\empty
     \def\soulomit{\noexpand\soulomit}%
     \gdef\SOUL@eventuallyexhyphen##1{}%
     \let\SOUL@soeventuallyskip\relax
