@@ -1,6 +1,7 @@
 % \iffalse
 %% File: soul.dtx  Copyright (C) 1998, 1999, 2002  Melchior FRANZ
 %% $Id$
+%% $Version: 2.3 $
 %
 %<*batchfile>
 %
@@ -125,7 +126,7 @@
 %
 %
 %
-% \CheckSum{1938}
+% \CheckSum{1941}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -502,7 +503,8 @@
 %
 % However, in the last centuries letterspacing was excessively used,
 % underlining at least sometimes, because capitals and italic shape could
-% not be used together with the old German fonts like the \emph{Fraktur} font.
+% not be used together with the \emph{Fraktur} font and other black-letter fonts,
+% which are sometimes also (wrongly) called ``old German fonts''.
 % This tradition is widely continued until today. The same limitations apply still today
 % to many languages with non-latin glyphs, which is why letterspacing has a strong
 % tradition in eastern countries where Cyrillic fonts are used.
@@ -2228,6 +2230,7 @@
     \chardef\atcode=\catcode`@
     \catcode`\@=11
     \def\DeclareRobustCommand*{\def}
+    \let\newcommand\DeclareRobustCommand
     \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
     \def\PackageError#1#2#3{{%
         \newlinechar`^^J%
@@ -2583,7 +2586,7 @@
             \SOUL@everyspace{\linebreak}%
         \else\ifcat\bgroup\noexpand\SOUL@@
             \def\SOUL@n*{\SOUL@addgroup{}}%
-        \else\ifcat$\noexpand\SOUL@@            
+        \else\ifcat$\noexpand\SOUL@@
             \def\SOUL@n*{\SOUL@addmath}%
         \else
             \def\SOUL@n*{\SOUL@dotoken}%
@@ -2609,7 +2612,7 @@
 % which will be fed to the analyzer every time a word is completed.
 % Since \emph{robust} commands come with an additional space, we
 % have also to examine if there's a space variant. Otherwise we
-% couldn't detect pre-expanded former robust commands.
+% couldn't detect pre-expanded formerly robust commands.
 %
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%

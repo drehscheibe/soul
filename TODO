@@ -1,5 +1,7 @@
 2.4:
 
+ + fixed bug that broke using soul under non-LaTeX
+
  - \inputenc{latin9}\uppercase{\so{Êﬂ}}
 
  - However, if I introduce a spacing macro immediately
