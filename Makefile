@@ -3,10 +3,10 @@ NAME=soul
 ARCHNAME=$(NAME).tar.gz
 ARCHIVE=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
 MAKEIDXOPT=
-DVIPSOPT= #-Pcmz -Pamz
+DVIPSOPT=#-Pcmz -Pamz
 DEP=$(NAME).sty
 
-all: $(NAME).ps
+all: $(NAME).sty $(NAME).ps
 
 print: $(NAME).ps
 	psbook $(NAME).ps|psnup -2|psselect -e|lpr
@@ -26,14 +26,14 @@ clean:
 	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
 
 distclean: clean
-	rm -f $(NAME).{ps,sty} $(ARCHNAME)
+	rm -f $(NAME).{ps,sty,pdf} $(ARCHNAME)
 
 
 REFWARN = 'Rerun to get cross-references'
 LATEXMAX = 5
 
 %.dvi: %.dtx $(DEP)
-	latex $<
+	latex $< ; true
 	RUNS=$(LATEXMAX); \
 	while [ $$RUNS -gt 0 ] ; do \
 		if grep $(REFWARN) $*.log > /dev/null; \
