@@ -1573,7 +1573,7 @@
 % \small
 % \bigskip
 % \begin{center}
-% \so{1. VON DEN MAASSEN UND MAASSST\"ABEN.}
+% \so{1\<. VON DEN MAASSEN UND MAASSST\"ABEN.}
 % \bigskip
 % \end{center}
 % \end{minipage}}
@@ -1667,14 +1667,13 @@
 % \subsection{The kernel}
 % \so{Letterspacing,} \ul{underlining}, \st{striking out} and \hl{highlighting}
 % use the same kernel mechanism. It lets a \emph{word scanner} run over the given argument,
-% which inpects every token. If a token is a command registered via \cs{\soulfont},
+% which inspects every token. If a token is a command registered via \cs{\soulfont},
 % it is executed immediately. Other tokens are only counted and trigger some action
 % when a certain amount is reached (quotes and dashes). Three subsequent `|-|', for example,
 % trigger |\SOUL@everyexhyphen{---}|. A third group leads to special actions,
 % like |\mbox| that starts reading-in a whole group to protect its contents and let them be
 % seen as one entity. All other tokens, mostly characters and digits, are collected in
-% a word register and whenever a whole word is read-in, it is passed to
-% the analyzer. 
+% a word register, which is passed to the analyzer, whenever a whole word was read-in.
 %
 % The analyzer typesets the word in a 1\,sp ($=\frac1{65536}$\,pt) wide \cs{\vbox},
 % hence encouraging \TeX\ to break lines at every possible hyphenation point. It
