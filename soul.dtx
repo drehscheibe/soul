@@ -4,18 +4,21 @@
 %
 %<*batchfile>
 %
-%     (1)  run `soul.dtx' through LaTeX to get `soul.ins',
-%          (if you don't already have it)
+% on Unix/Linux just run "make" to get the style file and the documentation
+% else generate the driver soul.ins (if you don't already have it):
 %
-%     (2)  run `soul.ins' through (La)TeX to get
-%          the package `soul.sty'
+%     $ latex soul.dtx
 %
-%          [or use `docstrip', and extract `soul.sty' from `soul.dtx'
-%           using option `package']
+% You'll probably get an error message that you may ignore. Now generate
+% the style file:
 %
-%     (3)  now run `soul.dtx' three times through LaTeX
-%          to get the documentation file `soul.dvi'
+%     $ tex soul.ins
 %
+% And finally to produce the documentation run LaTeX three times:
+%
+%     $ latex soul.dtx
+%     $
+%  
 %
 %
 %
@@ -289,7 +292,7 @@
 %    \def\SOUL@everyexhyphen##1{\textbf{##1}}^^A
 %    \SOUL@}
 %
-%^^A  analyze the interface---described somewhere below, too
+%^^A  analyze the engine---described somewhere below, too
 %
 % \DeclareRobustCommand*\an{^^A
 %   \def\SOUL@preamble{$^{^P}$}^^A
@@ -626,7 +629,7 @@
 %
 % Although the new \soul\ is much more robust and forgiving than
 % versions prior to~2.0, there are
-% still some things that are not allowed in \soul\ arguments.
+% still some things that are not allowed in arguments.
 % This is due to the complex engine, which has to read and inspect every
 % character before it can hand it over to \TeX's paragraph builder.
 %
@@ -642,7 +645,7 @@
 % \item[Material without ectt10 representation: \so{foo \TeX\ bar}]
 %   Every token that can't be typeset with just one character of
 %   the |cmtt10| font leads to a reconstruction error. This can be
-%   avoided by grouping the token, e.\,g.~|\so{foo {\TeX} bar}|, or registering
+%   avoided by enclosing the token in braces, e.\,g.~|\so{foo {\TeX} bar}|, or registering
 %   it as font, e.\,g.~|\soulfont{\TeX}{0}| |\so{foo \TeX\ bar}|. It doesn't matter
 %   if it isn't really a font at all. |\TeX| is actually a bad example,
 %   because it \emph{is} already pre-registered as font switching command.
@@ -925,7 +928,7 @@
 % \begin{tabular}{rl}
 % |\normalfont|&\sampletext\\
 % |\scshape|&{\scshape\sampletext}\\
-% |\caps|&\person\sampletext      ^^A ????
+% |\caps|&\caps\sampletext\\
 % \end{tabular}
 %
 % \medbreak\noindent 
@@ -1625,16 +1628,38 @@
 %
 % \subsection{The kernel}
 % \so{Letterspacing,} \ul{underlining}, \st{striking out} and \hl{highlighting}
-% use the same kernel mechanism. It splits the given argument into words and
-% typesets each in a 1\,sp wide \cs{\vbox}, so that \TeX\ is encouraged to
-% break lines at every possible hyphenation point. After the number of all lines
-% (i.\,e.~syllables) is counted, and 
-% the respective lengths are stored (pass one: \emph{analyzing}), the tokens are 
-% scanned again, and their length is added to a register. Always if the length of the 
-% next stored syllable is obtained (pass two: \emph{reconstruction}), the 
-% required actions take place. These are controlled by the `interface'. 
+% use the same kernel mechanism. It lets a \emph{word scanner} run over the given argument,
+% which inpects every token. If a token is a command registered via \cs{\soulfont},
+% it is executed immediately. Other tokens are only counted and trigger some action
+% when a certain amount is reached (quotes and dashes). Three subsequent `|-|', for example,
+% trigger |\SOUL@everyexhyphen{---}|. A third group leads to special actions,
+% like |\mbox| that starts reading-in a whole group to protect its contents and let them be
+% seen as just one atom. All other tokens, mostly characters and digits, are collected in
+% a word register and whenever a whole word is read-in, it is passed to
+% the analyzer. 
 %
+% The analyzer typesets the word in a 1\,sp ($=\frac1{65536}$\,pt) wide \cs{\vbox},
+% hence encouraging \TeX\ to break lines at every possible hyphenation point. It
+% uses the mono-spaced \cs{\SOUL@tt} font (|ectt10|), so as to avoid any inter-character
+% kerning. Now the \cs{\vbox} is decomposed splitting off \cs{\hbox} after \cs{\hbox}
+% from the bottom. All boxes, each of which contains one syllable, are pushed onto the
+% ``stack'', which is provided by \TeX's grouping mechanism. When returning from the
+% recursion, box after box is fetched from the stack, its width measured and fed to the
+%``reconstructor''.
 %
+% This reconstruction macro (\cs{\SOUL@dosyllable}) starts to read tokens
+% from the just analyzed word until the given syllable
+% width is obtained. This is repeated for each syllable. Every time the engine
+% reaches a relevant state, the corresponding driver macro is executed
+% and, if necessary, provided with some data. There is a macro that is
+% executed for each token, one for each syllable, one for each space etc\null.
+%
+% The engine itself doesn't know how to letterspace or to underline. It
+% just tells the selected driver about the structure of the given argument.
+% There's a default driver (\cs{\SOUL@setup}) that does only set the
+% interface macros to a reasonable default state, but doesn't really do anything.
+% Further drivers can safely inherit these settings and only need to
+% redefine what it wants to change.
 %
 %
 %
@@ -1644,25 +1669,66 @@
 % \subsection{The interface}
 % \label{sec:interface}
 % 
-% The package uses six interface macros that are to be defined
-% according to the required task.
-% \vspace*{2ex}
+% \subsubsection{The registers}
+%
+% The package offers eight interface macros that can be used to define
+% the required actions. Some of the macros receive data as macro parameter
+% or in special \emph{token} or \emph{dimen} registers.
+% 
+% \begin{labeling}{\hspace{.335\hsize}}
+% \item[\texttt{\string\SOUL@token}]
+%   This token register contains the current token. To be used as |\the\SOUL@token|.
+%   \cs{\SOUL@gettoken} reads the next token into \cs{\SOUL@token} and
+%   can be used in any interface macro. If you don't want to lose the old meaning,
+%   you have to save it explicitly. \cs{\SOUL@puttoken} pushes the token
+%   back into the queue, without changing \cs{\SOUL@token}. You can only
+%   put one token back, otherwise you get an error message.
+% \item[\texttt{\string\SOUL@lasttoken}]
+%   This token register contains the last token.
+% \item[\texttt{\string\SOUL@syllable}]
+%   This token register contains all tokens that were already collected for
+%   the current syllable. When used in \cs{\SOUL@everysyllable} it
+%   contains the \emph{whole} syllable.
+% \item[\texttt{\string\SOUL@charkern}]
+%   Dimen register with the kerning value between the current and the next character.
+%   Since most character pairs don't require a kerning value to be applied and the
+%   output in the logfile shouldn't be cluttered with |\kern0pt| it is
+%   recommended to write |\SOUL@setkern\SOUL@charkern|, which sets
+%   kerning for non-zero values only.
+% \item[\texttt{\string\SOUL@hyphkern}]
+%   Dimen register with the kerning value between the current character
+%   and the hyphen character.
+% \end{labeling}
+%
+%
+%
+%
+%
+%
+% \subsubsection{The interface macros}
+%
+% The following list describes each of the interface macros and which
+% registers they can rely on. The \emph{mark} will be used in section
+% \ref{sec:interfaceexamples} to show when the macros are executed.
+% \vspace{2.5ex}
+% 
 %
 % \newcommand*\tabline[3]{{\let\sloppy\relax\noindent
 %   \parbox[t]{.3\hsize}{\noindent\strut\texttt{#1}}^^A%
 %   \parbox[t]{.05\hsize}{\noindent\strut#2}^^A%
 %   \parbox[t]{.65\hsize}{\noindent\strut#3\strut}}\smallskip}
 %
-%^^A page breaks between the header and the first two items are not desirable
-% \noindent\parbox{\hsize}{^^A
+%^^A page breaks between the header and the first two items are deprecated
+% \noindent
+% \parbox{\hsize}{^^A
 % \tabline{\normalfont\textbf{macro name}}
 %   {\textbf{\hidewidth mark\hidewidth}}
 %   {\hfil\textbf{short description}}\\*[-8pt]
 % \rule{\hsize}{.4pt}\par
 % \tabline{\string\SOUL@preamble}{$P$}
 %   {executed once at the beginning}
-% \tabline{\string\SOUL@everyspace}{\texttt{\char`\ }}
-%   {executed between every two words}
+% \tabline{\string\SOUL@postamble}{$E$}
+%   {executed once at the end}
 % }
 % \tabline{\string\SOUL@everyhyphen}{$-$}    
 %   {executed at every implicit hyphenation point; It may access the
@@ -1687,21 +1753,21 @@
 %   package definitions so far; If you want to access the whole syllable,
 %   you have to let \texttt{\string\SOUL@everytoken} collect the tokens.}
 % \noindent{\parbox{\hsize}{^^A
-% \tabline{\string\SOUL@postamble}{$E$}
-%   {executed once at the end}\\*[-4pt]
-% \rule{\hsize}{.4pt}}}
+% \tabline{\string\SOUL@everyspace}{\texttt{\char`\ }}
+%   {executed between every two words}
+% }
 %
 %
 %
 %
-% \vspace*{2.5ex}
 %
-% \goodbreak\noindent
+%
+% \subsubsection{Some examples}
+% \label{sec:interfaceexamples}
+%
 % The above table's middle column shows a mark that indicates in the
 % following examples, when the respective macros are executed:\nopagebreak
 %
-% \noindent
-% \rule{\hsize}{.4pt}^^A
 % \begin{labeling}{\hspace{.335\hsize}}
 % \item[\normalfont\an{word}]
 %   At the first execution of |\SOUL@everytoken| the token `|w|' is  ????
@@ -1719,7 +1785,6 @@
 % \item[\normalfont\an{beta-test}]
 %   An explicit |\hyphen| belongs to the left syllable.
 % \end{labeling}
-% \rule[2ex]{\hsize}{.4pt}
 %
 %
 %
@@ -1749,7 +1814,7 @@
 %
 % \subsection{Doing it yourself}
 %
-% \subsubsection{Defining a new interface}
+% \subsubsection{Defining a new driver}
 %
 % Let's define a \soul\ driver that allows to typeset text
 % with a hyphen at every potential hyphenation point. The name of
@@ -1818,7 +1883,7 @@
 % |    \def\SOUL@everyexhyphen##1{\textbf{##1}}|\\
 % \end{example}
 %
-% Now that the interface is defined, we can start the scanner.
+% Now that the driver is defined, we can start the scanner.
 %
 % \begin{example}
 % |    \SOUL@|\\
