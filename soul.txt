@@ -15,8 +15,8 @@ it works with Plain TeX and with other
 packages, too.
 
 author          = "Melchior FRANZ"
-version         = "2.0"
-date            = "3 January 2002"
+version         = "2.1"
+date            = "6 January 2002"
 address         = "Melchior FRANZ
                    Rieder Hauptstrasse 52
                    A-5212 SCHNEEGATTERN
