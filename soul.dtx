@@ -111,21 +111,6 @@
 %
 %
 %
-\ifx\SOULSTYfound\active
-
-\iffalse\IfFileExists{color.sty}{%
-    \usepackage{color}
-    \definecolor{darkblue}{rgb}{0,0,.7}
-    \definecolor{lightblue}{rgb}{.90,.95,1}
-    \setulcolor{darkblue}
-    \sethlcolor{lightblue}
-}{
-    \def\textcolor##1{}
-    \AtBeginDocument{\let\hl\relax}
-}  
-\fi\fi
-%
-\AtBeginDocument{\let\hl\relax}
 %
 %
 %
@@ -356,9 +341,6 @@
 %   \let\an\SOUL@@@X
 %   \let\magstylepar\SOUL@@@X
 %   \let\sloppyword\SOUL@@@X
-%   \let\setulcolor\SOUL@@@X
-%   \let\setstcolor\SOUL@@@X
-%   \let\sethlcolor\SOUL@@@X
 %   \def\sodef#1#2#3#4{\let#1\relax\SOUL@@@X}%
 % \fi
 %
@@ -451,7 +433,7 @@
 %   \footnote{This file has version number \fileversion, last revised \filedate.},
 %^^A%%
 % which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
-% and some derivatives such as \st{overstriking} and \hl{highlighting}.
+% and some derivatives such as \st{overstriking} and highlighting.
 % Although the package is optimized for \LaTeXe, it also works with
 % Plain \TeX\ and with other flavors of \TeX\ like, for instance, \ConTeXt.
 % By the way, the package name |soul| is only a combination
@@ -553,7 +535,7 @@
 % \verb+\caps{CAPITALS, Small Capitals}+&\caps{CAPITALS, Small Capitals}\\
 % \verb+\ul{underlining}+&\ul{underlining}\\
 % \verb+\st{overstriking}+&\st{overstriking}\\
-% \verb+\hl{highlighting}+&\hl{highlighting}\footnotemark\\
+% \verb+\hl{highlighting}+&highlighting\footnotemark\\
 % \end{tabular}
 % \end{center}
 % \footnotetext{The look of highlighting is nowhere demonstrated
@@ -564,7 +546,7 @@
 % }
 %
 % \noindent
-% The |\hl| command does only highlight if the \package{color} package
+% The \cs{\hl} command does only highlight if the \package{color} package
 % was loaded, otherwise it falls back to underlining. The highlighting
 % color is by default yellow, underlines and overstriking lines are by
 % default black. The colors can be changed using the following commands:
@@ -724,7 +706,7 @@
 % \verb+\caps{CAPITALS, Small Capitals}+&   \pref{caps}         &\caps{CAPITALS, Small Capitals}\\
 % \verb+\ul{underlining}+&                  \pref{ul}           &\ul{underlining}\\
 % \verb+\st{striking out}+&                 \pref{st}           &\st{striking out}\\
-% \verb+\hl{highlighting}+&                 \pref{hl}           &\hl{highlighting}\\
+% \verb+\hl{highlighting}+&                 \pref{hl}           &highlighting\\
 % \\
 % \verb+\soulaccent{\cs}+&                  \pref{soulaccent}   &\ti{add accent} \cs{\cs} \ti{to accent list}\\
 % \verb+\soulfont{\cs}{0}+&                 \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
@@ -1193,7 +1175,7 @@
 % \subsubsection{The \program{dvips} problem}
 % \label{sec:dvips}
 %
-% \ul{Underlining}, \st{striking out} and \hl{highlighting} build up
+% \ul{Underlining}, \st{striking out} and highlighting build up
 % their lines with many short line segments. If you used the `\program{dvips}'
 % program with default settings, you would get little gaps on some places, because
 % the \emph{maxdrift} value allows the single objects to drift
@@ -1685,7 +1667,7 @@
 % \section{How the package works}
 %
 % \subsection{The kernel}
-% \so{Letterspacing,} \ul{underlining}, \st{striking out} and \hl{highlighting}
+% \so{Letterspacing,} \ul{underlining}, \st{striking out} and highlighting
 % use the same kernel mechanism. It lets a \emph{word scanner} run over the given argument,
 % which inspects every token. If a token is a command registered via \cs{\soulfont},
 % it is executed immediately. Other tokens are only counted and trigger some action
@@ -4019,7 +4001,7 @@
 %
 %
 %
-% \subsection{The \hl{highlighting} driver}
+% \subsection{The highlighting driver}
 % 
 % \begin{macro}{\SOUL@hlpreamble}
 % This is nothing else than overstiking with very thick lines.
