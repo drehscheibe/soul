@@ -18,11 +18,11 @@
 % And finally to produce the documentation run LaTeX three times:
 %
 %     $ latex soul.dtx
-%     $
 %
 %
 %
 %
+%$
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
@@ -126,7 +126,7 @@
 %
 %
 %
-% \CheckSum{1949}
+% \CheckSum{1940}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -2208,8 +2208,8 @@
 % manually for all other flavors of \TeX.
 %
 %    \begin{macrocode}
-\expandafter\ifx\csname SOUL@\endcsname\relax\else
-  \expandafter\endinput
+\ifx\SOUL@\@undefined\else
+    \expandafter\endinput
 \fi
 %    \end{macrocode}
 %
@@ -2227,7 +2227,7 @@
 % if e.\,g.~\cs{\mbox} was already in use. But we don't care \dots
 %
 %    \begin{macrocode}
-\expandafter\ifx\csname documentclass\endcsname\relax
+\ifx\documentclass\@undefined
     \chardef\atcode=\catcode`@
     \catcode`\@=11
     \def\DeclareRobustCommand*{\def}
@@ -3558,7 +3558,7 @@
 % doesn't have any special capabilities.
 %
 %    \begin{macrocode}
-\expandafter\ifx\csname documentclass\endcsname\relax
+\ifx\documentclass\@undefined
 \let\capsfont\relax
 \let\capsreset\relax
 \def\capsdef#1#2#3#4#5{}
@@ -4322,8 +4322,8 @@
 % package was already loaded, define the double quotes as accent.
 %
 %    \begin{macrocode}
-\expandafter\ifx\csname documentclass\endcsname\relax
-    \expandafter\ifx\csname mdqoff\endcsname\relax
+\ifx\documentclass\@undefined
+    \ifx\mdqoff\@undefined
     \else
         \soulaccent{"}%
     \fi
@@ -4365,7 +4365,11 @@
     \egroup
     \DeclareOption{capsdefault}{%
         \AtBeginDocument{%
-            \def\SOUL@capsdfltfnt#1{\SOUL@ulsetup\SOUL@ulpreamble}%
+            \def\SOUL@capsdfltfnt#1{%
+                \SOUL@ulsetup
+                \SOUL@ulpreamble
+                \scshape
+            }%
         }%
     }
     \InputIfFileExists{soul.cfg}%
