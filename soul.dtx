@@ -95,6 +95,7 @@
 %
 %
 \IfFileExists{soul.sty}{%
+    \makeatletter\let\SOUL@sethyphenchar\relax\makeatother
     \usepackage{soul}[2002/01/10]
     \expandafter\ifx\csname sloppyword\endcsname\relax  % old version?
         \def\sloppyword{\textbf{?? [obsolete soul version]}}
