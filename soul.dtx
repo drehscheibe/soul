@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1911}
+% \CheckSum{1926}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -631,7 +631,7 @@
 %   for instance not space it out. The contents must, however,
 %   not contain potential hyphenation points. (See~\ref{par:Protecting})
 % \item[Protecting: \so{foo \mbox{little} bar}]
-%   An \cs{\mbox} also lets \package{soul} see the contents as one
+%   An \cs{\mbox} also lets \soul\ see the contents as one
 %   item, but they may even contain hyphenation points. \cs{\hbox} can
 %   be used as a synonym.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
@@ -690,14 +690,15 @@
 %   Some commands must not be used in an \cs{\edef} statement^^A
 %   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.
 %   \quad\texttt{:-)}}.
-%   As \package{soul} does this when its argument is
+%   As \soul\ does this when its argument is
 %   a command sequence, it has to protect such commands with \cs{\noexpand} in
 %   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
-%   \cs{\S}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright}.
+%   \cs{\S}, \cs{\slash}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright},
+%   as well as for all registered fonts and accents, but not for active characters.
 %   You can put \cs{\noexpand} manually in front of similar commands, that
 %   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
-%   \package{soul} arguments must not contain \LaTeX\ environments, command definitions,
+%   \soul\ arguments must not contain \LaTeX\ environments, command definitions,
 %   and fancy stuff like |\vadjust|. As long as you are writing simple,
 %   ordinary `horizontal' material, you are on the safe side.
 % \end{verblist}
@@ -969,10 +970,10 @@
 % The \cs{\caps} font database is by default empty, i.\,e., it contains
 % just a single default entry, which yields the result as shown in the
 % above example. 
-% New font entries may be added on top of this list using the \describemacro{\capsdef}
+% New font entries may be added \emph{on top} of this list using the \describemacro{\capsdef}
 % command, which takes five arguments: The first argument describes the font with
 % \emph{encoding, family, series, shape,} and \emph{size,}^^A
-% \footnote{defined by the \caps{NFSS}, the ``New Font Selection Scheme''}
+% \footnote{as defined by the \caps{NFSS}, the ``New Font Selection Scheme''}
 % each optionally
 % (e.\,g.~|OT1/cmr/m/n/10| for this very font, or only |/ppl///12| for all
 % \emph{palatino} fonts at size 12\,pt). The \emph{size} entry may also contain
@@ -994,7 +995,7 @@
 % The \cs{\caps} command goes through the data list from top to bottom
 % and picks up the first matching set, so the order of definition is essential.
 % The last added entry is examined first, while the pre-defined default entry
-% will be examined last and match any font, if no entry was taken before.
+% will be examined last and will match any font, if no entry was taken before.
 %
 % To override the default values, just define a new default entry using
 % the identifier |{////}|. This entry should be defined first, because no
@@ -1102,10 +1103,7 @@
 % \end{quote}
 %
 %
-%
-%
-%
-%
+% 
 %
 %
 %
@@ -1349,7 +1347,7 @@
 %
 % You can also register other commands as fonts, so the
 % analyzer won't see them. This may be necessary for some
-% macros that \package{soul} refuses to typeset correctly.
+% macros that \soul\ refuses to typeset correctly.
 % But note, that \cs{\so} and \cs{\caps} won't put their
 % letter-skips around then.
 %
@@ -1481,7 +1479,7 @@
 %
 %
 %
-% \subsection{Using \soul\ commands in logical markup}
+% \subsection{Using \soul\ commands for logical markup}
 % \label{sec:markup}
 %
 % It's generally a bad idea to use font style commands like \cs{\textsc}
@@ -1520,6 +1518,37 @@
 % |\sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}|\\
 % \end{example}
 %
+%
+% But what if the \soul\ command is for some reason not the last one
+% in that macro definition and thus cannot look ahead at the following token?
+% 
+% 
+% \begin{example}
+% |\newcommand*\somsg[1]{\so{#1}\message{#1}}|\\
+% |...|\\
+% |foo \somsg{bar} baz|\\
+% \end{example}
+%
+% In this case you won't get the trailing space replaced by \emph{outer space}
+% because when \soul\ tries to look ahead, it only sees the token
+% \cs{\message} and consequently decides that there is no space to replace.
+% You can get around this by explicitly calling the space scanner again.
+%
+% \begin{example}
+% |\newcommand*\somsg[1]{{%|\\
+% |    \so{#1}%|\\
+% |    \message{bar}%|\\
+% |    \let\\\SOUL@socheck|\\
+% |    \\%|\\
+% |}}|\\
+% \end{example}
+%
+% However, \cs{\SOUL@socheck} can't be used directly, because it would discard
+% any normal space. \cs{\\} doesn't have this problem.
+% The additional pair of braces avoids that its definition leaks out
+% of this macro. In the above example you could, of course, simply
+% have put \cs{\message} in front, so you hadn't needed to
+% use the scanner macro \cs{\SOUL@socheck} at all.
 %
 %
 %
@@ -2251,7 +2280,8 @@
 % be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
 % if the first token was a macro name, we expand that macro and
 % call \cs{\SOUL@} with its contents again. Unfortunately, we have to
-% exclude some macros therein from expansion.
+% exclude some macros therein from expansion. This won't work with
+% active characters.
 %
 %    \begin{macrocode}
 \def\SOUL@expand{%
@@ -2273,9 +2303,17 @@
         \let\SOUL@n\SOUL@scan
     \else
         \bgroup
+            \def\\##1##2{%
+                \ifcat\noexpand##2\noexpand\SOUL@expand
+                    \def##2{\noexpand##2}%
+                \fi
+            }%
+            \the\SOUL@cmds
+            \def\\{\noexpand\\}%
             \def~{\noexpand~}%
             \def\,{\noexpand\,}%
             \def\S{\noexpand\S}%
+            \def\slash{\noexpand\slash}%
             \def\textregistered{\noexpand\textregistered}%
             \def\textcircled{\noexpand\textcircled}%
             \def\copyright{\noexpand\copyright}%
@@ -3100,23 +3138,20 @@
     \futurelet\SOUL@@\SOUL@sodoouter
 }
 \def\SOUL@sodoouter{%
-    \bgroup
-    \def\SOUL@n*##1{\hskip\skip@\egroup}%
-    \ifcat\egroup\noexpand\SOUL@@
-        \egroup
+    \def\SOUL@n*##1{\hskip\skip@}%
+    \ifx\egroup\SOUL@@
         \unkern
         \egroup
         \def\SOUL@n*{\afterassignment\SOUL@socheck\let\SOUL@@=}%
-    \else\ifx\SOUL@@\SOUL@spc
-        \def\SOUL@n* {\hskip\skip@\egroup}%
+    \else\ifx\SOUL@spc\SOUL@@
+        \def\SOUL@n* {\hskip\skip@}%
+    \else\ifx~\SOUL@@
+        \def\SOUL@n*~{\nobreak\hskip\skip@}%
+    \else\ifx\ \SOUL@@
+    \else\ifx\space\SOUL@@
+    \else\ifx\@xobeysp\SOUL@@
     \else
-        \ifx\SOUL@@~%
-        \def\SOUL@n*~{\nobreak\hskip\skip@\egroup}%
-    \else\ifx\SOUL@@\ %
-    \else\ifx\SOUL@@\space
-    \else\ifx\SOUL@@\@xobeysp
-    \else
-        \def\SOUL@n*{\egroup}%
+        \def\SOUL@n*{}%
     \fi\fi\fi\fi\fi\fi
     \SOUL@n*%
 }
