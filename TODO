@@ -2,13 +2,15 @@
 
  + fixed bug that broke using soul under non-LaTeX
 
+ + accent \r
+
+ + re-add \> definition
+
+ + \def\soulomit#1{#1} outside the soul domain
+
+ + let \capssave check for overwriting a cs-name
+
+ + check for \expandafter\ifx\csname bla\endcsname\relax
+
  - \inputenc{latin9}\uppercase{\so{Êﬂ}}
 
- - However, if I introduce a spacing macro immediately
-   after the \hfill\caps{}, \medskip for example, extra
-   spacing is inserted after the small caps text, eg.
-
-   \hfill\caps{some text}
-   \medskip
-
-   (Anshuman PANDEY)
