@@ -270,7 +270,7 @@
 %
 %
 % \ifx\SOULSTYfound\active
-%^^A  analyze syllables--described somewhere below 
+%^^A  analyze syllables---described somewhere below 
 % 
 % \DeclareRobustCommand*\sy{^^A
 %   \SOUL@setup 
@@ -360,6 +360,7 @@
 % }
 %
 % \def\ConTeXt{Con\TeX t}
+% \def\soul{\package{soul}}
 %
 % ^^A  set some parameters as used in Plain TeX
 % \def\plainsetup{^^A
@@ -411,7 +412,7 @@
 %
 %
 % \begin{abstract}
-% This article describes the \package{soul} package^^A
+% This article describes the \soul\ package^^A
 %^^A%%
 %   \footnote{This file has version number \fileversion, last revised \filedate.},
 %^^A%%
@@ -505,7 +506,7 @@
 %
 % \section{Short introduction and common rules}
 %
-% The \package{soul} package provides five commands that are aimed at emphasizing
+% The \soul\ package provides five commands that are aimed at emphasizing
 % text parts. Each of the commands takes one argument that can either be
 % the text itself or the name of a macro that contains text (e.\,g.~|\so\text|).
 % See table~\ref{tab:survey} for a complete command survey.
@@ -563,13 +564,13 @@
 %
 % The following examples may look boring and redundant, because they describe
 % nothing else than common \LaTeX\ notation with a few exceptions, but this is
-% only the half story: The \package{soul} package has to pre-process the argument
+% only the half story: The \soul\ package has to pre-process the argument
 % before it can split it into characters and syllables, and all described
 % constructs are only allowed because the package explicitly provides them.
 %
 % \begin{verblist}{1}
 % \item[Quotes: \so{``quotes''}]
-%   The \package{soul} package recognizes the quotes ligatures |``|, |''| and |,,|. 
+%   The \soul\ package recognizes the quotes ligatures |``|, |''| and |,,|. 
 % \item[Accents: \so{na\"\i ve}]
 %   Accents can be used naturally.
 %   Support for the following accents is built-in: |\`|, |\'|, |\^|, |\"|, |\~|,
@@ -587,22 +588,22 @@
 % \item[Newlines: \so{new\\line}]
 %   The |\\|~command fills the current line with white space
 %   and starts a new line. Unlike the original \LaTeX\ command
-%   \package{soul}'s version does not handle optional parameters
+%   \soul's version does not handle optional parameters
 %   like in |\\[1ex]|.
 % \item[Breaking lines: \so{foo\linebreak bar}]
 %   The |\linebreak| command also breaks the line without
-%   filling it with white space at the end. \package{soul}'s version
+%   filling it with white space at the end. \soul's version
 %   does not handle optional parameters like in |\linebreak[1]|.
 %   |\break| can be used as a synonym.
 % \item[Unbreakable spaces: \so{don't~break}]
 %   The |~|~command sets an unbreakable space.
 % \item[Grouping: \so{Virchow{sche}}]
 %   A pair of braces can be used to let a group of characters
-%   be seen as one item, so that \package{soul} does
+%   be seen as one item, so that \soul\ does
 %   for instance not space it out. The contents must, however,
 %   not contain potential hyphenation points. (See~\ref{par:Protecting})
 % \item[Protecting: \so{foo \mbox{little} bar}]
-%   An |\mbox| does also keep \package{soul} from
+%   An |\mbox| does also keep \soul\ from
 %   breaking up the contents, but they may even contain
 %   breakable material. |\hbox| can be used as a synonym.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
@@ -623,9 +624,9 @@
 %
 % \subsection{\dots\ others don't}
 %
-% Although the new \package{soul} is much more robust and forgiving than
+% Although the new \soul\ is much more robust and forgiving than
 % versions prior to~2.0, there are
-% still some things that are not allowed in \package{soul} arguments.
+% still some things that are not allowed in \soul\ arguments.
 % This is due to the complex engine, which has to read and inspect every
 % character before it can hand it over to \TeX's paragraph builder.
 %
@@ -646,7 +647,7 @@
 %   if it isn't really a font at all. |\TeX| is actually a bad example,
 %   because it \emph{is} already pre-registered as font switching command.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
-%   \package{soul} commands must not be nested. If you really
+%   \soul\ commands must not be nested. If you really
 %   need such, put the inner stuff in a box and use this box.\\
 %   \null\qquad|\newbox\anyboxname|\\
 %   \null\qquad|\sbox\anyboxname{ \so{the worst} }|\\
@@ -656,7 +657,7 @@
 %   \sbox\anyboxname{ \so{the worst} }
 %   \null\qquad\ul{This is by far\mbox{\usebox\anyboxname}example!}
 % \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
-%   \package{soul} arguments must not contain conditional statements like
+%   \soul\ arguments must not contain conditional statements like
 %   |\if|, |\else|, |\fi|, |\ifcase|, etc.
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
 %   They also must not contain \LaTeX\ environments, command definitions,
@@ -706,7 +707,8 @@
 %          page where the command is described. Those marked
 %          with a little asterisk are only available when the package
 %          is used together with \LaTeX, because they rely on the
-%          \emph{New Font Selection Scheme (NFSS)} used in \LaTeX.}
+%          \package{color} package or on the \emph{New Font Selection
+%          Scheme (NFSS)} used in \LaTeX.}
 % \label{tab:survey}
 % \end{center}
 % \end{table}
@@ -719,33 +721,42 @@
 %
 % \subsection{Troubleshooting}
 %
-% Unfortunately, there's just one error message that really describes
-% the cause and it is provided by the \package{soul} package. All other
-% error messages come directly from \TeX\ and do not really explain
-% what \package{soul} syntax rules were violated. Instead you will
-% get some complaints about low-level commands that \TeX\ wasn't
-% happy with. In these cases comment the \package{soul} statement out
-% and see if the error message still appears. If not, check if you
-% followed all the rules stated in~\S\S\,20--26.
+% Unfortunately, there's just one helpful error message provided by
+% the \soul\ package, that actually describes the problem. All other
+% messages are generated directly by \TeX\ and show the low-level
+% commands that \TeX\ wasn't happy with. They'll hardly point you
+% to the violated rule as described in the above paragraphs.
+% If you get such a mysterious error message for a line that contains
+% a soul statement, then comment that statement out and see if the message
+% still appears.
+% \texttt{`Incomplete }\cs{\ifcat}\texttt{'} is such a non-obvious message.
+% If the message doesn't appear now, then check the argument for 
+% violations of the rules listed in~\S\S\,20--26.
 %
 %
 %
-% \subsubsection{``Reconstruction failed''}
+% \subsubsection{\texttt{`Reconstruction failed'}}
 %
-% This message appears if \ref{par:Grouping hyphenateable material} or
-% eventually \ref{par:Material without ectt10 representation} were
-% violated. It is caused by the fact that the ????
-%
+% This message appears, if \ref{par:Grouping hyphenateable material} or
+% \ref{par:Material without ectt10 representation} were
+% violated. It is caused by the fact that the reconstruction pass
+% couldn't collect tokens with an overall width of the syllable that
+% was measured by the analyzer. This does either occurr when you
+% grouped hyphenateable text or used an unregistered command
+% that influences the syllable width. Font switching commands belong
+% to the latter group. See the cited paragraphs for how to fix
+% these problems.
 %
 %
 %
 % \subsubsection{Missing characters}
 %
-% you may get error messages that do not indicate that you violated one of the
-% above rules. Instead they may show some low-level problems that \TeX\ has detected.
-% \texttt{`Incomplete }\cs{\ifcat}\texttt{'} in a line with a \package{soul}
-% command is such a non-obvious message. ????
-%
+% If you have redefined the internal font as described in section \ref{sec:internalfont},
+% you may notice that some characters are omitted without any error message
+% being shown. This happens if you have chosen, let's say, a font with
+% only 128~characters like the |cmtt10| font, but are using characters
+% that aren't represented in this font, e.g. characters with codes
+% greater than~127.
 %
 %
 %
@@ -785,10 +796,10 @@
 % \noindent
 % Case~1 shows how letterspacing macros (\cs{\so} and \cs{\caps}) behave if
 % they aren't following or followed by a space: they omit outer space around
-% \package{soul} command. Case~2 is what you'll mostly need---letterspaced
+% \soul\ command. Case~2 is what you'll mostly need---letterspaced
 % text amidst running text. Following and leading space gets replaced by
 % \syn{outer space}. It doesn't matter if there are opening brace before
-% or closing braces afterwards. \package{soul} can see though both of them (case~3).
+% or closing braces afterwards. \soul\ can see though both of them (case~3).
 % Note that leading space has to be at least |5sp| wide to be accepted as
 % space, because \LaTeX\ uses tiny spaces with |\hskip1sp| internally as marker.
 % Case~3 shows how to enforce normal spaces instead of \syn{outer spaces:}
@@ -867,7 +878,7 @@
 %   {\so{input\slash output}}
 %
 % \soultest{To keep \TeX\ from breaking lines between the hyphen and `jet'
-%   you have to protect the hyphen. This is no \package{soul} restriction
+%   you have to protect the hyphen. This is no \soul\ restriction
 %   but normal \TeX\ behaviour}  
 %   |\so{\dots and \mbox{-}jet}|
 %   {\so{\dots and \mbox{-}jet}}
@@ -1151,7 +1162,7 @@
 % \bigbreak
 %
 % \noindent
-% There are two ways to avoid the problem, where the \package{soul} package
+% There are two ways to avoid the problem, where the \soul\ package
 % chooses the second by default:
 % \begin{enumerate}
 % \item
@@ -1198,7 +1209,7 @@
 %   {\ul{input\slash output}}
 %
 % \soultest{To keep \TeX\ from breaking lines between the hyphen and `jet'
-%   you have to protect the hyphen. This is no \package{soul} restriction
+%   you have to protect the hyphen. This is no \soul\ restriction
 %   but normal \TeX\ behaviour}  
 %   |\ul{\dots and \mbox{-}jet}|
 %   {\ul{\dots and \mbox{-}jet}}
@@ -1236,7 +1247,7 @@
 % \subsection{Adding accents}
 % \label{sec:soulaccent}
 %
-% The \package{soul} scanner generally sees every input token separately.
+% The \soul\ scanner generally sees every input token separately.
 % It has to be taught that some tokens belong together. For accents this is done
 % by registering them via the \describemacro{\soulaccent} macro.
 %
@@ -1247,7 +1258,7 @@
 % The standard accents, however, are already pre-registered:
 % |\`|, |\'|, |\^|, |\"|, |\~|, |\=|, |\.|, |\u|, |\v|, |\H|, |\t|,
 % |\c|, |\d| and |\b|. If used together with the \package{german}
-% package, \package{soul} automatically adds the |"| command.
+% package, \soul\ automatically adds the |"| command.
 % Let's assume you have defined |\%e| to produce some weird accent on
 % an `e'. Simply put the following line into your |soul.cfg|:
 %
@@ -1263,7 +1274,7 @@
 % \subsection{Adding font commands}
 % \label{sec:soulfont}
 %
-% To convince \package{soul} not to feed font switching
+% To convince \soul\ not to feed font switching
 % commands to the analyzer, but rather to execute these immediately,
 % they have to be registered, too. The \describemacro{\soulfont} macro
 % takes the name of the font switching command and either
@@ -1305,14 +1316,14 @@
 % \subsection{Changing the internal font}
 % \label{sec:internalfont}
 %
-% The \package{soul} package uses the |ectt10| font to
+% The \soul\ package uses the |ectt10| font to
 % analyze the syllables. This font belongs to \person{J\"org Knappen'\textrm{s}}
 % \caps{EC}-fonts, which should be part of every modern \TeX\ installation.
 % If \TeX\ reports ``\texttt{I can't find file `ectt10'.}'' you don't
 % seem to have this font installed. This font is used, because it
-% has 256~mono-space characters without any kerning. It is recommended that
-% you install at least the file |ectt10.tfm| which has has less than 1.4\,kB\null.
-% Alternatively, you can make the \package{soul} package use another
+% has 256~mono-spaced characters without any kerning. It is recommended that
+% you install at least the file |ectt10.tfm| which has less than 1.4\,kB\null.
+% Alternatively, you can let the \soul\ package use another
 % font like the |cmtt10| font that is part of any installation, or
 % some other mono-spaced font.
 % 
@@ -1320,7 +1331,7 @@
 % |\font\SOUL@tt=cmtt10|
 % \end{example}
 %
-% Note, however, that \package{soul} does only handle characters,
+% Note, however, that \soul\ does only handle characters,
 % for which the internal font has a character with the same
 % character code. As |cmtt10| contains only characters with codes
 % 0 to~127, you can't typeset character with codes 128 to~256.
@@ -1370,7 +1381,7 @@
 % \end{example}
 %
 % You can safely use the |\SOUL@@@| namespace for internal macros---it
-% won't be used by the \package{soul} package in the future.
+% won't be used by the \soul\ package in the future.
 %
 %
 %
@@ -1383,9 +1394,9 @@
 %
 % \section{Miscellaneous}
 %
-% \subsection{Using \package{soul} with other flavors of \TeX}
+% \subsection{Using \soul\ with other flavors of \TeX}
 %
-% This documentation describes how to use \package{soul} together
+% This documentation describes how to use \soul\ together
 % with \LaTeXe, for which it is optimized. It works, however, with
 % all other flavors of \TeX, too. There are just some minor restrictions
 % for Non-\LaTeX\ use:
@@ -1413,7 +1424,7 @@
 %
 %
 %
-% \subsection{Using \package{soul} commands in logical markup}
+% \subsection{Using \soul\ commands in logical markup}
 % \label{sec:markup}
 %
 % It's generally a bad idea to use font style commands like \cs{\textsc}
@@ -1430,7 +1441,7 @@
 % |the ducks. To the lions.'' --~\person{Brian Kantor}|\\
 % \end{example}
 %
-% It's quite simple to use \package{soul} commands that way:
+% It's quite simple to use \soul\ commands that way:
 %
 % \begin{example}
 % |\newcommand\comment*{\ul}             % or \let\comment=\ul|\\
@@ -1439,9 +1450,9 @@
 %
 % Letterspacing commands like \cs{\so} and \cs{\caps} have to
 % check whether they are followed by white space, in which case
-% they replace that space by \syn{outer space}. Note that \package{soul}
+% they replace that space by \syn{outer space}. Note that \soul\
 % does look through closing braces. Hence you can conveniently bury
-% a \package{soul} command within another macro like in the following
+% a \soul\ command within another macro like in the following
 % example. Use any other token to hide following space if necessary,
 % e.\,g.~the \cs{\null} macro.
 %
@@ -1496,7 +1507,7 @@
 %
 %
 %
-% \subsection{Using \package{soul} commands in section headings}
+% \subsection{Using \soul\ commands in section headings}
 %
 % Letterspacing was often used for section titles in the past,
 % mostly centered and with a closing period. The following example
@@ -1693,13 +1704,15 @@
 % \rule{\hsize}{.4pt}^^A
 % \begin{labeling}{\hspace{.335\hsize}}
 % \item[\normalfont\an{word}]
-%   At the first execution of |\SOUL@everytoken| the token `|w|' is
+%   At the first execution of |\SOUL@everytoken| the token `|w|' is  ????
 %   stored in |\SOUL@actual| while the token `|o|' is already stored
 %   in |\SOUL@prefetch|, and the token `|r|' in the macro
 %   |\SOUL@pprefetch|. The preamble and postamble are executed
 %   at the beginning\slash end.
 % \item[\normalfont\an{one two}]
-%   The macro |\SOUL@interword| is executed at every space.
+%   The macro |\SOUL@everyspace| is executed at every space within
+%   the \soul\ argument. It has to take one argument, that can either
+%   be empty or contain a penalty, that should be applied to the space.
 % \item[\normalfont\an{example}\kern-1em]
 %   The macro |\SOUL@everyhyphen| is executed at every possible
 %   imcplicit hyphenation point.
@@ -1738,15 +1751,15 @@
 %
 % \subsubsection{Defining a new interface}
 %
-% Let's define a \package{soul} driver that allows to typeset text
+% Let's define a \soul\ driver that allows to typeset text
 % with a hyphen at every potential hyphenation point. The name of
 % the macro shall be \cs{\sy} (for \emph{syllables}).
-% Since the \package{soul} mechanism is highly fragile, we use the \LaTeX\
+% Since the \soul\ mechanism is highly fragile, we use the \LaTeX\
 % command \cs{\DeclareRobustCommand}, so that the \cs{\sy} macro
 % can be used even in section headings etc. The \cs{\SOUL@setup}
 % macro sets all interface macros to reasonalbe default values.
 % This could of course be done manually, but what if a later
-% \package{soul} release has some interface macro added? 
+% \soul\ release has some interface macro added? 
 % \cs{\SOUL@setup} will consider future additions. As we won't
 % make use of \cs{\SOUL@everytoken} and \cs{\SOUL@postamble}
 % and both default to \cs{\relax}, anyway, we don't have to
@@ -1831,7 +1844,7 @@
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
 % suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach},
 % who sent me a couple of bug reports and feature requests, and finally encouraged
-% me to (almost) completely rewrite \package{soul}. \person{Rowland McDonnel}
+% me to (almost) completely rewrite \soul. \person{Rowland McDonnel}
 % gave useful hints for how to improve the documentation, but I'm afraid
 % he will still not be satisfied. And rightfully so. \texttt{:-)}
 %
@@ -1948,7 +1961,7 @@
 %
 %
 % \noindent
-% \package{soul} tries to be a good \LaTeX\ citizen if used under \LaTeX\ and
+% \soul\ tries to be a good \LaTeX\ citizen if used under \LaTeX\ and
 % declares itself properly. Most command sequences in the package
 % are protected by the |SOUL@| namespace, all other macros are first
 % defined to be empty. This will give us an error message \emph{now}
@@ -2070,9 +2083,9 @@
 % \subsection{The kernel}
 %
 % \begin{macro}{\SOUL@}
-% This macro is the entry to \package{soul}. Using it does only make
-% sense after setting up a \package{soul} driver. The next token after
-% the \package{soul} command will be assigned to \cs{\SOUL@}. This should
+% This macro is the entry to \soul. Using it does only make
+% sense after setting up a \soul\ driver. The next token after
+% the \soul\ command will be assigned to \cs{\SOUL@}. This should
 % either be an opening brace or the name of a macro that contains text.
 %
 %    \begin{macrocode}
@@ -2092,7 +2105,7 @@
 %
 %
 % \begin{macro}{\SOUL@expand}
-% If the first token after the \package{soul} command was an opening
+% If the first token after the \soul\ command was an opening
 % brace we set up some counters and start scanning. The \cs{\bgroup} will
 % be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
 % if the first token was a macro name, we expand that macro and
@@ -2881,7 +2894,7 @@
 %
 % \begin{macro}{\SOUL@socheck}
 % \begin{macro}{\SOUL@sodoouter}
-% Read the next token after the \package{soul} command into \cs{\SOUL@@}
+% Read the next token after the \soul\ command into \cs{\SOUL@@}
 % and examine it. If it's some kind of space, remove that and set
 % our \syn{outer space} with the appropriate penalty, else if it's
 % a closing brace, continue scanning. If it is neither: do nothing.
