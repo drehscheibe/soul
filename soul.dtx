@@ -126,7 +126,7 @@
 %
 %
 %
-% \CheckSum{1941}
+% \CheckSum{1951}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -607,7 +607,7 @@
 % \item[Accents: \so{na\"\i ve}]
 %   Accents can be used naturally.
 %   Support for the following accents is built-in: |\`|, |\'|, |\^|, |\"|, |\~|,
-%   |\=|, |\.|, |\u|, |\v|, |\H|, |\t|, |\c|, |\d| and |\b|. Additionally,
+%   |\=|, |\.|, |\u|, |\v|, |\H|, |\t|, |\c|, |\d|, |\b|, and |\r|. Additionally,
 %   if the \package{german} package \cite{german} is loaded you can also use the |"|
 %   accent command and write |\so{na"ive}|. See section~\ref{sec:soulaccent} for how to add
 %   further accents.
@@ -1323,7 +1323,7 @@
 %
 % The standard accents, however, are already pre-registered:
 % |\`|, |\'|, |\^|, |\"|, |\~|, |\=|, |\.|, |\u|, |\v|, |\H|, |\t|,
-% |\c|, |\d| and |\b|. If used together with the \package{german}
+% |\c|, |\d|, |\b|, and |\r|. If used together with the \package{german}
 % package, \soul\ automatically adds the |"| command.
 % Let's assume you have defined |\%| to put some weird accent on
 % the next character. Simply put the following line into your |soul.cfg|
@@ -2288,6 +2288,7 @@
     \newcommand*\caps{}
     \newcommand*\soulaccent{}
     \newcommand*\soulfont{}
+    \newcommand*\soulomit{}
 \fi
 %    \end{macrocode}
 %
@@ -2349,7 +2350,7 @@
 % \cs{\catcode} of~10.
 %
 %    \begin{macrocode}
-\newcommand*\soulomit{\noexpand\soulomit}
+\def\soulomit#1{#1}
 \def\SOUL@stopM{\SOUL@stop}
 \let\SOUL@stop\relax
 \def\SOUL@lowerthan{}
@@ -2411,6 +2412,8 @@
     \ifcat\bgroup\noexpand\SOUL@@
         \bgroup
         \let\<\SOUL@lowerthan
+        \let\>\relax
+        \def\soulomit{\noexpand\soulomit}%
         \gdef\SOUL@eventuallyexhyphen##1{}%
         \let\SOUL@soeventuallyskip\relax
         \SOUL@spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
@@ -2784,7 +2787,7 @@
 %    \begin{macrocode}
 \SOUL@cmds={%
     \\9\`\\9\'\\9\^\\9\"\\9\~\\9\=\\9\.%
-    \\9\u\\9\v\\9\H\\9\t\\9\c\\9\d\\9\b
+    \\9\u\\9\v\\9\H\\9\t\\9\c\\9\d\\9\b\\9\r
     \\1\emph\\1\textrm\\1\textsf\\1\texttt\\1\textmd\\1\textbf
     \\1\textup\\1\textsl\\1\textit\\1\textsc\\1\textnormal
     \\0\rmfamily\\0\sffamily\\0\ttfamily\\0\mdseries\\0\upshape
