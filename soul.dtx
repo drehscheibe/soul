@@ -165,7 +165,7 @@
 % \fi
 %
 %
-% \CheckSum{1098}
+% \CheckSum{1106}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1896,8 +1896,6 @@
 %
 %
 %
-%
-%
 % \begin{macro}{\caps}
 % The \LaTeX\ |\caps| version gets its settings from
 % the |\caps| data base.
@@ -1923,6 +1921,26 @@
 \let\SOUL@capsdfltfnt\scshape
 \fi
 %    \end{macrocode}
+%
+%
+%
+% \begin{macro}{\sloppyword}
+%
+%    \begin{macrocode}
+\sodef\sloppyword{%
+  \linepenalty10
+  \hyphenpenalty10
+  \adjdemerits0
+  \doublehyphendemerits0
+  \finalhyphendemerits0
+  \emergencystretch.1em}%
+  {0ptplus.1em}%
+  {.33emplus.11emminus.11em}%
+  {.33emplus.11emminus.11em}
+%    \end{macrocode}
+% \end{macro}
+%
+%
 %
 %
 %
@@ -1995,7 +2013,7 @@
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
     \dimen@ii\wd\z@\advance\dimen@ii\p@
-    \rlap{\SOUL@color{\SOUL@ulleaders\hskip\dimen@ii\kern-.5\p@}}\unhbox\z@}}}
+    \rlap{\SOUL@color{\kern-.5\p@\SOUL@ulleaders\hskip\dimen@ii}}\unhbox\z@}}}
 %    \end{macrocode}
 % \end{macro}
 %
