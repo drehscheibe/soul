@@ -17,6 +17,9 @@ print: $(NAME).ps
 %.ps: %.dvi 
 	dvips $(DVIPSOPT) $< -o $@
 
+$(NAME).pdf: $(NAME).dtx $(NAME).sty
+	pdflatex $(NAME).dtx
+
 archive:
 	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
 	@ echo ""
