@@ -2,4 +2,7 @@ v2.2:
 -----
 * make \hl work in plain mode (explain /tex-archive/macros/plain/graphics use)
 * fix \SOUL@uleveryexhyphen (#1 -> \hbox{#1})
-
+* fix \begin{tabularx}{}{}\so{test}\end{tabularx} bug:
+  soul doesn't seem to restore \toks@ properly, so tabularx falls on its
+  nose  :->
+* likewise s/toksdef/newtoks/ for SOUL@cmds. (nasty bug!)
