@@ -26,7 +26,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.3",
-%%     date            = "12 May 2002",
+%%     date            = "29 May 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -80,7 +80,7 @@
 %
 %<*driver>
 \def\fileversion{2.3}
-\def\filedate{2002/05/12}
+\def\filedate{2002/05/29}
 %
 %
 %
@@ -148,7 +148,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{May 12, 2002}
+% \date{May 29, 2002}
 %
 %^^A=====================================================
 %
@@ -386,7 +386,7 @@
 %   \overfullrule5pt
 % }
 %
-% \def\FIXME{\message{<FIXME>}}
+% \def\FIXME#1{\message{<FIXME>}#1}
 %
 % \makeatother
 %
@@ -420,7 +420,7 @@
 % \changes{v2.2}{2002/05/12}{fixed a couple of bugs; added support for
 %   the Plain TeX color.sty wrapper}
 %
-% \changes{v2.3}{2002/??/??}{compatibility with cmbright/ccfonts}
+% \changes{v2.3}{2002/05/29}{compatibility with cmbright/ccfonts}
 %
 %
 %
@@ -2265,7 +2265,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/05/12 v2.3 letterspacing/underlining  (mf)]
+        [2002/05/29 v2.3 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2331,7 +2331,7 @@
 %
 %
 %
-% \newpage\FIXME
+% \FIXME{\newpage}
 % \begin{macro}{\soulomit}
 % \begin{macro}{\SOUL@ignorem}
 % \begin{macro}{\SOUL@ignore}
@@ -2605,7 +2605,7 @@
 %
 % \begin{macro}{\SOUL@dotoken}
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
-% to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
+% to \cs{\SOUL@docmd}, everything else is added to \cs{\SOUL@word},
 % which will be fed to the analyzer every time a word is completed.
 % Since \emph{robust} commands come with an additional space, we
 % have also to examine if there's a space variant. Otherwise we
