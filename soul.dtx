@@ -498,7 +498,7 @@
 %
 % However, in the last centuries letterspacing was excessively used,
 % underlining at least sometimes, because the old \emph{Fraktur} fonts
-% could not use capitals or italic shape for emphasizing. This tradition is wideley
+% could not use capitals or italic shape for emphasizing. This tradition is widely
 % continued until today. Furthermore italic shape is not an option in many languages with
 % non-latin glyphs. Letterspacing has a strong tradition in eastern countries
 % where cyrillic fonts are used.
@@ -539,7 +539,7 @@
 % \end{tabular}
 % \end{center}
 % \footnotetext{The look of highlighting is nowhere demonstrated
-%   in this documentation, because it requires a PostScript aware
+%   in this documentation, because it requires a Postscript aware
 %   output driver and would come out as ugly black bars on other
 %   devices, looking very much like censoring bars. Think of it as
 %   the effect of one of those coloring text markers.}
@@ -799,7 +799,7 @@
 % and \syn{outer space} before and after the spaced out text.
 % If we let ``$\cdot$'' stand for \syn{inter-letter space}, ``$\ast$''
 % for \syn{inner spaces} and ``$\bullet$'' for \syn{outer
-% spaces,} then the input on the left side of the follwing table
+% spaces,} then the input on the left side of the following table
 % will yield the schematic output on the right side:
 %
 % \begin{center}
@@ -883,7 +883,7 @@
 %   |\so{inside.} \& \so{outside}.|
 %   {\so{inside.} \& \so{outside}.}
 % 
-% \soultest{Spaceout skips may be removed by typing \texttt{\string\<}.
+% \soultest{Space-out skips may be removed by typing \texttt{\string\<}.
 % It's, however, desirable to put the quotation marks out of
 % the argument}
 %   |\so{``\<Pennsylvania\<''}|
@@ -1653,7 +1653,7 @@
 % \bigbreak
 %
 % \noindent
-% Note that the defintion of \cs{\periodafter} decides if
+% Note that the definition of \cs{\periodafter} decides if
 % the closing period shall be spaced out with the title (1), or
 % follow without space (2):
 %
@@ -1820,7 +1820,7 @@
 %   be empty or contain a penalty, that should be applied to the space.
 % \item[\normalfont\an{example}\kern-1em]
 %   The macro |\SOUL@everyhyphen| is executed at every possible
-%   imcplicit hyphenation point.
+%   implicit hyphenation point.
 % \item[\normalfont\an{beta-test}]
 %   Explicit hyphens trigger \cs{\SOUL@everyexhyphen}.
 % \end{labeling}
@@ -2123,7 +2123,7 @@
 %
 %
 % \noindent
-% Other packages wouldn' be happy if we reserved piles of \cs{\newtoks} and
+% Other packages wouldn't be happy if we reserved piles of \cs{\newtoks} and
 % \cs{\newdimen}, so we try to get away with their \cs{\...def} counterparts.
 % If the future shows that it was a bad decision, this can still be changed.
 % Local registers are always even, while global ones are odd---this is a
@@ -2999,7 +2999,7 @@
 %
 % \begin{macro}{\SOUL@sopreamble}
 % If letterspacing (\cs{\so} or \cs{\caps}) follows a white space, we
-% repace it with our \syn{outer space}. \LaTeX\ uses a |\hskip1sp| as
+% replace it with our \syn{outer space}. \LaTeX\ uses a |\hskip1sp| as
 % marker in tabular entries, so we ignore tiny skips.
 %
 %    \begin{macrocode}
@@ -3088,7 +3088,7 @@
 %
 %
 % \begin{macro}{\SOUL@soeverytoken}
-% Typeset the token and put an unbreakabel inter-character skip
+% Typeset the token and put an unbreakable inter-character skip
 % after. If the token is \cs{\<} then remove the last skip instead.
 % Gets the character kerning value between the actual and the
 % next token in \cs{\SOUL@charkern}.
@@ -3122,8 +3122,8 @@
 %
 %
 % \begin{macro}{\SOUL@soeveryspace}
-% This makro sets an \syn{inner space}. The argument may contain
-% panalties and is used for the |~| command. This construction was
+% This macro sets an \syn{inner space}. The argument may contain
+% penalties and is used for the |~| command. This construction was
 % needed to make colored underlines work, without having to put
 % any of the coloring commands into the core. |\kern\z@| prevents
 % in subsequent \cs{\so} commands that the second discards the
@@ -3600,7 +3600,7 @@
 % \begin{macro}{\SOUL@ulunderline}
 % Set an underline under the given material. It draws the line first,
 % and the given material afterwards. This is needed for highlighting,
-% but gives less than optimal results for colored overstiking, which,
+% but gives less than optimal results for colored overstriking, which,
 % however, will hardly ever be used, anyway.
 %
 %    \begin{macrocode}
@@ -3747,7 +3747,7 @@
 % \begin{macro}{\setulcolor}
 % Define the underline color or turn off coloring, in which case the lines are not
 % just colored black, but remain uncolored. This makes them appear
-% black, nevertheless, and has the advantage, that no PostScript
+% black, nevertheless, and has the advantage, that no Postscript
 % \cs{\specials} are cluttering the output. 
 %
 %    \begin{macrocode}
@@ -3975,7 +3975,7 @@
 %
 % \begin{macro}{\SOUL@stcolor}
 % \begin{macro}{\setstcolor}
-% Set the overstiking color. This won't be used often, but is required
+% Set the overstriking color. This won't be used often, but is required
 % in cases, where the underlines are colored. You wouldn't want to
 % overstrike in the same color. Note that overstriking lines are
 % drawn \emph{beneath} the text, hence light colors won't look good.
@@ -4004,7 +4004,7 @@
 % \subsection{The highlighting driver}
 % 
 % \begin{macro}{\SOUL@hlpreamble}
-% This is nothing else than overstiking with very thick lines.
+% This is nothing else than overstriking with very thick lines.
 %
 %    \begin{macrocode}
 \def\SOUL@hlpreamble{%
@@ -4046,7 +4046,7 @@
 % \begin{macro}{\texthl}
 % \begin{macro}{\sethlcolor}
 % \begin{macro}{\SOUL@hlcolor}
-% Define the highlighing macro and the color setting macro with a 
+% Define the highlighting macro and the color setting macro with a 
 % simple default color. Yellow isn't really pleasing, but it's already
 % predefined by the \package{color} package.
 %
@@ -4102,7 +4102,7 @@
 %
 % \noindent
 % When used in an environment other than \LaTeX\ we disable any command
-% that uses color and let the hightlighting macro just set an underline.
+% that uses color and let the highlighting macro just set an underline.
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
