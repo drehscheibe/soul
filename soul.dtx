@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1912}
+% \CheckSum{1896}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -304,7 +304,7 @@
 %^^A  magazine-like (truly awful) paragraphs
 %^^A  (This macro was part of v1.0.  I took this out of the package,
 %^^A  after I was warned, that one would not see any difference between
-%^^A  M$-Wood and TeX documents in the future, after which I had sleepless nights...   ;-)
+%^^A  Micros~1 WinWord and TeX documents in the future, after which I had sleepless nights...   ;-)
 %^^A  If you know what you're doing, you can copy it to your personal `soul.cfg' file.
 %
 %  \DeclareRobustCommand*\magstylepar{\SOUL@sosetup
@@ -686,13 +686,20 @@
 %   scope as in |\def\foo{{\bf bar}}| or register the `container'
 %   as font switching command: |\soulfont{\foo}{0}|. Note that both
 %   solutions yield different results. 
-% \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
-%   \soul\ arguments must not contain conditional statements like
-%   |\if|, |\else|, |\fi|, |\ifcase|, etc.
-% \item[Unexpandable material in command sequences: \def\foo{\copyright} \so\foo]
-%   Some commands must not be used in an \cs{\edef} statement^^A
+% \item[Material that needs expansion: \so{\romannumeral\year}]
+%   In this example \cs{\so} would try to put space between \cs{\romannumeral}
+%   and \cs{\year}, which will, of course, not work. Putting group braces
+%   around the argument would work, but keep the contents from being
+%   letterspaced.
+%   You have to expand them before you feed them to \soul, or even better:
+%   Wrap the material up in a command sequence and let \soul\ expand it:
+%   |\def\x{\romannumeral\year}\so\x|. \soul\ is careful to expand
+%   enough, yet not too much.
+% \item[Unexpandable material in command sequences: \def\foo{\bar} \so\foo]
+%   Some commands---don't ask for examples--- must not be used in an \cs{\edef} statement^^A
 %   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.
-%   \quad\texttt{:-)}}.
+%   Yet \texttt{\string\copyright} works in \soul\ arguments, because it is
+%   explicitly protected by the package}.
 %   As \soul\ does this when its argument is
 %   a command sequence, it has to protect such commands with \cs{\noexpand} in
 %   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
@@ -748,8 +755,7 @@
 %          page where the command is described. Those marked
 %          with a little asterisk are only available when the package
 %          is used together with \LaTeX, because they rely on the
-%          \package{color} package or on the \emph{New Font Selection
-%          Scheme (NFSS)} used in \LaTeX.}
+%          \emph{New Font Selection Scheme (NFSS)} used in \LaTeX.}
 % \label{tab:survey}
 % \end{center}
 % \end{table}
@@ -1308,7 +1314,9 @@
 % |\soulaccent{\%}|
 % \end{example}
 %
-%
+% Note that active characters like the |"| command have already
+% to be \cs{\active} when they are stored or they won't be recognized
+% later. This can be done temporarily, as in |{\catcode\`"\active\soulaccent{"}}|.
 %
 %
 %
@@ -2151,22 +2159,14 @@
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
-    \newcommand*\textso{}
-    \newcommand*\sloppyword{}
-    \newcommand*\capsreset{}
     \newcommand*\capsdef{}
-    \newcommand*\capssave{}
-    \newcommand*\textcaps{}
     \newcommand*\capsfont{}
     \newcommand*\setulcolor{}
     \newcommand*\setuloverlap{}
-    \newcommand*\textul{}
     \newcommand*\setul{}
     \newcommand*\resetul{}
     \newcommand*\setuldepth{}
-    \newcommand*\textst{}
     \newcommand*\setstcolor{}
-    \newcommand*\texthl{}
     \newcommand*\sethlcolor{}
     \newcommand*\so{}
     \newcommand*\ul{}
@@ -3074,7 +3074,7 @@
 %
 % \begin{macro}{\SOUL@sopreamble}
 % If letterspacing (\cs{\so} or \cs{\caps}) follows a white space, we
-% replace it with our \syn{outer space}. \LaTeX\ uses a |\hskip1sp| as
+% replace it with our \syn{outer space}. \LaTeX\ uses |\hskip1sp| as
 % marker in tabular entries, so we ignore tiny skips.
 %
 %    \begin{macrocode}
@@ -3121,7 +3121,7 @@
 % \begin{macro}{\SOUL@sodoouter}
 % Read the next token after the \soul\ command into \cs{\SOUL@@}
 % and examine it. If it's some kind of space, replace it with
-% our \syn{outer space} and the appropriate penalty, else if it's
+% \syn{outer space} and the appropriate penalty, else if it's
 % a closing brace, continue scanning. If it is neither: do nothing.
 %
 %    \begin{macrocode}
@@ -3159,8 +3159,8 @@
 %
 %
 % \begin{macro}{\SOUL@soeverytoken}
-% Typeset the token and put an unbreakable inter-character skip
-% after. If the token is \cs{\<} then remove the last skip instead.
+% Typeset the token and put an unbreakable inter-letter skip
+% thereafter. If the token is \cs{\<} then remove the last skip instead.
 % Gets the character kerning value between the actual and the
 % next token in \cs{\SOUL@charkern}.
 %
@@ -3240,7 +3240,7 @@
 % \begin{macro}{\SOUL@soeveryexhyphen}
 % Sets the explicit hyphen that is passed as argument.
 % \cs{\SOUL@soeventuallyskip} equals \cs{\SOUL@sosetletterskip},
-% except when a \cs{\<} has been detected. This is necessary because
+% except when a \cs{\<} had been detected. This is necessary because
 % \cs{\SOUL@soeveryexhyphen} wouldn't know otherwise, that it
 % follows a \cs{\<}.
 %
@@ -3722,7 +3722,7 @@
 %
 %
 % \begin{macro}{\SOUL@uleverysyllable}
-% If we use \cs{\SOUL@everysyllable}, we don't have to care about
+% By using \cs{\SOUL@everysyllable} we don't have to care about
 % kerning values and get better results for highlighting, where
 % negative kerning values would otherwise cut off characters.
 %
@@ -4195,7 +4195,9 @@
 % \noindent
 % If we have been loaded by a \LaTeX\ environment and the \package{color}
 % package wasn't also loaded, we disable all colors. Then we add the umlaut accent
-% |"| if the \package{german} package is present. The \option{capsdefault}
+% |"| if the \package{german} package is present. The quotes character has to
+% be \cs{\catcode}'d \cs{\active} now, or it won't get recognized later.
+% The \option{capsdefault}
 % option overrides the \cs{\caps} driver and lets \cs{\SOUL@} set an underline.
 % Finally load the local configuration, process the |capsdefault|
 % option and exit.
