@@ -91,13 +91,8 @@
 %
 \IfFileExists{soul.sty}{%
     \usepackage{soul}[2002/01/10]
-    \expandafter\ifx\csname setulcolor\endcsname\relax
-        \GenericError{soul.dtx}{soul.dtx error}{%
-            Wrong soul.sty version found. Stop here (by typing X)^^J^^A
-            and process soul.dtx again.}%
-            {You have an older soul.sty version installed. This^^J^^A
-            documentation needs the version that will be generated^^J^^A
-            when you process soul.dtx again.}
+    \expandafter\ifx\csname sloppyword\endcsname\relax  % old version?
+        \def\sloppyword{\textbf{?? [obsolete soul version]}}
     \fi    
     \let\SOULSTYfound\active
 }{%
@@ -129,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1898}
+% \CheckSum{1918}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -157,7 +152,7 @@
 %^^A=====================================================
 %
 %^^A  These messy macros allow to typeset the `example' sections
-%^^A  conveniently. You'd better ignore them.    :-)
+%^^A  conveniently. You'd better ignore them. I do!   :-)
 %
 % \makeatletter
 %
@@ -433,7 +428,8 @@
 % \begin{abstract}
 % This article describes the \soul\ package^^A
 %^^A%%
-%   \footnote{This file has version number \fileversion, last revised \filedate.},
+%   \footnote{This file has version number \fileversion, last revised \filedate, on
+%             DEK's 64\textsuperscript{th} birthday.},
 %^^A%%
 % which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
 % and some derivatives such as \st{overstriking} and highlighting.
@@ -514,7 +510,7 @@
 % not broken within spaced out text.}
 %
 % While some books follow all these rules \cite{Muszynski}, others don't
-% \cite{Reglement}. (In fact, most books in my personal library do \emph{not} space out commas.)
+% \cite{Reglement}. In fact, most books in my personal library do \emph{not} space out commas.
 %
 %
 %
@@ -528,7 +524,12 @@
 %
 % The \soul\ package provides five commands that are aimed at emphasizing
 % text parts. Each of the commands takes one argument that can either be
-% the text itself or the name of a macro that contains text (e.\,g.~|\so\text|).
+% the text itself or the name of a macro that contains text (e.\,g.~|\so\text|)^^A
+% ^^A
+% \footnote{See~\ref{par:Unexpandable material in command sequences} for
+%    some additional information about the latter mode.}^^A
+% ^^A
+% .
 % See table~\ref{tab:survey} for a complete command survey.
 %
 % {\catcode`\|=12
@@ -594,8 +595,6 @@
 % constructs are only allowed because the package explicitly implements them.
 %
 % \begin{verblist}{1}
-% \item[Quotes: \so{``quotes''}]
-%   The \soul\ package recognizes the quotes ligatures |``|, |''| and |,,|. 
 % \item[Accents: \so{na\"\i ve}]
 %   Accents can be used naturally.
 %   Support for the following accents is built-in: |\`|, |\'|, |\^|, |\"|, |\~|,
@@ -603,6 +602,8 @@
 %   if the \package{german} package \cite{german} is loaded you can also use the |"|
 %   accent command and write |\so{na"ive}|. See section~\ref{sec:soulaccent} for how to add
 %   further accents.
+% \item[Quotes: \so{``quotes''}]
+%   The \soul\ package recognizes the quotes ligatures |``|, |''| and |,,|. 
 % \item[Mathematics: \so{foo$x^3$bar}]
 %   Mathematic formulas are allowed, as long as they are
 %   surrounded by~\texttt\$. Note that the \LaTeX\ 
@@ -664,13 +665,6 @@
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
 %   The argument must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
-% \item[Material without ectt1000 representation: \so{foo \TeX\ bar}]
-%   Every token that can't be typeset using characters of the |ectt1000| font
-%   without any space in between leads to a reconstruction error. This can be
-%   avoided by enclosing the token in braces, e.\,g.~|\so{foo {\TeX} bar}|, or registering
-%   it as font, e.\,g.~|\soulfont{\TeX}{0}| |\so{foo \TeX\ bar}|. It doesn't matter
-%   if it isn't really a font at all. \cs{\TeX} is actually a bad example,
-%   because it \emph{is} already pre-registered as font switching command.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
 %   \soul\ commands must not be nested. If you really
 %   need such, put the inner stuff in a box and use this box.\\
@@ -681,13 +675,28 @@
 %   \newbox\anyboxname
 %   \sbox\anyboxname{ \so{the worst} }
 %   \null\qquad\ul{This is by far\mbox{\usebox\anyboxname}example!}
+% \item[Leaking font switching: \def\foo{\bf bar} \so{\foo baz}]
+%   A hidden font switching command that infects its neighborship
+%   causes a \texttt{`Reconstruction failed'} error. To avoid this either limit its
+%   scope as in |\def\foo{{\bf bar}}| or register the `container'
+%   as font switching command: |\soulfont{\foo}{0}|. Note that both
+%   solutions yield different results. 
 % \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
 %   \soul\ arguments must not contain conditional statements like
 %   |\if|, |\else|, |\fi|, |\ifcase|, etc.
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
-%   They also must not contain \LaTeX\ environments, command definitions,
+%   \package{soul} arguments must not contain \LaTeX\ environments, command definitions,
 %   and fancy stuff like |\vadjust|. As long as you are writing simple,
 %   ordinary `horizontal' material, you are on the safe side.
+% \item[Unexpandable material in command sequences: \def\foo{\copyright} \so\foo]
+%   Some commands must not be used in an \cs{\edef} statement^^A
+%   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}}.
+%   As \package{soul} does this when its argument is
+%   a command sequence, it has to protect such commands with \cs{\noexpand} in
+%   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
+%   \cs{\S}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright}.
+%   You can put \cs{\noexpand} manually in front of similar commands, that
+%   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|
 % \end{verblist}
 %
 %
@@ -763,13 +772,13 @@
 % \subsubsection{\texttt{`Reconstruction failed'}}
 %
 % This message appears, if \ref{par:Grouping hyphenateable material} or
-% \ref{par:Material without ectt1000 representation} were
+% \ref{par:Leaking font switching} was
 % violated. It is caused by the fact that the reconstruction pass
 % couldn't collect tokens with an overall width of the syllable that
 % was measured by the analyzer. This does either occur when you
 % grouped hyphenateable text or used an unregistered command
 % that influences the syllable width. Font switching commands belong
-% to the latter group. See the cited paragraphs for how to fix
+% to the latter group. See the above cited sections for how to fix
 % these problems.
 %
 %
@@ -825,11 +834,11 @@
 % text amidst running text. Following and leading space get replaced by
 % \syn{outer space}. It doesn't matter if there are opening braces before
 % or closing braces afterwards. \soul\ can see though both of them (case~3).
-% Note that leading space has to be at least |5sp| wide to be accepted as
-% space, because \LaTeX\ uses tiny spaces with |\hskip1sp| internally as marker.
+% Note that leading space has to be at least |5sp| wide to be recognized as
+% space, because \LaTeX\ uses tiny spaces generated by |\hskip1sp| as marker.
 % Case~4 shows how to enforce normal spaces instead of \syn{outer spaces:}
-% Preceding space can be hidden by any token or |\kern0pt|. Following space
-% can also be hidden by any token, but note that a typical macro name
+% Preceding space can be hidden by or |\kern0pt| or \cs{\null} or any character.
+% Following space can also be hidden by any token, but note that a typical macro name
 % like \cs{\relax} or \cs{\null} would also hide the space after.
 %
 %
@@ -954,12 +963,14 @@
 % \end{tabular}
 %
 % \medbreak\noindent 
-% The \cs{\caps} font database is by default empty, i.\,e.: it contains
+% The \cs{\caps} font database is by default empty, i.\,e., it contains
 % just a single default entry, which yields the result as shown in the
 % above example. 
 % New font entries may be added on top of this list using the \describemacro{\capsdef}
 % command, which takes five arguments: The first argument describes the font with
-% \emph{encoding, family, series, shape,} and \emph{size,} each optionally
+% \emph{encoding, family, series, shape,} and \emph{size,}^^A
+% \footnote{defined by the \caps{NFSS}, the ``New Font Selection Scheme''}
+% each optionally
 % (e.\,g.~|OT1/cmr/m/n/10| for this very font, or only |/ppl///12| for all
 % \emph{palatino} fonts at size 12\,pt). The \emph{size} entry may also contain
 % a size range (\texttt{5-10}), where zero is assumed for an omitted lower
@@ -987,10 +998,10 @@
 % entry after it can be reached.
 %
 % The \cs{\caps} database can be cleared with the \describemacro{\capsreset}
-% command. It will only contain the default entry thereafter. The
+% command and will only contain the default entry after that. The
 % \describemacro{\capssave} command saves the whole current database
 % and assigns it to a macro name. This allows to predefine different
-% groups of \cs{\caps} sets:
+% groups of \cs{\caps} data sets:
 %
 % \begin{example}
 % |\capsreset|\\
@@ -1015,7 +1026,7 @@
 % |}|\\
 % \end{example}
 %
-% See the `|example.cfg|' file for a fairly complete example.
+% See the `|example.cfg|' file for a detailed example.
 % If you have defined a bunch of sets for different fonts and sizes,
 % you may lose control over what fonts are used by the package. With the
 % package option \DescribeOption{capsdefault}\option{capsdefault} selected, 
@@ -1098,8 +1109,9 @@
 %
 % \section{\ul{Underlining}}
 %
-% The underlining macros are my answer to Prof.~\person{Knuth{\normalfont's}} exercise 18.26 from his 
-% \TeX{}book~\cite{DEK}. \texttt{:-)} All said about the macro \describemacro{\ul} is also true of the
+% The underlining macros are my answer to Prof.~\person{Knuth{\normalfont's}}
+% exercise 18.26 from his \TeX{}book~\cite{DEK}. \texttt{:-)} Most of what
+% is said about the macro \describemacro{\ul} is also true of the
 % striking out macro \describemacro{\st} and the highlighting macro \describemacro{\hl},
 % both of which are in fact derived from the former.
 %
@@ -1318,7 +1330,7 @@
 % \end{example}
 %
 %
-% The standard commands of \TeX\ and \LaTeX\, as well as the
+% All standard \TeX\ and \LaTeX\ font commands, as well as the
 % \package{yfonts} commands are already pre-registered:
 % 
 % \begin{example}
@@ -1332,15 +1344,11 @@
 % |\swabfamily, \gothfamily|\\
 % \end{example}
 %
-% Some other macros are also registered as fonts, so the
-% analyzer won't see them. This is necessary because they
-% have no representation in the |ectt1000| font and would
-% hence cause a reconstruction error.
-% See~\ref{par:Material without ectt1000 representation}.
-%
-% \begin{example}
-% |\S, \textregistered, \copyright, \TeX, \LaTeX|\\
-% \end{example}
+% You can also register other commands as fonts, so the
+% analyzer won't see them. This may be necessary for some
+% macros that \package{soul} refuses to typeset correctly.
+% But note, that \cs{\so} and \cs{\caps} won't put their
+% letter-skips around then.
 %
 %
 %
@@ -1464,7 +1472,7 @@
 % It's generally a bad idea to use font style commands like \cs{\textsc}
 % in running text. There should always be some reasoning behind changing
 % the style, such as ``names of persons shall be typeset in a caps-an-small-caps
-% font''. Then you declare in your text just that some words are the name of a
+% font''. So you declare in your text just that some words are the name of a
 % person, while you define in the preamble or, even better, in a separate
 % style file how to deal with persons:
 %
@@ -1579,7 +1587,7 @@
 % \noindent
 % The \cs{\periodafter} macro adds a period to the title, but not to
 % the entry in the table of contents. It takes the name of a command as
-% argument, that shall be applied to the title, like e.\,g.~\cs{\so}.
+% argument, that shall be applied to the title, for example~\cs{\so}.
 % Here's a more complicated and complete example:
 %
 % \begin{example}
@@ -1674,7 +1682,7 @@
 % use the same kernel mechanism. It lets a \emph{word scanner} run over the given argument,
 % which inspects every token. If a token is a command registered via \cs{\soulfont},
 % it is executed immediately. Other tokens are only counted and trigger some action
-% when a certain amount is reached (quotes and dashes). Three subsequent `|-|', for example,
+% when a certain number is reached (quotes and dashes). Three subsequent `|-|', for example,
 % trigger |\SOUL@everyexhyphen{---}|. A third group leads to special actions,
 % like |\mbox| that starts reading-in a whole group to protect its contents and let them be
 % seen as one entity. All other tokens, mostly characters and digits, are collected in
@@ -1751,7 +1759,7 @@
 % \subsubsection{The interface macros}
 %
 % The following list describes each of the interface macros and which
-% registers they can rely on. The mark between label and description
+% registers it can rely on. The mark between label and description
 % will be used in section \ref{sec:interfaceexamples} to show when
 % the macros are executed. The addition |#1| means that the macro
 % takes one argument.
@@ -1765,7 +1773,7 @@
 % \item[\texttt{\string\SOUL@everytoken}]\m{$T$}^^A
 %   executed after scanning a token; It gets that 
 %   token in \cs{\SOUL@token} and has to care for inserting
-%   the kerning value between this and the next character (\cs{\SOUL@charkern}).
+%   the kerning value \cs{\SOUL@charkern} between this and the next character.
 %   To look at the next character, execute \cs{\SOUL@gettoken}, which
 %   replaces \cs{\SOUL@token} by the next token. This token has to
 %   be put back into the queue using \cs{\SOUL@puttoken}.
@@ -1795,10 +1803,9 @@
 %   setting the space. The engine submits a \cs{\penalty} setting as
 %   parameter |#1| that should be put in front of the space. The
 %   macro should at least do |{#1\space}|. Further information can be found in
-%   \cs{\SOUL@lasttoken} and \cs{\SOUL@syllable}. Note that the leading and
-%   trailing space of the \cs{\so} driver implementation is not covered
-%   by \cs{\SOUL@everyspace}, but provided by \cs{\SOUL@preamble} and
-%   \cs{\SOUL@postamble}.
+%   \cs{\SOUL@lasttoken} and \cs{\SOUL@syllable}. Note that this macro does not
+%   care for the leading and trailing space. This is the job of 
+%   \cs{\SOUL@preamble} and \cs{\SOUL@postamble}.
 % \end{labeling}
 %
 %
@@ -1859,7 +1866,7 @@
 % \subsection{A driver example}
 %
 % Let's define a \soul\ driver that allows to typeset text
-% with a hyphen at every potential hyphenation point. The name of
+% with a \cs{\cdot} at every potential hyphenation point. The name of
 % the macro shall be \cs{\sy} (for \emph{syllables}).
 % Since the \soul\ mechanism is highly fragile, we use the \LaTeX\
 % command \cs{\DeclareRobustCommand}, so that the \cs{\sy} macro
@@ -2251,6 +2258,11 @@
             \def~{\noexpand~}%
             \def\,{\noexpand\,}%
             \def\S{\noexpand\S}%
+            \def\textregistered{\noexpand\textregistered}%
+            \def\textcircled{\noexpand\textcircled}%
+            \def\copyright{\noexpand\copyright}%
+            \def\TeX{\noexpand\TeX}%
+            \def\LaTeX{\noexpand\LaTeX}%
             \xdef\SOUL@x{\SOUL@@}%
         \egroup%
         \def\SOUL@n{\expandafter\SOUL@\expandafter{\SOUL@x}}%
@@ -2758,7 +2770,7 @@
 % the requested width \cs{\SOUL@syllgoal}. Furthermore the kerning
 % values are prepared in case \cs{\SOUL@everytoken} needs them.
 % The \cs{\<} command used by \cs{\so} and \cs{\caps} needs some
-% special treatment: It has to be checked for, even before
+% special treatment: It has to be checked for even before
 % we can end a syllable.
 %
 %    \begin{macrocode}
@@ -2838,7 +2850,7 @@
 % The possibility to put tokens back makes the scanner design much
 % cleaner. There's only room for one token, though, so we issue
 % an error message if \cs{\SOUL@puttoken} is told to put a token
-% back while the buffer is still in use. Note the \cs{\SOUL@debug}
+% back while the buffer is still in use. Note that \cs{\SOUL@debug}
 % is actually undefined. This won't hurt as it can only happen
 % during driver design. No user will ever see this message.
 %
@@ -3485,7 +3497,7 @@
 %
 % \begin{macro}{\SOUL@chk}
 % Sets the \cs{\SOUL@match} flag if both parameters are equal.
-% This is used for all \caps{NFSS} elements except the font size.
+% This is used for all \caps{\small NFSS} elements except the font size.
 %
 %    \begin{macrocode}
 \def\SOUL@chk#1#2{%
@@ -3990,7 +4002,7 @@
 % Set the overstriking color. This won't be used often, but is required
 % in cases, where the underlines are colored. You wouldn't want to
 % overstrike in the same color. Note that overstriking lines are
-% drawn \emph{beneath} the text, hence light colors won't look good.
+% drawn \emph{beneath} the text, hence bright colors won't look good.
 %
 %    \begin{macrocode}
 \let\SOUL@stcolor\relax
