@@ -442,6 +442,9 @@
 %   Other bugfixes; change caps set handling; add footnote and
 %   textsuperscript support}
 %
+% \changes{v2.5}{????/??/??}{don't use `count0 to avoid problems
+%   with the `output routine}
+%
 %
 %
 %
@@ -2377,10 +2380,10 @@
 \dimendef\SOUL@syllwidth\tw@
 \dimendef\SOUL@charkern=4
 \dimendef\SOUL@hyphkern=6
-\countdef\SOUL@minus\z@
-\countdef\SOUL@comma\tw@
-\countdef\SOUL@apo=4
-\countdef\SOUL@grave=6
+\countdef\SOUL@minus\tw@
+\countdef\SOUL@comma4
+\countdef\SOUL@apo=6
+\countdef\SOUL@grave=8
 \newskip\SOUL@spaceskip
 \newif\ifSOUL@ignorespaces
 %    \end{macrocode}
