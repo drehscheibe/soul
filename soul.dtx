@@ -2148,6 +2148,7 @@
 \countdef\SOUL@apo=4
 \countdef\SOUL@grave=6
 \countdef\SOUL@level=8
+\newif\ifSOUL@ignorespaces
 %    \end{macrocode}
 %
 %
@@ -2233,6 +2234,7 @@
         \let\<\SOUL@lowerthan
         \gdef\SOUL@eventuallyexhyphen##1{}%
         \let\SOUL@soeventuallyskip\relax
+        \SOUL@ignorespacesfalse
         \leavevmode
         \SOUL@preamble
         \SOUL@lasttoken={}%
@@ -2296,6 +2298,10 @@
 %    \begin{macrocode}
 \def\SOUL@eval{%
     \def\SOUL@n*##1{\SOUL@scan}%
+    \if\noexpand\SOUL@@\SOUL@spc
+    \else
+        \SOUL@ignorespacesfalse
+    \fi
     \ifnum\SOUL@minus=\thr@@
         \SOUL@doword
         \SOUL@eventuallyexhyphen{-}%
@@ -2354,12 +2360,16 @@
         \else\if\noexpand\SOUL@@\SOUL@spc
             \SOUL@doword
             \SOUL@eventuallyexhyphen\null
-            \SOUL@everyspace{}%
+            \ifSOUL@ignorespaces
+            \else
+                \SOUL@everyspace{}%
+            \fi
             \def\SOUL@n* {\SOUL@scan}%
         \else\ifx\SOUL@@\\%
             \SOUL@doword
             \SOUL@eventuallyexhyphen\null
-            \unskip\nobreak\hfil\break
+            \SOUL@everyspace{\unskip\nobreak\hfil\break}%
+            \SOUL@ignorespacestrue
         \else\ifx\SOUL@@~%
             \SOUL@doword
             \SOUL@eventuallyexhyphen\null
@@ -2576,7 +2586,6 @@
 \SOUL@cmds={%
     \\9\`\\9\'\\9\^\\9\"\\9\~\\9\=\\9\.%
     \\9\u\\9\v\\9\H\\9\t\\9\c\\9\d\\9\b
-    \\0\S\\0\textregistered\\0\copyright\\0\TeX\\0\LaTeX
     \\1\emph\\1\textrm\\1\textsf\\1\texttt\\1\textmd\\1\textbf
     \\1\textup\\1\textsl\\1\textit\\1\textsc\\1\textnormal
     \\0\rmfamily\\0\sffamily\\0\ttfamily\\0\mdseries\\0\upshape
