@@ -128,7 +128,7 @@
 %
 %
 %
-% \CheckSum{1814}
+% \CheckSum{1829}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -177,10 +177,10 @@
 %   \catcode`\|=13\unskip\def|{\hss\egroup\egroup\soultttest}}}
 %
 % \def\soultttest#1{\hbox{\vtop{\hsize.4\hsize\hbadness\@M
-%   \leavevmode\llap{\squarebull\hspace{.4em}}#1}}%
+%   \leavevmode\llap{\squarebull\hspace{.4em}}#1\null}}%
 %   \egroup$\hspace{1.5em}\parbox[t]{1mm}{\hyphenpenalty-\@M
 %   \exhyphenpenalty-\@M\hbadness\@M\hfuzz\maxdimen
-%   \strut\llap{\squarebull\hspace{.4em}}#1}%
+%   \strut\llap{\squarebull\hspace{.4em}}#1\null}%
 %   \goodbreak\vspace{2ex}
 %   \egroup}
 %
@@ -349,12 +349,14 @@
 % \let\option\textsf
 % \def\package#1{{\normalfont\texttt{#1}}}
 % \let\program\texttt
+% \let\bibtitle\textit
 %
-% \sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}
+% ^^A\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}
+% \sodef\person{\scshape}{0.06em}{0.45em}{0.4em}
 % \sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}
 % \DeclareRobustCommand*\versal[1]{^^A
 %   \MakeUppercase{\SOUL@@@versal{#1}}^^A
-%   \SOUL@socheck} 
+% }
 %
 % \def\ConTeXt{Con\TeX t}
 %
@@ -362,6 +364,7 @@
 % \makeatother
 %
 %
+% \hyphenation{Le-se-ty-po-gra-phie Ver-bin-dung}
 %
 %
 %^^A=====================================================
@@ -505,8 +508,6 @@
 %
 % \noindent
 % The |\hl| command does only highlight if the \package{color} package has
-% \DescribeMacro{\setstcolor}\label{cmd:setstcolor}^^A
-% \DescribeMacro{\sethlcolor}\label{cmd:sethlcolor}^^A
 % been loaded, otherwise it falls back to underlining. The highlighting
 % color is by default lightblue, underlines and overstriking lines are by
 % default black. The colors can be changed using the following commands:
@@ -524,7 +525,7 @@
 % \noindent
 % |\setulcolor{}| and |\setstcolor{}| (note the empty braces) turn
 % coloring off. There are only few colors predefined by the \package{color}
-% package, but you can easily add custom definitions.
+% package, but you can easily add custom color definitions.
 % See the \package{color} package documentation\cite{color} for further
 % information.
 %
@@ -720,32 +721,30 @@
 %
 % \begin{center}
 % \def\.{$\cdot$}
-% \def\-{\,$\ast$\,}
-% \def\*{\,$\bullet$\,}
+% \def\-{\kern1pt$\ast$\kern1pt}
+% \def\*{$\bullet$}
 % \def\_{\texttt{\char"20}}
 % \begin{tabular}{ccc}
-% 1.& \verb*|XX \so{aaa bbb ccc} YY|&         XX\*a\.a\.a\-b\.b\.b\-c\.c\.c\*YY\\
-% 2.& \verb*|XX\so{aaa bbb ccc}YY|&           XXa\.a\.a\-b\.b\.b\-c\.c\.cYY\\[1.5ex]
-% 3.& \verb*|XX \null\so{aaa bbb ccc}{} YY|&  XX\_a\.a\.a\-b\.b\.b\-c\.c\.c\_YY\\
-% 4.& \verb*|XX {\so{aaa bbb ccc}} YY|&       XX\*a\.a\.a\-b\.b\.b\-c\.c\.c\_YY\\
+% 1.& \verb*|XX\so{aaa bbb ccc}YY|&            \textsf{XXa\.a\.a\-b\.b\.b\-c\.c\.cYY}\\
+% 2.& \verb*|XX \so{aaa bbb ccc} YY|&          \textsf{XX\*a\.a\.a\-b\.b\.b\-c\.c\.c\*\kern-1ptYY}\\
+% 3.& \verb*|XX {\so{aaa bbb ccc}} YY|&        \textsf{XX\*a\.a\.a\-b\.b\.b\-c\.c\.c\*\kern-1ptYY}\\
+% 4.& \verb*|XX \null{\so{aaa bbb ccc}}{} YY|& \textsf{XX\_a\.a\.a\-b\.b\.b\-c\.c\.c\_YY}\\
 % \end{tabular}
 % \end{center}
 %
-% Case~1 is what you'll need in most cases. The spaced out text is surrounded
-% by spaces whose width lies between the width of a normal space and
-% that of \emph{inner space}. Case~2 shows that only preceding and following
-% spaces in the input really lead to \emph{outer space}, whereby the preceding
-% space has to be more than |5sp| wide, because some \LaTeX\ macros use
-% |\hskip1sp| as marker.
+% \noindent
+% Case~1 shows how letterspacing macros {\cs{\so} and \cs{\caps}) behave if
+% they aren't following or followed by a space: they omit outer space around
+% \package{soul} command. Case~2 is what you'll mostly need---letterspaced
+% text amidst running text. Following and leading space gets replaced by
+% \emph{outer space}. It doesn't matter if there are opening brace before
+% or closing braces afterwards. \package{soul} can see though both of them (case~3).
+% Note that leading space has to be at least |5sp| wide to be accepted as
+% space, because \LaTeX\ uses tiny spaces with |\hskip1sp| internally as marker.
 % Case~3 shows how to enforce normal spaces instead of \emph{outer spaces:}
 % Preceding space can be hidden by any token or |\kern0pt|. Following space
 % can also be hidden by any token, but note that a typical macro name
-% like |\relax| would also hide the space after. |{}| is safe, though.
-% The last case shows that braces around the \package{soul} statement
-% don't hide the preceding space, but they do hide the following. This,
-% however, is hardly what you desire if you put the statement in braces
-% because it is part of a macro like |\newcommand*\soup[1]{{\upshape\so{#1}}}|.
-% See section \ref{sec:markup} for a solution.
+% like \cs{\relax} or \cs{\null} would also hide the space after.
 %
 %
 % The values are predefined for typesetting facsimiles mainly with
@@ -1019,7 +1018,13 @@
 % striking out macro \describemacro{\st} and the highlighting macro \describemacro{\hl},
 % both of which are in fact derived from the former.
 %
+%
+%
+%
 % \subsection{Settings}
+%
+% \subsubsection{Underline depth and thickness}
+%
 % The predefined \textit{underline depth} and \textit{thickness}
 % work well with most fonts. They can be changed using the macro \describemacro{\setul}.
 %
@@ -1047,6 +1052,10 @@
 % |\setuldepth{}|\\
 % \end{example}
 %
+%
+%
+% \subsubsection{Line color}
+%
 % \describemacro{\setulcolor}
 % The underlines are by default black. The color can be changed by
 % using the \cs{\setulcolor} command. It takes one argument that can be any
@@ -1069,6 +1078,40 @@
 % |...|\\
 % |\end{document}|\\
 % \end{example}
+%
+%
+% The colors for overstriking lines and highlighting are likewise set
+% with \describemacro{\setstcolor} (default: black) and \describemacro{\sethlcolor}
+% (default: yellow). If the \package{color} package wasn't loaded
+% underlining and overstriking color are set to black, while highlighting
+% is replaced by underlining.
+%
+%
+%
+%
+% \subsubsection{The \program{dvips} problem}
+%
+% \ul{Underlining}, \st{striking out} and \hl{highlighting} build up
+% their lines with many short line segments. If you used the `\program{dvips}'
+% program with default settings, you would get little gaps on some places, because
+% the \emph{maxdrift} value allows the single objects to drift
+% this many pixels from their real positions.
+% \bigbreak
+%
+% \noindent
+% There are two ways to avoid the problem, where the \package{soul} package
+% chooses the second by default:
+% \begin{enumerate}
+% \item
+%   Set the \emph{maxdrift} value to zero, e.\,g.: |dvips -e 0 file.dvi|.
+%   This is probably not a good idea, since the letters may then no longer be
+%   spaced equally on low resolution printers.
+% \item
+%   Let the lines stick out by a certain amount on each side so that they
+%   overlap. This overlap amount can be set using the \describemacro{\setuloverlap}.
+%   It is set to 0.25\,pt by default. |\setuloverlap{0pt}| turns overlapping off.
+% \end{enumerate}
+%
 %
 %
 %
@@ -1130,30 +1173,6 @@
 %
 %
 %
-%
-% \subsection{The \program{dvips} problem}
-% \label{sec:dvips}
-%
-% \ul{Underlining}, \st{striking out} and \hl{highlighting} build up
-% their lines with many short line segments. If you used the `\program{dvips}'
-% program with default settings, you would get little gaps on some places, because
-% the \emph{maxdrift} value allows the single objects to drift
-% this many pixels from their real positions.
-% \bigbreak
-%
-% \noindent
-% There are two ways to avoid the problem, where the \package{soul} package
-% chooses the second by default:
-% \begin{enumerate}
-% \item
-%   Set the \emph{maxdrift} value to zero, e.\,g.: |dvips -e 0 file.dvi|.
-%   This is probably not a good idea, since the letters may then no longer be
-%   spaced equally on low resolution printers.
-% \item
-%   Let the lines stick out by a certain amount on each side so that they
-%   overlap. This overlap amount can be set using the \describemacro{\setuloverlap}.
-%   It is set to 0.25\,pt by default. |\setuloverlap{0pt}| turns overlapping off.
-% \end{enumerate}
 %
 %
 %
@@ -1223,19 +1242,17 @@
 % |\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}|\\
 % \end{example}
 %
-% A problem arises, though, if you want to use one of the
-% letterspacing commands \cs{\so} and \cs{\caps} within another
-% macro such that it can not look ahead, because there is
-% e.\,g.\ a closing brace in the way. In this case you have
-% to repeat the look-ahead macro \cs{\SOUL@socheck} as last
-% command, so that it can check if the expression is followed
-% by white space. Otherwise \package{soul} couldn't set the
-% \emph{outer space} appropriately:
+% Letterspacing commands like \cs{\so} and \cs{\caps} have to
+% check whether they are followed by white space, in which case
+% they replace that space by \emph{outer space}. Note that \package{soul}
+% does look through closing braces. Hence you can conveniently bury
+% a \package{soul} command within another macro like in the following
+% example. Use any other token to hide following space, e.\,g. the
+% \cs{\null} macro.
 %
 % \begin{example}
 % |\DeclareRobustCommand*\versal[1]{%|\\
 % |    \MakeUppercase{\SOUL@@@versal{#1}}%|\\
-% |    \SOUL@socheck|\\
 % |}|\\
 % |\sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}|\\
 % \end{example}
@@ -1385,7 +1402,7 @@
 % \indent
 % \begin{example}
 % |% load the color package and set|\\
-% |a different highlighting color|\\
+% |% a different highlighting color|\\
 % |\RequirePackage{color}|\\
 % |\definecolor{lightblue}{rgb}{.90,.95,1}|\\
 % |\sethlcolor{lightblue}|\\
@@ -1407,8 +1424,9 @@
 % \subsection{The kernel}
 % \so{Letterspacing,} \ul{underlining}, \st{striking out} and \hl{highlighting}
 % use the same kernel mechanism. It splits the given argument into words and
-% typesets each in a 1\,sp wide |\vbox|, so that \TeX\ is encouraged to
-% break lines at every possible hyphenation point. After the number of all lines (i.\,e.~syllables) is counted, and 
+% typesets each in a 1\,sp wide \cs{\vbox}, so that \TeX\ is encouraged to
+% break lines at every possible hyphenation point. After the number of all lines
+% (i.\,e.~syllables) is counted, and 
 % the respective lengths are stored (pass one: \emph{analyzing}), the tokens are 
 % scanned again, and their length is added to a register. Always if the length of the 
 % next stored syllable is obtained (pass two: \emph{reconstruction}), the 
@@ -1620,33 +1638,33 @@
 %
 % \begin{thebibliography}{0}
 % \hbadness3000
-% \bibitem{color}{\person{Carlisle, D. P.} \textit{The color package.} CTAN-Archive, 1997, v1.0d.}
+% \bibitem{color}{\person{Carlisle, D. P.} \bibtitle{The color package.} \versal{ctan}-Archive, 1997, v1.0d.}
 %    
-% \bibitem{Duden}{Duden, Volume 1. \textit{Die Rechtschreibung.} Bibliographisches Institut, 
+% \bibitem{Duden}{Duden, Volume 1. \bibtitle{Die Rechtschreibung.} Bibliographisches Institut, 
 %   Mannheim--Wien--Z\"urich, 1986, 19th~edition.}
 %
-% \bibitem{DEK}{\person{Knuth, Donald Ervin}. \textit{The \TeX book.}
+% \bibitem{DEK}{\person{Knuth, Donald Ervin}. \bibtitle{The \TeX book.}
 %   Addison--Wesley Publishing Company, Reading/Massachusetts, 1989, 16th~edition.}
 %
-% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P{\v r}ihoda, Eduard}.
-%   \textit{Die Terrainlehre in Ver\-bin\-dung mit der Darstellung, Beurtheilung und
+% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P\v rihoda, Eduard}.
+%   \bibtitle{Die Terrainlehre in Verbindung mit der Darstellung, Beurtheilung und
 %   Beschreibung des Terrains vom milit\"arischen
 %   Standpunkte.}
 %   L.\,W.~Seidel \&\ Sohn, Wien, 1872.}
 %
 % \bibitem{Reglement}{Normalverordnungsblatt f\"ur das k.\,u.\,k.~Heer.
-%   \textit{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
+%   \bibtitle{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{titlesec}{\person{Bezos, Javier}. \textit{The titlesec and titletoc package.}
-%   CTAN-Archive, 1999, v2.1.}
+% \bibitem{titlesec}{\person{Bezos, Javier}. \bibtitle{The titlesec and titletoc package.}
+%   \versal{ctan}-Archive, 1999, v2.1.}
 %    
-% \bibitem{Tschichold}{\person{Tschichold, Jan}. \textit{Ausgew\"ahlte Aufs\"atze \"uber Fragen
+% \bibitem{Tschichold}{\person{Tschichold, Jan}. \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
 %   1987, 2nd~edition.}
 %
 % \bibitem{Willberg}{\person{Willberg, Hans Peter} and \person{Forssmann, Friedrich}.
-%   \textit{Le\-se\-ty\-po\-gra\-phie.} H. Schmidt, Mainz, 1997.}
+%   \bibtitle{Lesetypographie.} H. Schmidt, Mainz, 1997.}
 %
 % \end{thebibliography}
 % 
@@ -1691,7 +1709,7 @@
 % \noindent
 % Fake some of the \LaTeX\ commands if we were loaded by another flavor
 % of \TeX. This might break some previously loaded packages, though,
-% if e.\,g.~\cs{\mbox} was already in use.
+% if e.\,g.~\cs{\mbox} was already in use. But we don't care \dots
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
@@ -1725,7 +1743,7 @@
 %
 %
 % \noindent
-% |soul| tries to be a good \LaTeX\ citizen if used under \LaTeX\ and
+% \package{soul} tries to be a good \LaTeX\ citizen if used under \LaTeX\ and
 % declares itself properly. Most command sequences in the package
 % are protected by the |SOUL@| namespace, all other macros are first
 % defined to be empty. This will give us an error message \emph{now}
@@ -1775,10 +1793,11 @@
 %
 %
 % \noindent
-% Piles of \cs{\newtoks} and \cs{\newdimen} would be costly, so we try to get
-% away with their \cs{\...def} counterparts. If the future shows that it was
-% a bad decision, this can still be changed. Local registers are always even,
-% while global ones are odd. This is a \TeX\ convention.
+% Other packages wouldn' be happy if we reserved piles of \cs{\newtoks} and
+% \cs{\newdimen}, so we try to get away with their \cs{\...def} counterparts.
+% If the future shows that it was a bad decision, this can still be changed.
+% Local registers are always even, while global ones are odd---this is a
+% \TeX\ convention.
 %
 %    \begin{macrocode}
 \toksdef\SOUL@word\z@
@@ -1847,9 +1866,9 @@
 %
 % \begin{macro}{\SOUL@}
 % This macro is the entry to \package{soul}. Using it does only make
-% sense if it was called after setting up a \package{soul} driver. \cs{\SOUL@@}
-% will swallow the first token after a \package{soul} command. This is
-% either an opening brace or the name of a macro that contains text.
+% sense after setting up a \package{soul} driver. The next token after
+% the \package{soul} command will be assigned to \cs{\SOUL@}. This should
+% either be an opening brace or the name of a macro that contains text.
 %
 %    \begin{macrocode}
 \def\SOUL@{%
@@ -1871,7 +1890,7 @@
 % If the first token after the \package{soul} command was an opening
 % brace we set up some counters and start scanning. The \cs{\bgroup} will
 % be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
-% if the first token was a macro name, then we expand that macro and
+% if the first token was a macro name, we expand that macro and
 % call \cs{\SOUL@} with its contents again. Unfortunately, we have to
 % exclude some macrs therein from expansion.
 %
@@ -2082,8 +2101,9 @@
 % Commands with the |9| identifier are accents that are put in a
 % group with their argument. The others are mostly (but not necessarily)
 % font switching commands, which may (|1|) or may not (|0|) take
-% an argument. They let the current word be typeset and are simply
-% executed.
+% an argument. A registered command leads to the current word
+% buffer being flushed to the analyzer, after which the command
+% itself is executed.
 %
 %    \begin{macrocode}
 \def\SOUL@docmd#1#2{%
@@ -2141,7 +2161,7 @@
 % \begin{macro}{\SOUL@addprotect}
 % \begin{macro}{\SOUL@addtoken}
 % The macro names say it all. Each of these macros adds some
-% token to \cs{\SOUL@word}.
+% token to the workd buffer \cs{\SOUL@word}.
 %
 %    \begin{macrocode}
 \def\SOUL@addgroup#1#2{%
@@ -2178,10 +2198,10 @@
 % Here is a list of pre-registered commands that the analyzer
 % cannot handle, so the scanner has to look after them. Every
 % entry consists of a handle (\cs{\\}), an identifier and the
-% macroname. The class identifier can be |9| for accents,
+% macro name. The class identifier can be |9| for accents,
 % |0| for commands without arguments and |1| for commands that
 % take one argument. Commands with two or more arguments are
-% not dealt with.
+% not supported.
 %
 %    \begin{macrocode}
 \SOUL@cmds={%
@@ -2213,7 +2233,7 @@
 % \begin{macro}{\soulaccent}
 % Register a font switching command (or some other command) to the
 % scanner. The first argument is the macro name, the second is
-% the number of arguments (|0| or |1|). Example: |\soulfont{\bold}{0}|.
+% the number of arguments (|0|~or~|1|). Example: |\soulfont{\bold}{0}|.
 % \cs{\soulaccent} has only one argument---the accent macro name.
 % Example: |\soulaccent{\~}|. It is a shortcut for |\soulfont{\~}{9}|.
 %
@@ -2285,8 +2305,8 @@
 %
 %
 % \noindent
-% We store the width of the hyphen character of the |cmtt10| font,
-% because we need it in |\SOUL@doword|. (|cmtt10| is a fixed width
+% We store the hyphen width of the |cmtt10| font,
+% because we will need it in |\SOUL@doword|. (|cmtt10| is a fixed width
 % font, so every other character would have worked, too.)
 % 
 %    \begin{macrocode}
@@ -2311,7 +2331,10 @@
 % after syllable from the stack again---this time from top to bottom---and
 % hand the syllable width |\SOUL@syllgoal| over to |\SOUL@dosyllable|.
 % All but the last syllable end with the hyphen character, hence
-% we subtract the hyphen width.
+% we subtract the hyphen width accordingly. After processing a
+% syllable we calculate the hyphen kern (i.\,e.~the kerning amount
+% between the last character and the hyphen). This might be needed
+% by \cs{\SOUL@everyhyphen} that we call now.
 %
 %    \begin{macrocode}
 \def\SOUL@analyze{{%
@@ -2355,6 +2378,9 @@
 % until \cs{\SOUL@syllwidth} has reached
 % the requested width \cs{\SOUL@syllgoal}. Furthermore the kerning
 % values are prepared in case \cs{\SOUL@everytoken} needs them.
+% The \cs{\<} command needed by \cs{\so} and \cs{\caps} needs some
+% special treatment: It has to be checked for even before
+% we can end a syllable.
 %
 %    \begin{macrocode}
 \def\SOUL@dosyllable{%
@@ -2404,7 +2430,8 @@
 %
 %
 % \begin{macro}{\SOUL@gettoken}
-% Read a token from the buffer or fetch a new one.
+% Provide the next token in \cs{\SOUL@token}. If there's already one
+% in the buffer, use that one first.
 %
 %    \begin{macrocode}
 \def\SOUL@gettoken{%
@@ -2457,6 +2484,9 @@
 %
 %
 % \begin{macro}{\SOUL@nexttoken}
+% \begin{macro}{\SOUL@splittoken}
+% If the word buffer \cs{\SOUL@word} is empty, deliver a \cs{\SOUL@stop},
+% otherwise take the next token.
 %
 %    \begin{macrocode}
 \def\SOUL@nexttoken{%
@@ -2467,25 +2497,12 @@
         \expandafter\SOUL@splittoken\the\SOUL@word\SOUL@stop
     \fi
 }
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@splittoken}
-%
-%    \begin{macrocode}
 \def\SOUL@splittoken#1#2\SOUL@stop{%
     \global\SOUL@token={#1}%
     \global\SOUL@word={#2}%
 }
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %
@@ -2497,6 +2514,10 @@
 %
 %
 % \begin{macro}{\SOUL@getkern}
+% Assign the kerning value between the first and the third argument
+% to the second, which has to be a \cs{\dimen} register.
+% |\SOUL@getkern{A}{\dimen0}{V}| will assign the kerning value
+% between `A' and `V' to |\dimen0|.
 %
 %    \begin{macrocode}
 \def\SOUL@getkern#1#2#3{%
@@ -2517,6 +2538,9 @@
 %
 %
 % \begin{macro}{\SOUL@setkern}
+% Set a kerning value if it doesn't equal 0\,pt. Of course, we could
+% also set a zero value, but that would needlessly clutter debug
+% output.
 %
 %    \begin{macrocode}
 \def\SOUL@setkern#1{\ifdim#1=\z@\else\kern#1\fi}
@@ -2532,6 +2556,8 @@
 %
 %
 % \begin{macro}{\SOUL@error}
+% This error message will be shown once for every word that couldn't
+% be reconstructed by \cs{\SOUL@dosyllable}.
 %
 %    \begin{macrocode}
 \def\SOUL@error{%
@@ -2541,7 +2567,7 @@
         braces,^^Jwhich I can't handle. Either drop the braces or
         make the material^^Junbreakable using an \string\mbox\space
         (\string\hbox). Note that a space^^Jalso counts as possible
-        hyphenation point. See p.?? of the manual.^^JI'm leaving
+        hyphenation point. See page 4 of the manual.^^JI'm leaving
         a black square so that you can see where I am right now.%
     }%
 }
@@ -2556,9 +2582,10 @@
 %
 %
 %
-% \subsection{The \so{letterspacing} driver}
-%
 % \begin{macro}{\SOUL@setup}
+% This is a null driver, that will be used as the basis for
+% other drivers, which have to redefine only interface commands
+% that shall do more than just \cs{\relax}.
 %
 %    \begin{macrocode}
 \def\SOUL@setup{%
@@ -2583,7 +2610,10 @@
 %
 %
 %
+% \subsection{The \so{letterspacing} driver}
+%
 % \begin{macro}{\SOUL@sosetletterskip}
+% A handy helper macro that sets the inter-letter skip.
 %
 %    \begin{macrocode}
 \def\SOUL@sosetletterskip{\nobreak\hskip\SOUL@soletterskip}
@@ -2599,6 +2629,9 @@
 %
 %
 % \begin{macro}{\SOUL@sopreamble}
+% If letterspacing (\cs{\so} or \cs{\caps}) follows a white space, we
+% repace it with our \emph{outer space}. \LaTeX\ uses a |\hskip1sp| as
+% marker in tabular entries, so we ignore tiny skips.
 %
 %    \begin{macrocode}
 \def\SOUL@sopreamble{%
@@ -2620,6 +2653,10 @@
 %
 %
 % \begin{macro}{\SOUL@sopostamble}
+% Remove the last letter skip with its high penalty and start the
+% look-ahead scanner \cs{\SOUL@socheck} outside the \cs{\SOUL@}
+% scope. That's why we make the \emph{outer space} globally available in
+% \cs{\skip@}.
 %
 %    \begin{macrocode}
 \def\SOUL@sopostamble{%
@@ -2640,30 +2677,26 @@
 %
 %
 % \begin{macro}{\SOUL@socheck}
+% \begin{macro}{\SOUL@sodoouter}
+% Read the next token after the \package{soul} command into \cs{\SOUL@@}
+% and have a look at it. If it's some kind of space, remove that and set
+% our \emph{outer space} with the appropriate penalty, else if it's
+% a closing brace, keep on scanning. If it is neither: do nothing.
 %
 %    \begin{macrocode}
 \def\SOUL@socheck{%
     \futurelet\SOUL@@\SOUL@sodoouter
 }
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@sodoouter}
-%
-%    \begin{macrocode}
 \def\SOUL@sodoouter{%
     \bgroup
     \aftergroup\kern\aftergroup\z@
     \def\SOUL@n*##1{\hskip\skip@\egroup}%
-    \ifx\SOUL@@\SOUL@spc
+    \ifcat\egroup\noexpand\SOUL@@
+        \egroup
+        \unkern
+        \egroup
+        \def\SOUL@n*{\afterassignment\SOUL@socheck\let\SOUL@@=}%
+    \else\ifx\SOUL@@\SOUL@spc
         \def\SOUL@n* {\hskip\skip@\egroup}%
     \else
         \ifx\SOUL@@~%
@@ -2673,10 +2706,11 @@
     \else\ifx\SOUL@@\@xobeysp
     \else
         \def\SOUL@n*{\egroup}%
-    \fi\fi\fi\fi\fi
+    \fi\fi\fi\fi\fi\fi
     \SOUL@n*%
 }
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %
@@ -2688,6 +2722,7 @@
 %
 %
 % \begin{macro}{\SOUL@soeverytoken}
+% 
 %
 %    \begin{macrocode}
 \def\SOUL@soeverytoken{%
@@ -3417,6 +3452,11 @@
 % \subsection{The \st{overstriking} driver}
 %
 % \begin{macro}{\SOUL@stpreamble}
+% Striking out is just underlining with a higher line with a different
+% color. Hence we only need to define the preamble accordingly and
+% let the underlining preamble do its job at last. Not that colored
+% overstriking was especially useful, but we want at least to keep
+% it black while we might want to set underlines in some fancy color.
 %
 %    \begin{macrocode}
 \def\SOUL@stpreamble{%
@@ -3439,6 +3479,8 @@
 %
 %
 % \begin{macro}{\SOUL@stsetup}
+% We re-use the whole underlining setup and just replace the preamble
+% with our modified version.
 %
 %    \begin{macrocode}
 \def\SOUL@stsetup{%
@@ -3457,6 +3499,7 @@
 %
 %
 % \begin{macro}{\textst}
+% These pretzels are making me thirsty \dots
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textst{\SOUL@stsetup\SOUL@}
@@ -3562,6 +3605,10 @@
 % \begin{macro}{\st}
 % \begin{macro}{\hl}
 % \begin{macro}{\caps}
+% OK, I lied. The short macro names are just abbreviations for their
+% longer counterpart. Some people might be used to |\text*| style commands
+% to select a certain font. And then it doesn't hurt to reserve
+% these early enough.
 %
 %    \begin{macrocode}
 \let\so\textso
@@ -3584,6 +3631,10 @@
 %
 %
 %
+% \noindent
+% When used in an environment other than \LaTeX\ we disable any command
+% that uses color and let the hightlighting macro just set an underline.
+%
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
     \expandafter\ifx\csname mdqoff\endcsname\relax
@@ -3604,6 +3655,14 @@
 %
 %
 %
+%
+% \noindent
+% If we are used in a \LaTeX\ environment, we disable colors if the
+% \package{color} packager weren't loaded. Then we add the umlaut accent
+% |"| if the \package{german} package is present. The \option{capsdefault}
+% option swallows the \cs{\caps} command and sets an underline instead.
+% Finally load the local configuration, process the |capsdefault|
+% option and exit.
 %
 %    \begin{macrocode}
 \else
