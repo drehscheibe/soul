@@ -156,8 +156,8 @@
 %^^A=====================================================
 %
 %^^A  These slightly complicated macros allow to typeset the `example' sections
-%^^A  conveniently. You'd better ignore them, since they are not thought to be
-%^^A  good style...                                            ;-)
+%^^A  conveniently. You'd better ignore them, since they are quite messy and
+%^^A  of bad style.    :-)
 %
 % \makeatletter
 %
@@ -360,11 +360,17 @@
 %
 % \def\ConTeXt{Con\TeX t}
 %
+% ^^A set some parameters as used in Plain TeX
+% \def\plainsetup{\pretolerance100\tolerance200\hbadness1000
+%   \linepenalty10\hyphenpenalty50\exhyphenpenalty50
+%   \doublehyphendemerits10000\finalhyphendemerits5000\adjdemerits10000
+%   \hfuzz.1pt\overfullrule5pt}
+%
 %
 % \makeatother
 %
 %
-% \hyphenation{Le-se-ty-po-gra-phie Ver-bin-dung}
+% \hyphenation{Le-se-ty-po-gra-phie Ver-bin-dung fak-si-mi-le}
 %
 %
 %^^A=====================================================
@@ -733,7 +739,7 @@
 % \end{center}
 %
 % \noindent
-% Case~1 shows how letterspacing macros {\cs{\so} and \cs{\caps}) behave if
+% Case~1 shows how letterspacing macros (\cs{\so} and \cs{\caps}) behave if
 % they aren't following or followed by a space: they omit outer space around
 % \package{soul} command. Case~2 is what you'll mostly need---letterspaced
 % text amidst running text. Following and leading space gets replaced by
@@ -976,6 +982,7 @@
 %
 % 
 % \subsection{Dirty tricks}
+% \label{sec:dirtytricks}
 %
 % Narrow columns are hard to set, because they don't allow much spacing
 % flexibility, hence long words often cause overfull boxes. A macro---let us
@@ -987,11 +994,6 @@
 % \def\sampletext{Some magazines and newspapers prefer this kind of spacing 
 % because it reduces hyphenation problems to a minimum\<. Unfortunately\<, such 
 % paragraphs aren't especially beautiful\<.}
-%
-% \def\plainsetup{\pretolerance100\tolerance200\hbadness1000
-%   \linepenalty10\hyphenpenalty50\exhyphenpenalty50
-%   \doublehyphendemerits10000\finalhyphendemerits5000\adjdemerits10000
-%   \hfuzz.1pt\overfullrule5pt}
 %
 % \begin{quote}
 % \batchmode     ^^A  we don't want to see all these overfull boxes...
@@ -1090,6 +1092,7 @@
 %
 %
 % \subsubsection{The \program{dvips} problem}
+% \label{sec:dvips}
 %
 % \ul{Underlining}, \st{striking out} and \hl{highlighting} build up
 % their lines with many short line segments. If you used the `\program{dvips}'
@@ -1259,39 +1262,89 @@
 %
 %
 %
+%
+%
+%
 % \subsection{Typesetting long words in narrow columns}
 %
-% \describemacro{\sloppyword}
+% Narrow columns are best set |flushleft|, because not even the best
+% hyphenation algorithm can guarantee acceptable line breaks without
+% overly streched spaces.
+% However, in some rare cases one may be \emph{forced} to typeset
+% block aligned. When typesetting in languages like German, where
+% there are really long words, the \describemacro{\sloppyword} macro
+% might help a little bit. It adds enough stretchability between the
+% single characters to make the hyphenation algorithm happy, but 
+% is still not as ugly as the example in section~\ref{sec:dirtytricks}
+% demonstrates. In the following example the right column is typeset
+% as ``|Die \sloppyword{Donau...novelle} wird ...|'':   
+%
+% \begin{center}
+% \def\word{Do\-nau\-dampf\-schiff\-fahrts\-ge\-sell\-schafts\-^^A
+%   ka\-pi\-t\"ans\-wit\-wen\-pen\-si\-ons\-ge\-setz\-no\-vel\-le}
+% \batchmode
+% \begin{minipage}{1.5in}
+% \plainsetup
+% Die \word\ wird mit sofortiger Wirkung au\ss er Kraft gesetzt.
+% \end{minipage}
+% \errorstopmode
+% \hspace{2em}
+% \begin{minipage}{1.5in}
+% \plainsetup
+% Die 
+% \expandafter\sloppyword\expandafter{\word}
+% wird mit sofortiger Wirkung au\ss er Kraft gesetzt.
+% \end{minipage}
+% \end{center}
+% 
+%
+%
+%
+%
 %
 %
 % \subsection{Using \package{soul} commands in section headings}
 %
-% \cite{titlesec}
-%
+% Letterspacing was often used for section titles in the past,
+% mostly centered and with a closing dot. The following example
+% shows how to achieve such using the \package{titlesec}
+% package \cite{titlesec}.
+% 
 % \begin{example}
 % |\documentclass{article}|\\
 % |\usepackage[latin1]{inputenc}|\\
 % |\usepackage[T1]{fontenc}|\\
-% |\usepackage{german,soul,titlesec}|
+% |\usepackage{german,soul}|\\
+% |\usepackage[indentfirst]{titlesec}|\\
 % \end{example}
 % 
+% \indent
 % \begin{example}
+% |\newcommand*\sectitle[1]{%|\\
+% |    \MakeUppercase{\so{#1}.}\\[.66ex]|\\
+% |    \rule{13mm}{.4pt}}|\\
 % |\newcommand*\periodafter[2]{#1{#2.}}|\\
+% \end{example}
+%
+% \indent
+% \begin{example}
 % |\titleformat{\section}[display]|\\
 % |    {\normalfont\centering}|\\
 % |    {\S. \thesection.}|\\
 % |    {2ex}|\\
-% |    {\periodafter\caps}|
+% |    {\sectitle}|\\
 % \end{example}
 %
+% \indent
 % \begin{example}
 % |\titleformat{\subsection}[block]|\\
 % |    {\normalfont\centering\bfseries}|\\
 % |    {\thesection.}|\\
 % |    {.66em}|\\
-% |    {\periodafter\so}|
+% |    {\periodafter\relax}|\\
 % \end{example}
 % 
+% \indent
 % \begin{example}
 % |\begin{document}|\\
 % |\section{VON DEN MAASSEN UND MAASSST\"ABEN}|\\
@@ -1305,6 +1358,61 @@
 % |\end{document}|
 % \end{example}
 %
+% This short example gives you roughly the following output,
+% which is a faked faksimile from \cite{Muszynski}.
+%
+% \bigbreak
+% \newbox\examplebox
+% \sbox\examplebox{
+% \begin{minipage}{.9\textwidth}
+% \small
+% \bigskip
+% \begin{center}
+% \S. 1.\\[2ex]
+% \so{VON DEN MAASSEN UND MAASSST\"ABEN}.\\[.66ex]
+% \rule{12mm}{.4pt}\\[1.66ex]
+% \textbf{1. Das L\"angenmaass im Allgemeinen.}\\[.66em]
+% \end{center}
+% \leavevmode\qquad
+% Um L\"angen genau messen und vergleichen zu k\"onnen,
+% bedarf es einer gewissen, bestimmten Einheit, mit der
+% man untersucht, wie oft sie selbst, oder ihre Theile,
+% in der zu bestimmenden L\"ange enthalten sind.
+% \bigskip
+% \end{minipage}}
+% \fbox{\usebox\examplebox}
+% \bigbreak
+%
+% \noindent
+% The \cs{\periodafter} macro takes one argument which isn't needed
+% in this example and thus fed with \cs{\relax}. We could
+% have written |{\periodafter\so}|, though, to add a dot that would get spaced
+% out with the section title. 
+%
+% \indent
+% \begin{example}
+% |\titleformat{\section}[block]|\\
+% |    {\normalfont\centering}|\\
+% |    {\thesection.}|\\
+% |    {.66em}|\\
+% |    {\periodafter\so}|\\
+% \end{example}
+%
+% \bigbreak
+% This would have typeset the section title like this:
+% \bigskip
+%
+% \sbox\examplebox{
+% \begin{minipage}{.9\textwidth}
+% \small
+% \bigskip
+% \begin{center}
+% \so{1. VON DEN MAASSEN UND MAASSST\"ABEN.}
+% \bigskip
+% \end{center}
+% \end{minipage}}
+% \fbox{\usebox\examplebox}
+% \bigbreak
 %
 %
 %
