@@ -23,7 +23,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.0",
-%%     date            = "99 999 2001",
+%%     date            = "99 December 2001",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -33,7 +33,8 @@
 %%     URL             = "http://www.unet.univie.ac.at/~a8603365/",
 %%     email           = "a8603365@unet.univie.ac.at",
 %%     codetable       = "ISO/ASCII",
-%%     keywords        = "spacing out, letterspacing, underlining, striking out",
+%%     keywords        = "spacing out, letterspacing, underlining, striking out,
+%%                        highlighting",
 %%     supported       = "yes",
 %%     docstring       = "This article describes the `soul' package, which
 %%                        provides hyphenateable letterspacing (spacing out),
@@ -75,7 +76,7 @@
 %
 %<*driver>
 \def\fileversion{2.0}
-\def\filedate{2001/99/99}
+\def\filedate{2001/12/99}
 %
 %
 %
@@ -84,8 +85,9 @@
 \documentclass[draft]{ltxdoc}
 %
 %
+%
 \IfFileExists{soul.sty}{%
-    \usepackage{soul}[2001/99/99]
+    \usepackage{soul}[2001/12/99]
     \let\SOULSTYfound\active
 }{%
     \GenericWarning{soul.dtx}{%
@@ -128,7 +130,7 @@
 %
 %
 %
-% \CheckSum{1835}
+% \CheckSum{1834}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -151,7 +153,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{November ??, 2001}
+% \date{December ??, 2001}
 %
 %^^A=====================================================
 %
@@ -274,19 +276,18 @@
 % \DeclareRobustCommand*\sy{^^A
 %   \SOUL@setup 
 %   \def\SOUL@preamble{\lefthyphenmin0\righthyphenmin0}^^A
+%   \def\SOUL@everysyllable{\the\SOUL@syllable}^^A
 %   \def\SOUL@everyspace##1{##1\space}^^A
-%   \let\SOUL@postamble\relax
 %   \def\SOUL@everyhyphen{^^A
 %       \unkern
 %       \discretionary{^^A
-%           \SOUL@setkern\SOUL@charkern
+%           \SOUL@setkern\SOUL@hyphkern
 %           \char\hyphenchar\font
 %       }{}{^^A
-%           \hbox{-}^^A
+%           \hbox{\kern1pt$\cdot$}^^A
 %      }^^A
 %    }^^A
-%    \def\SOUL@everyexhyphen{$=$}^^A
-%    \def\SOUL@everytoken{\the\SOUL@token\SOUL@setkern\SOUL@charkern}^^A
+%    \def\SOUL@everyexhyphen##1{\textbf{##1}}^^A
 %    \SOUL@}
 %
 %^^A  analyze the interface---described somewhere below, too
@@ -295,8 +296,8 @@
 %   \def\SOUL@preamble{$^{^P}$}^^A
 %   \def\SOUL@everyspace##1{##1\texttt{\char`\ }}^^A
 %   \def\SOUL@postamble{$^{^E}$}^^A
-%   \def\SOUL@everyhyphen{$^{^h}$}^^A
-%   \def\SOUL@everyexhyphen##1{##1$^{^H}$}^^A
+%   \def\SOUL@everyhyphen{$^{^-}$}^^A
+%   \def\SOUL@everyexhyphen##1{##1$^{^=}$}^^A
 %   \def\SOUL@everysyllable{$^{^S}$}^^A
 %   \def\SOUL@everytoken{\the\SOUL@token$^{^T}$}^^A
 %   \def\SOUL@everylowerthan{$^{^L}$}^^A
@@ -353,7 +354,6 @@
 % \let\bibtitle\textit
 % \let\syn\textit
 %
-% ^^A\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}
 % \sodef\person{\scshape}{0.06em}{0.45em}{0.4em}
 % \sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}
 % \DeclareRobustCommand*\versal[1]{^^A
@@ -362,11 +362,20 @@
 %
 % \def\ConTeXt{Con\TeX t}
 %
-% ^^A set some parameters as used in Plain TeX
-% \def\plainsetup{\pretolerance100\tolerance200\hbadness1000
-%   \linepenalty10\hyphenpenalty50\exhyphenpenalty50
-%   \doublehyphendemerits10000\finalhyphendemerits5000\adjdemerits10000
-%   \hfuzz.1pt\overfullrule5pt}
+% ^^A  set some parameters as used in Plain TeX
+% \def\plainsetup{^^A
+%   \pretolerance100
+%   \tolerance200
+%   \hbadness1000
+%   \linepenalty10
+%   \hyphenpenalty50
+%   \exhyphenpenalty50
+%   \doublehyphendemerits10000
+%   \finalhyphendemerits5000
+%   \adjdemerits10000
+%   \hfuzz.1pt
+%   \overfullrule5pt
+% }
 %
 %
 % \makeatother
@@ -389,7 +398,7 @@
 % \changes{v1.3}{1999/05/15}{changed allowhyphen, preambles; added a paragraph
 %   in the `features' section}
 %
-% \changes{v2.0}{????/??/??}{almost complete rewrite}
+% \changes{v2.0}{2001/12/??}{almost complete rewrite}
 %
 %
 %
@@ -1652,8 +1661,8 @@
 %      \def\SOUL@preamble{$^{^P}$}%
 %      \def\SOUL@everyspace##1{##1\texttt{\char`\ }}%
 %      \def\SOUL@postamble{$^{^E}$}%
-%      \def\SOUL@everyhyphen{$^{^H}$}%
-%      \def\SOUL@everyexhyphen##1{##1$^{^ExH}$}%
+%      \def\SOUL@everyhyphen{$^{^-}$}%
+%      \def\SOUL@everyexhyphen##1{##1$^{^=}$}%
 %      \def\SOUL@everysyllable{$^{^S}$}%
 %      \def\SOUL@everytoken{\SOUL@actual$^{^T}$}%
 %      \SOUL@}
@@ -1670,76 +1679,85 @@
 %
 % \subsubsection{Defining a new interface}
 %
-% Let's define an interface that allows to typeset text
-% with a centered dot at every hyphenation point. The name of
-% the macro shall be |\sy| (for \emph{syllables}).
-% Since the |soul| mechanism is highly fragile, we use the \LaTeX\
-% command |\DeclareRobustCommand|, so that the |\sy| macro
-% can be used even in section headings etc.
+% Let's define a \package{soul} driver that allows to typeset text
+% with a hyphen at every possible hyphenation point. The name of
+% the macro shall be \cs{\sy} (for \emph{syllables}).
+% Since the \package{soul} mechanism is highly fragile, we use the \LaTeX\
+% command \cs{\DeclareRobustCommand}, so that the \cs{\sy} macro
+% can be used even in section headings etc. The \cs{\SOUL@setup}
+% macro sets all interface macros to reasonalbe default values.
+% This could of course be done manually, but what if a later
+% \package{soul} release has some interface macro added? 
+% \cs{\SOUL@setup} will consider future additions. As we won't
+% make use of \cs{\SOUL@everytoken} and \cs{\SOUL@postamble}
+% and both default to \cs{\relax}, anyway, we don't have to
+% define them here.
 %
-%\begin{verbatim}
-%    \DeclareRobustCommand*\sy{%
-%\end{verbatim}
+% \begin{example}
+% |\DeclareRobustCommand*\sy{%|\\
+% |    \SOUL@setup|\\
+% \end{example}
 %
-% \noindent
-% We only set |\lefthyphenmin| and |\righthyphenmin| to zero
+% We only set \cs{\lefthyphenmin} and \cs{\righthyphenmin} to zero
 % at the beginning. All changes are restored automatically, 
 % so there's nothing to do at the end.
 %
-%\begin{verbatim}
-%    \def\SOUL@preamble{\lefthyphenmin=0 \righthyphenmin=0 }%
-%    \let\SOUL@postamble=\relax
-%\end{verbatim}
+% \begin{example}
+% |    \def\SOUL@preamble{\lefthyphenmin=0 \righthyphenmin=0 }%|\\
+% \end{example}
 %
-% \noindent
-% We only want simple spaces. Note that they are not provided
-% by default!
+% We only want simple spaces. Note that these are not provided
+% by default! \cs{\SOUL@everyspace} may get a penalty to be
+% applied to that space, so we set it before.
 %
-%\begin{verbatim}
-%    \let\SOUL@interword=\space
-%\end{verbatim}
+% \begin{example}
+% |    \def\SOUL@everyspace##1{##1\space}%|\\
+% \end{example}
 %
-% \noindent
-% Output the current token and the character kern.
-%\begin{verbatim}
-%    \def\SOUL@everytoken{\SOUL@actual\kern\dimen@}%
-%\end{verbatim}
+% There's nothing to do for \cs{\SOUL@everytoken}, we rather let
+% \cs{\SOUL@everysyllable} handle a whole syllable at once.
+% This has the advantage, that we don't have to deal with
+% kerning values, because \TeX\ takes care of that.
 %
-% \noindent
-% We would like to put a centered dot (|\cdot|) at every implicit
-% hyphenation point except when the line is broken there, in which case
-% there should be the hyphen character, anyway. The \TeX\ primitive |\discretionary|
+% \begin{example}
+% |    \def\SOUL@everysyllable{\the\SOUL@syllable}|\\
+% \end{example}
+%
+% The \TeX\ primitive \cs{\discretionary}
 % takes three arguments: 1.~pre-hyphen material 
-% (|\box2| contains the current hyphen sign);
-% 2.~post-hyphen material; 3.~no-hyphen material. The |\dimen@| kern that was
-% inserted by the last |\SOUL@everytoken| command  has to be removed.
-% |\dimen3| contains the hyphen kern, which is not used by the CM/EC
-% fonts, but, for example, by the \emph{palatino} fonts. 
+% (\cs{\box2} contains the current hyphen sign);
+% 2.~post-hyphen material; 3.~no-hyphen material.
 %
-%\begin{verbatim}
-%    \def\SOUL@everyhyphen{\kern-\dimen@\discretionary
-%      {\kern\dimen3\unhcopy\tw@}{}%
-%      {\hbox{\kern.5pt$\cdot$\kern.5pt}}}%
-%\end{verbatim}
+% \begin{example}
+% |    \def\SOUL@everyhyphen{%|\\
+% |        \unkern|\\
+% |        \discretionary{%|\\
+% |            \SOUL@setkern\SOUL@hyphkern|\\
+% |            \char\hyphenchar\font|\\
+% |        }{}{%|\\
+% |            \hbox{\kern1pt$\cdot$}%|\\
+% |        }%|\\
+% |    }%|\\
+%\end{example}
 %
-% \noindent
-% There's nothing to do for |\SOUL@everysyllable|.
-%\begin{verbatim}
-%    \let\SOUL@everysyllable\relax
-%\end{verbatim}
+% Explicit hyphens like dashes and slashes shall be set in boldface type.
 %
-% \noindent
-% Now that the interface is defined, we can start the mechanism.
+% \begin{example}
+% |    \def\SOUL@everyexhyphen##1{\textbf{##1}}|\\
+% \end{example}
 %
-%\begin{verbatim}
-%    \SOUL@}
-%\end{verbatim}
+% Now that the interface is defined, we can start the scanner.
+%
+% \begin{example}
+% |    \SOUL@|\\
+% |}|\\
+% \end{example}
 % 
 % \hyphenation{al-go-rithm lin-guists ex-cel-lent} ^^A correct?
 % \noindent
 % \emph{\sy{This little macro will hardly be good enough
 % for linguists, although it uses {\TeX's} excellent hyphenation algorithm,
-% but it is at least a nice alternative to the}} |\showhyphens| \emph{\sy{command}.}
+% but it is at least a nice alternative to the}} \cs{\showhyphens} \emph{\sy{command}.}
 %
 %
 %
@@ -1764,7 +1782,7 @@
 %
 %
 % \begin{thebibliography}{0}
-% \hbadness3000
+% \hbadness4000
 % \bibitem{color}{\person{Carlisle, D. P.} \bibtitle{The color package.} \versal{ctan}-Archive, 1997, v1.0d.}
 %    
 % \bibitem{Duden}{Duden, Volume 1. \bibtitle{Die Rechtschreibung.} Bibliographisches Institut, 
@@ -1880,7 +1898,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2001/99/99 v2.0 letterspacing/underlining  (mf)]
+        [2001/12/99 v2.0 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{cmtt10}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2722,7 +2740,7 @@
     \let\SOUL@everysyllable\relax
     \def\SOUL@everyspace##1{##1\space}%
     \let\SOUL@everyhyphen\relax
-    \let\SOUL@everyexhyphen\relax
+    \def\SOUL@everyexhyphen##1{##1}%
     \let\SOUL@everylowerthan\relax
 }
 \SOUL@setup
@@ -3095,7 +3113,7 @@
 %
 %
 %
-% \subsection{The \caps{caps} driver}
+% \subsection[The \caps{caps} driver]{The caps driver}
 %
 % \begin{macro}{\caps}
 % Unless run under \LaTeX, make \cs{\caps} just another simple letterspacing
@@ -3124,7 +3142,7 @@
 %
 %
 % \begin{macro}{\capsreset}
-% \dots\ ... else, if run under \LaTeX\ prepare a set of macros that
+% \dots\ else, if run under \LaTeX\ prepare a set of macros that
 % maintain a database with certain letterspacing values for different
 % fonts. \cs{\capsreset} clears the database and puts a default rule
 % in.
