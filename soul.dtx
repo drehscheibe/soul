@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1936}
+% \CheckSum{1938}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -636,6 +636,11 @@
 %   An \cs{\mbox} also lets \soul\ see the contents as one
 %   item, but these may even contain hyphenation points. \cs{\hbox} can
 %   be used as a synonym.
+% \item[Omitting: \so{\soulomit{foo}}]
+%   The contents of \cs{\soulomit} bypass the soul core and are typeset
+%   as is, without being letterspaced or underlined. Hyphenation points are
+%   allowed within the argument. The current font pertains, but can be
+%   overridden with \cs{\normalfont} etc.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
 %   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
 %   well as the \package{yfonts} package \cite{yfonts} font commands like \cs{\textfrak} etc.
@@ -1728,6 +1733,16 @@
 %
 %
 %
+% \subsection{A real-world example}
+%
+%
+%
+%
+%
+%
+%
+%
+%
 % \section{How the package works}
 %
 % \subsection{The kernel}
@@ -2083,7 +2098,7 @@
 %
 % \section{The implementation}
 %
-% \subsection{The package preamble}
+% ^^A\subsection{The package preamble}
 %
 % This piece of code makes sure that the package is only loaded 
 % once. While this is guaranteed by \LaTeX, we have to do it
@@ -2454,7 +2469,11 @@
         \else\ifx\SOUL@@\hbox
             \def\SOUL@n*{\SOUL@addprotect}%
         \else\ifx\SOUL@@\soulomit
-            \def\SOUL@n*\soulomit##1{\SOUL@doword##1\SOUL@scan}%
+            \def\SOUL@n*\soulomit##1{%
+                \SOUL@doword
+                {\spaceskip\SOUL@spaceskip##1}%
+                \SOUL@scan
+            }%
         \else\ifx\SOUL@@\break
             \SOUL@doword
             \break
@@ -4154,7 +4173,7 @@
 %
 %
 %
-% \subsection{The package postamble}
+% ^^A\subsection{The package postamble}
 %
 % \begin{macro}{\so}
 % \begin{macro}{\ul}
