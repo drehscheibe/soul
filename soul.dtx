@@ -25,8 +25,8 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "2.1",
-%%     date            = "10 January 2002",
+%%     version         = "2.2",
+%%     date            = "17 April 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -78,8 +78,8 @@
 %
 %
 %<*driver>
-\def\fileversion{2.1}
-\def\filedate{2002/01/10}
+\def\fileversion{2.2}
+\def\filedate{2002/04/17}
 %
 %
 %
@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1902}
+% \CheckSum{1898}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -147,7 +147,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{January 10, 2002}
+% \date{April 17, 2002}
 %
 %^^A=====================================================
 %
@@ -414,7 +414,8 @@
 %   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
-% ^^A 2.2   fixed SOUL@soeveryexhyphen   2002-01-12
+% \changes{v2.2}{2002/04/17}{fixed a couple of bugs; added support for
+%   the Plain TeX color.sty wrapper}
 %
 %
 %
@@ -428,8 +429,7 @@
 % \begin{abstract}
 % This article describes the \soul\ package^^A
 %^^A%%
-%   \footnote{This file has version number \fileversion, last revised \filedate, on
-%             DEK's 64\textsuperscript{th} birthday.},
+%   \footnote{This file has version number \fileversion, last revised \filedate.},
 %^^A%%
 % which provides \so{hyphenatable letterspacing (spacing out),} \ul{underlining}
 % and some derivatives such as \st{overstriking} and highlighting.
@@ -1990,18 +1990,18 @@
 %
 %
 % \begin{thebibliography}{00}
-% \bibitem{titlesec}{\person{Bezos, Javier}. \bibtitle{The titlesec and titletoc package.}
+% \bibitem{titlesec}{\person{Bezos, Javier}: \bibtitle{The titlesec and titletoc package.}
 %   \CTAN-Archive, 1999, v2.1.}
 %
-% \bibitem{color}{\person{Carlisle, D. P.} \bibtitle{The color package.} \CTAN-Archive, 1997, v1.0d.}
+% \bibitem{color}{\person{Carlisle, D. P.}: \bibtitle{The color package.} \CTAN-Archive, 1997, v1.0d.}
 %
 % \bibitem{Duden}{Duden, Volume 1. \bibtitle{Die Rechtschreibung.} Bibliographisches Institut, 
 %   Mann\-heim--\hskip0pt Wien--Z\"urich, 1986, 19th~edition.}
 %
-% \bibitem{DEK}{\person{Knuth, Donald Ervin}. \bibtitle{The \TeX book.}
+% \bibitem{DEK}{\person{Knuth, Donald Ervin}: \bibtitle{The \TeX book.}
 %   Addison--Wesley Publishing Company, Reading/Massachusetts, 1989, 16th~edition.}
 %
-% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P\v rihoda, Eduard}.
+% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P\v rihoda, Eduard}:
 %   \bibtitle{Die Terrainlehre in Verbindung mit der Darstellung, Beurtheilung und
 %   Beschreibung des Terrains vom milit\"arischen
 %   Standpunkte.}
@@ -2011,16 +2011,16 @@
 %   \bibtitle{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{german}{\person{Raichle, Bernd}. \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
+% \bibitem{german}{\person{Raichle, Bernd}: \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
 %    
-% \bibitem{yfonts}{\person{Schmidt, Walter}. \bibtitle{Ein Makropaket f\"ur die gebrochenen
+% \bibitem{yfonts}{\person{Schmidt, Walter}: \bibtitle{Ein Makropaket f\"ur die gebrochenen
 %   Schriften.} \CTAN-Archive, 1998, v1.2.}
 %    
-% \bibitem{Tschichold}{\person{Tschichold, Jan}. \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
+% \bibitem{Tschichold}{\person{Tschichold, Jan}: \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
 %   1987, 2nd~edition.}
 %
-% \bibitem{Willberg}{\person{Willberg, Hans Peter} and \person{Forssmann, Friedrich}.
+% \bibitem{Willberg}{\person{Willberg, Hans Peter} and \person{Forssmann, Friedrich}:
 %   \bibtitle{Lesetypographie.} H. Schmidt, Mainz, 1997.}
 %
 % \end{thebibliography}
@@ -2110,7 +2110,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/01/10 v2.1 letterspacing/underlining  (mf)]
+        [2002/04/17 v2.2 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -3095,7 +3095,6 @@
 }
 \def\SOUL@sodoouter{%
     \bgroup
-    \aftergroup\kern\aftergroup\z@
     \def\SOUL@n*##1{\hskip\skip@\egroup}%
     \ifcat\egroup\noexpand\SOUL@@
         \egroup
