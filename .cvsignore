@@ -6,3 +6,5 @@
 *.sty
 *.toc
 *.pdf
+*.out
+test.*
