@@ -165,7 +165,7 @@
 % \fi
 %
 %
-% \CheckSum{1095}
+% \CheckSum{1098}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -367,7 +367,7 @@
 % if they are used in expanding environments such as |\write| arguments.
 % 
 %
-% \subsection[Command summary]{Command summary\\or: Tribute to the impatient}
+% \subsection{Command summary}
 %
 % Those commands marked with an asterisk are only accessible in \LaTeXe\ mode:
 %
@@ -1345,7 +1345,7 @@
     \pretolerance\m@ne\tolerance\@M\leftskip\z@\rightskip\z@
     \def\SOUL@exhyphen{\kern\dimen@ii\penalty\z@}%
     \everypar{}\parfillskip\z@\@plus1fil
-    \hsize1sp\noindent\hskip\z@skip#1}%
+    \hsize1sp\noindent\hskip\z@skip\relax#1}%
 %    \end{macrocode}
 %
 % \noindent
@@ -1447,6 +1447,7 @@
 %
 %
 % \begin{macro}{\SOUL@donexttoken}
+% \begin{macro}{\SOUL@nokern}
 % \begin{macro}{\SOUL@error}
 % This macro outputs all tokens and returns, when the current
 % syllable is complete. First of all, the tokens in |\SOUL@prefetch|
@@ -1454,6 +1455,7 @@
 % |\SOUL@pprefetch|.
 %
 %    \begin{macrocode}
+\def\SOUL@nokern{\<}
 \def\SOUL@donexttoken{%
   \let\SOUL@actual\SOUL@prefetch
   \let\SOUL@prefetch\SOUL@pprefetch
@@ -1468,7 +1470,7 @@
 % register. |\dimen3| is set to the hyphen kern. 
 %
 %    \begin{macrocode}
-  \expandafter\ifx\SOUL@prefetch\empty
+  \ifx\SOUL@prefetch\SOUL@nokern
     \let\SOUL@next\SOUL@pprefetch
   \else
     \let\SOUL@next\SOUL@prefetch
@@ -1513,6 +1515,7 @@
    I'm leaving a black square at my current position.^^J%
    (See section 6.5 in the documentation for further explanation.)}}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
