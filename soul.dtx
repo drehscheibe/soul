@@ -91,6 +91,14 @@
 %
 \IfFileExists{soul.sty}{%
     \usepackage{soul}[2002/01/03]
+    \expandafter\ifx\csname setulcolor\endcsname\relax
+        \GenericError{soul.dtx}{soul.dtx error}{%
+            Wrong soul.sty version found. Stop here (by typing `x<return>')^^J^^A
+            and process soul.dtx again.}%
+            {You have an older soul.sty version installed. This^^J^^A
+            documentation needs the version that will be generated^^J^^A
+            when you process soul.dtx again.}
+    \fi    
     \let\SOULSTYfound\active
 }{%
     \GenericWarning{soul.dtx}{%
@@ -346,6 +354,9 @@
 %   \let\an\SOUL@@@X
 %   \let\magstylepar\SOUL@@@X
 %   \let\sloppyword\SOUL@@@X
+%   \let\setulcolor\SOUL@@@X
+%   \let\setstcolor\SOUL@@@X
+%   \let\sethlcolor\SOUL@@@X
 %   \def\sodef#1#2#3#4{\let#1\relax\SOUL@@@X}%
 % \fi
 %
