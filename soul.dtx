@@ -17,6 +17,8 @@
 %          to get the documentation file `soul.dvi'
 %
 %
+%
+%
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
@@ -55,6 +57,8 @@
 %
 %
 %
+%
+%
 \begin{filecontents}{soul.ins}
 \def\batchfile{soul.ins}
 \input docstrip.tex
@@ -67,100 +71,46 @@
 %
 %
 %
+%
+%
 %<*driver>
 \def\fileversion{2.0}
 \def\filedate{2001/99/99}
+%
+%
 %
 %
 %^^A  the `draft' option is needed for demonstration
 \documentclass[draft]{ltxdoc}
 %
 %
-\IfFileExists{soul.sty}
-  {\usepackage{soul}[2001/99/99]\let\SOULSTYfound\active}%
-  {\GenericWarning{soul.dtx}%
-    {Package file `soul.sty' couldn't be found. You should however find^^J^^A
-     a file `soul.ins' in the current directory. If you type "tex soul.ins"^^J^^A
-     on the command line, `soul.sty' will be processed for you. After that
-     run "latex soul.dtx" again and you won't see that message again.}}%
+\IfFileExists{soul.sty}{%
+    \usepackage{soul}[2001/99/99]
+    \let\SOULSTYfound\active
+}{%
+    \GenericWarning{soul.dtx}{%
+        Package file `soul.sty' couldn't be found. You should however find^^J^^A
+        a file `soul.ins' in the current directory. If you type "tex soul.ins"^^J^^A
+        on the command line, `soul.sty' will be generated. After that
+        run "latex soul.dtx" again and you won't see this message again.
+    }%
+}%
 %
 %
 %
-\makeatletter
 \ifx\SOULSTYfound\active
-%
-%^^A  analyze syllables -- described somewhere below 
-% 
-  \DeclareRobustCommand*\sy{%
-    \def\SOUL@preamble{\lefthyphenmin0\righthyphenmin0}%
-    \def\SOUL@everyspace##1{##1\space}%
-    \let\SOUL@postamble\relax
-    \def\SOUL@everyhyphen{\SOUL@removelastkern
-      \discretionary{\SOUL@setkern\SOUL@charkern\char\hyphenchar\font}%
-      {}{\hbox{\kern.5pt$\cdot$\kern.5pt}}}%
-    \let\SOUL@everysyllable\relax
-    \def\SOUL@everytoken{\the\SOUL@token\SOUL@setkern\SOUL@charkern}%
-    \SOUL@}%
-%
-%^^A  analyze the interface -- described somewhere below, too
-%
-  \DeclareRobustCommand*\an{%
-    \def\SOUL@preamble{$^{^P}$}%
-    \def\SOUL@everyspace##1{##1\texttt{\char`\ }}%
-    \def\SOUL@postamble{$^{^E}$}%
-    \def\SOUL@everyhyphen{$^{^h}$}%
-    \def\SOUL@everyexhyphen##1{##1$^{^H}$}%
-    \def\SOUL@everysyllable{$^{^S}$}%
-    \def\SOUL@everytoken{\the\SOUL@token$^{^T}$}%
-    \SOUL@}
-%
-%^^A  magazine-like (truly awful) paragraphs
-%^^A  (This macro was part of v1.0.  I took this out of the package,
-%^^A  after I was warned, that one would not see any difference between
-%^^A  M$-Wood and TeX documents in the future, after which I had sleepless nights...   ;-)
-%^^A  If you know what you're doing, you can copy it to your personal `soul.cfg' file.
-%
-  \DeclareRobustCommand*\magstylepar{\SOUL@sosetup
-    \def\SOUL@preamble{%
-      \edef\SOUL@soletterskip{\z@\@plus\fontdimen2\font\@minus\z@}%
-      \edef\SOUL@soinnerskip{\the\fontdimen2\font
-        \@plus\the\fontdimen3\font\@minus\the\fontdimen4\font}%
-      \let\SOUL@soouterskip\SOUL@soinnerskip
-      \SOUL@sopreamble}%
-    \lefthyphenmin2\righthyphenmin2\SOUL@}
-%
-\else
-%
-%^^A  The package has not been found, so we're providing some dummies, just
-%^^A  to avoid all these `Undefined command sequence' messages.
-% 
-  \def\SOULDUMMY#1{\textbf{??}}%
-  \let\so\SOULDUMMY
-  \let\caps\SOULDUMMY
-  \let\ul\SOULDUMMY
-  \let\st\SOULDUMMY
-  \let\sy\SOULDUMMY
-  \let\an\SOULDUMMY
-  \let\magstylepar\SOULDUMMY
-  \def\sodef#1#2#3#4{\SOULDUMMY}%
+
+\IfFileExists{color.sty}{%
+    \usepackage{color}
+    \definecolor{darkblue}{rgb}{0,0,.7}
+    \definecolor{lightblue}{rgb}{.90,.95,1}
+    \definecolor{lightgrey}{rgb}{.9,.9,.9}
+    \setulcolor{darkblue}
+    \sethlcolor{lightblue}
+}{
+    \AtBeginDocument{\let\hl\relax}
+}  
 \fi
-\makeatother
-%
-%^^A  similar to the `description' environment
-%
-\newenvironment{labeling}[1]{%
-  \list{}{%
-    \settowidth{\labelwidth}{\textbf{#1}}%
-    \leftmargin\labelwidth
-    \advance\leftmargin\labelsep
-    \def\makelabel##1{\textbf{##1}\hfil}%
-  }}%
-  {\endlist}
-%
-%
-\newcommand*\DescribeOption[1]{\marginpar{\raggedleft\textsf{#1}\ignorespaces}}
-%
-%
 %
 %
 %
@@ -174,7 +124,12 @@
 % \fi
 %
 %
-% \CheckSum{1249}
+%
+%
+%
+%
+%
+% \CheckSum{1551}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -197,9 +152,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{??? ??, 2001}
-%
-% \maketitle
+% \date{November ??, 2001}
 %
 %^^A=====================================================
 %
@@ -232,7 +185,182 @@
 %   \goodbreak\vspace{2ex}
 %   \egroup}
 %
+% \newcommand*\DescribeOption[1]{\marginpar{\raggedleft\textsf{#1}\ignorespaces}}
+%
+%
+%^^A  similar to the `description' environment
+%
+% \def\describemacro{^^A
+%   \bgroup
+%   \let\do\@makeother
+%   \dospecials
+%   \catcode`{=1
+%   \catcode`}=2
+%   \SOUL@@@descmacro
+% }
+%
+% \def\SOUL@@@descmacro#1{^^A
+%   \texttt{#1}^^A
+%   \DescribeMacro{#1}^^A
+%   \expandafter\edef\expandafter\x\expandafter{\expandafter\@gobble#1}^^A
+%   \expandafter\label{cmd:\x}^^A
+%   \egroup
+% }
+%
+%
+% \def\SOUL@@@verbitem[#1: {^^A
+%   \bgroup
+%   \let\do\@makeother
+%   \dospecials
+%   \SOUL@@@verbscan{#1}^^A
+% }
+%
+% \def\SOUL@@@verbscan#1#2]{^^A
+%   \egroup
+%   \def\@currentlabel{\S\,\the\SOUL@@@itemnr}^^A 
+%   \label{par:#1}^^A
+%   \SOUL@@@item[\textbf{\@currentlabel\hskip.6em#1:}]\hfil\break
+%   Example: \texttt{#2}\hfil\break^^A
+%   \advance\SOUL@@@itemnr1
+% }
+% 
+% \let\SOUL@@@item\item
+% \newcount\SOUL@@@itemnr
+%
+% \newenvironment{verblist}[1]{^^A
+%   \SOUL@@@itemnr=#1 
+%   \list{}{^^A
+%       \settowidth{\labelwidth}{\indent\indent}^^A
+%       \leftmargin\labelwidth
+%       \advance\leftmargin\labelsep
+%       \def\makelabel##1{##1}^^A
+%       \let\item\SOUL@@@verbitem
+%   }^^A
+% }{^^A
+%   \endlist
+% }
+%
+% \newenvironment{labeling}[1]{^^A
+%   \list{}{^^A
+%       \settowidth{\labelwidth}{\textbf{#1}}^^A
+%       \leftmargin\labelwidth\advance\leftmargin\labelsep
+%       \def\makelabel##1{\textbf{##1}\hfil}^^A
+%   }^^A
+% }{^^A
+%   \endlist
+% }
+%
+% \newenvironment{syntax}{^^A
+%   \par\medskip\def\<##1>{$\langle$\textit{##1}$\rangle$}^^A
+%       \indent\begin{tabular}{l}^^A
+%   }{^^A
+%       \end{tabular}\noindentafter\medbreak
+%   }
+%    
+%
+% \newenvironment{example}[1][.9\textwidth]
+%   {\par\medskip\begin{tabular}{p{#1}l}}
+%   {\end{tabular}\noindentafter\medbreak}
+%
+% \newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}    
+%
+% \newcommand*\errsquare{\leavevmode\vrule height.8em depth.2em width1em\relax}
+%
+%
+% \ifx\SOULSTYfound\active
+%^^A  analyze syllables--described somewhere below 
+% 
+% \DeclareRobustCommand*\sy{^^A
+%   \def\SOUL@preamble{\lefthyphenmin0\righthyphenmin0}^^A
+%   \def\SOUL@everyspace##1{##1\space}^^A
+%   \let\SOUL@postamble\relax
+%   \def\SOUL@everyhyphen{^^A
+%       \SOUL@removelastkern
+%       \discretionary{^^A
+%           \SOUL@setkern\SOUL@charkern
+%           \char\hyphenchar\font
+%       }{}{^^A
+%           \hbox{\kern.5pt$\cdot$\kern.5pt}^^A
+%      }^^A
+%    }^^A
+%    \let\SOUL@everysyllable\relax
+%    \def\SOUL@everytoken{\the\SOUL@token\SOUL@setkern\SOUL@charkern}^^A
+%    \SOUL@}
+%
+%^^A  analyze the interface---described somewhere below, too
+%
+% \DeclareRobustCommand*\an{^^A
+%   \def\SOUL@preamble{$^{^P}$}^^A
+%   \def\SOUL@everyspace##1{##1\texttt{\char`\ }}^^A
+%   \def\SOUL@postamble{$^{^E}$}^^A
+%   \def\SOUL@everyhyphen{$^{^h}$}^^A
+%   \def\SOUL@everyexhyphen##1{##1$^{^H}$}^^A
+%   \def\SOUL@everysyllable{$^{^S}$}^^A
+%   \def\SOUL@everytoken{\the\SOUL@token$^{^T}$}^^A
+%   \def\SOUL@everylowerthan{$^{^L}$}^^A
+%   \SOUL@}
+%
+%^^A  magazine-like (truly awful) paragraphs
+%^^A  (This macro was part of v1.0.  I took this out of the package,
+%^^A  after I was warned, that one would not see any difference between
+%^^A  M$-Wood and TeX documents in the future, after which I had sleepless nights...   ;-)
+%^^A  If you know what you're doing, you can copy it to your personal `soul.cfg' file.
+%
+%  \DeclareRobustCommand*\magstylepar{\SOUL@sosetup
+%    \def\SOUL@preamble{^^A
+%      \edef\SOUL@soletterskip{\z@\@plus\fontdimen2\font\@minus\z@}^^A
+%      \edef\SOUL@soinnerskip{\the\fontdimen2\font
+%        \@plus\the\fontdimen3\font\@minus\the\fontdimen4\font}^^A
+%      \let\SOUL@soouterskip\SOUL@soinnerskip
+%      \SOUL@sopreamble}^^A
+%    \lefthyphenmin2\righthyphenmin2\SOUL@}
+%
+%\else
+%
+%^^A  The package has not been found, so we're providing some dummies, just
+%^^A  to avoid all these `Undefined command sequence' messages.
+% 
+%   \def\SOUL@X#1{\textbf{??}}%
+%   \let\so\SOUL@X
+%   \let\caps\SOUL@X
+%   \let\ul\SOUL@X
+%   \let\st\SOUL@X
+%   \let\sy\SOUL@X
+%   \let\an\SOUL@X
+%   \let\magstylepar\SOUL@X
+%   \def\sodef#1#2#3#4{\SOUL@X}%
+% \fi
+%
+% \newcommand*\path{^^A
+%   \bgroup
+%   \let\do\@makeother
+%   \dospecials
+%   \catcode`{=1
+%   \catcode`}=2
+%   \SOUL@@@code
+% }
+%
+% \newcommand*\SOUL@@@code[1]{\normalfont\texttt{#1}\egroup}
+%
+% \let\macro\path
+% \let\option\textsf
+% \let\package\texttt
+% \let\program\texttt
+%
+% \sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}
+% \sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}
+% \DeclareRobustCommand*\versal[1]{^^A
+%   \MakeUppercase{\SOUL@@@versal{#1}}^^A
+%   \SOUL@socheck} 
+%
+%
+%
+%
 % \makeatother
+%
+%
+%
+%
 %^^A=====================================================
 %
 %
@@ -249,31 +377,38 @@
 %
 % \changes{v???}{????/??/??}{Alexander SHIBAKOV}
 %
+%
+%
+%
+%
+%
+%
+%
+% \maketitle
+%
+%
+%
 % \begin{abstract}
-% This article describes the \texttt{soul} package^^A
+% This article describes the \package{soul} package^^A
 %^^A%%
 %   \footnote{This file has version number \fileversion, last revised \filedate.\\
-%   I'd like to thank \caps{Stefan Ulrich} for teaching me much about high quality
+%   I'd like to thank \person{Stefan Ulrich} for teaching me much about high quality
 %   typesetting, sending me dozens of error reports, and, finally, providing the
 %   `example.cfg' configuration file. Without his help the package would only be half 
 %   as good. And, no, he had nothing to do with \so{minuscules letterspacing,}
 %   \ul{underlining}, and such \dots},
 %^^A%%
-% which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining},
-% and some derivatives such as \caps{majuscules letterspacing} that
-% might be needed for high quality typesetting.
-% All features are based upon a common mechanism that allows to
-% typeset text syllable by syllable using \TeX's excellent
-% hyphenation algorithm to find the proper hyphenation points.
-% Two examples show how to use the provided interface to
-% implement things such as `\sy{analyzing syllables}'.
-%
-% Although the package is optimized for \LaTeXe, it works with
-% Plain \TeX\ and with other packages, too.
+% which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
+% and some derivatives such as \st{overstriking} and \hl{highlighting}.
+% Although the package is optimized for \LaTeXe, it also works with
+% Plain \TeX\ and with other flavors of \TeX.
 % By the way, the package name |soul|
 % is only a combination of the two macro names |\so| (\emph{space out})
-% and |\ul| (\emph{underline})---nothing poetic at all \dots^^A   :-( 
+% and |\ul| (\emph{underline})---nothing poetic at all.^^A  :-( 
 % \end{abstract}
+%
+%
+%
 %
 %
 % {\parskip0pt\tableofcontents }
@@ -284,20 +419,16 @@
 %
 %
 %
-% \section{Introduction}
-%
-% There are several possibilities to emphasize parts of a paragraph,
-% where not all are considered to be good style. While underlining
-% is commonly rejected, experts dispute about whether letterspacing
-% should be used or not, and in which cases. If you are not interested
-% in such debates, you may well skip over the next section.
-% 
-%
-%
-% 
 % \section{Typesetting rules}
 % 
-% \subsection[Theory]{Theory \dots}
+% There are several possibilities to emphasize parts of a paragraph,
+% where not all are considered good style. While underlining
+% is commonly rejected, experts dispute about whether letterspacing
+% should be used or not, and in which cases. If you are not interested
+% in such debates, you may well skip to the next section.
+% 
+%
+% \subsection*{Theory \dots}
 % \label{sec:theory}
 % 
 % To understand the expert's arguments we have to know about the 
@@ -305,7 +436,7 @@
 % a page represents a certain amount of greyness, provided that
 % the letters are printed black onto white paper.
 % 
-% \caps{Jan Tschichold} \cite{Tschichold}, a well known and recognized
+% \person{Jan Tschichold} \cite{Tschichold}, a well known and recognized
 % typographer, accepts only forms of emphasizing, which do not disturb this
 % greyness. This is only true of italic shape, caps, and
 % caps-and-small-caps fonts, but not of ordinary letterspacing, underlining,
@@ -314,31 +445,33 @@
 % running over the text, but rather when actually reading the respective words.
 % 
 % Other, less restrictive typographers \cite{Willberg} call this kind of emphasizing
-% to be `integrated' or `aesthetic', while they describe `active' emphasizing apart from it,
+% `integrated' or `aesthetic', while they describe `active' emphasizing apart from it,
 % which actually \emph{has} to catch the reader's eye. To the latter group belong commonly
 % despised things like letterspacing, demibold face type and even underlined and colored text!
 %
-% On the other hand, \caps{Tschichold} suggests
+% On the other hand, \person{Tschichold} suggests
 % to space out caps and caps-and-small-caps fonts on title pages, headings and running headers from
 % 1\,pt up to 2\,pt.
-% Even in running text readability of uppercase letters should be improved with slight
+% Even in running text legibility of uppercase letters should be improved with slight
 % letterspacing, since (the Roman) majuscules don't look right, if they are spaced
 % like (the Carolingian) minuscules.\footnote{This suggestion is followed throughout this article,
-% although Prof.~\caps{Knuth} already considered slight letterspacing with his |cmcsc| fonts.}
+% although Prof.~\person{Knuth} already considered slight letterspacing with his |cmcsc| fonts.}
 %
 %
 %
-%\subsection{\dots\ and Practice}
+%\subsection*{\dots\ and Practice}
 %
 % However, in the last centuries letterspacing was excessively used,
 % underlining at least sometimes, because the old \emph{Fraktur} fonts
 % could not use capitals or italic shape for emphasizing. This tradition is wideley
-% continued until today.
+% continued until today. Furthermore italic shape is not an option in many languages with
+% non-latin glyphs. Letterspacing has a strong tradition in eastern countries
+% where cyrillic fonts are used.
 %
-% The \caps{Duden} \cite{Duden}, a well known German dictionary, tells us how to space out properly:
+% The \person{Duden} \cite{Duden}, a well known German dictionary, describes how to space out properly:
 % \emph{Punctuation marks are spaced out like letters, except quotation marks and periods.
 % Numbers are never spaced out. The German syllable \mbox{\emph{-sche}} is not spaced
-% out in cases like \emph{``der {\so{Virchow{sche}}} Versuch''}\footnote{the \caps{Virchow} experiment}. 
+% out in cases like \emph{``der {\so{Virchow{sche}}} Versuch''}\footnote{the \person{Virchow} experiment}. 
 % In the old German \emph{Fraktur} fonts the ligatures \emph{|ch|, |ck|, |sz|~(\ss),} and~\emph{|tz|} are
 % not broken within spaced out text.}
 %
@@ -349,55 +482,196 @@
 %
 %
 %
-% \section{Modes and options}
+% \section{Short introduction and common rules}
 %
-% The |soul| package has a \LaTeXe\ mode, which is selected if the |\documentclass|
-% command can be found, and a \emph{plain} \TeX\ mode, which is selected otherwise. These
-% modes differ in some points:
+% The \package{soul} package provides five commands that are aimed at emphasizing
+% text parts. Each of the commands takes one argument that can either be
+% the text itself, or a macro that contains text (e.\,g. |\so\text|).
 %
-%
-% \subsection{\LaTeXe\ mode}
-%
-% This mode provides a package option \textsf{capsdefault} (see section \ref{sec:somacros}) and 
-% two package options \textsf{nooverlap} and \textsf{overlap},
-% where the latter is selected by default. These options deal with the way underlines
-% are typeset. They are described in section \ref{sec:dvips}, but you'll hardly
-% ever need to know about them. The \LaTeXe\ mode provides an intelligent |\caps| command
-% and makes commands `robust' where it is desired. Furthermore, it tries to load
-% a file `soul.cfg', where local stuff is to be placed in. (See the
-% file `example.cfg', which implements a fairly complete |\caps| data base.)
-%
-%
-% \subsection{Plain \TeX\ mode}
-% This mode implements the respective options as commands |\overlap| and |\nooverlap|,
-% and provides a simplified |\caps| command. The `fragile' commands
-% |\so|, |\caps|, |\ul|, and~|\st| are to be protected by the user, 
-% if they are used in expanding environments such as |\write| arguments.
-% 
-%
-% \subsection{Command summary}
-%
-% Those commands marked with an asterisk are only accessible in \LaTeXe\ mode:
-%
-% \medskip\noindent
 % {\catcode`\|=12
-% \newcommand*\Ast{\rlap{$^\ast$}}
+% \begin{center}    
 % \begin{tabular}{r@{\hspace{1.5em}}l}
-% \hline\\[-1ex]
+% ^^A\hline\\[-1ex]
 % \verb+\so{letterspacing}+&\so{letterspacing}\\
 % \verb+\caps{CAPITALS, Small Capitals}+&\caps{CAPITALS, Small Capitals}\\
 % \verb+\ul{underlining}+&\ul{underlining}\\
-% \verb+\st{striking out}+&\st{striking out}\\[1.5ex]\hline\\[-1ex]
-% \verb+\sodef\cs{1em}{2em}{3em}+&\textit{define new spacing command} \verb+\cs+\\
-% \verb+\resetso+&\textit{reset} \verb+\so+ \textit{dimensions}\\
-% \verb+\capsreset+\Ast&\textit{clear caps data set}\\
-% \verb+\capsdef{////}{1em}{2em}{3em}+\Ast&\textit{define (default)} \verb+\caps+ \textit{data entry}\\
-% \verb+\capssave\cs+\Ast&\textit{save} \verb+\caps+ \textit{data set under name} \verb+\cs+\\
-% \verb+\setul{1ex}{2ex}+&\textit{set} \verb+\ul+ \textit{dimensions}\\
-% \verb+\resetul+& \textit{reset} \verb+\ul+ \textit{dimensions}\\
-% \verb+\setuldepth{y}+& \textit{set underline depth to depth of} \verb+y+\\
-% \verb+\setulcolor{y}+\Ast& \textit{set underline color to} \verb+y+\\[1.5ex]\hline
+% \verb+\st{overstriking}+&\st{overstriking}\\
+% \verb+\hl{highlighting}+&\hl{highlighting}\\[1.5ex]^^A\hline
+% \end{tabular}
+% \end{center}
+% }
+%
+% \noindent
+% The |\hl| command does only highlight if the \package{color} package has
+% been loaded, otherwise it falls back to underlining. The highlighting
+% color is by default lightblue, underlines and overstriking lines are by
+% default black. The colors can be changed using the following commands:
+%
+% {\catcode`\|=12
+% \begin{center}    
+% \begin{tabular}{r@{\hspace{1.5em}}l}
+% ^^A\hline\\[-1ex]
+% \verb+\setulcolor{red}+&set underlining color\\
+% \verb+\setstcolor{green}+&set overstriking color\\
+% \verb+\sethlcolor{blue}+&set highlighting color\\[1.5ex]^^A\hline
+% \end{tabular}
+% \end{center}
+% }
+%
+% \noindent
+% |\setulcolor{}| and |\setstcolor{}| (note the empty braces) turn
+% coloring off. There are only few colors predefined by the \package{color}
+% package, but you can easily add custom definitions.
+% See the \package{color} package documentation\cite{color} for further
+% information.
+%
+% \begin{example}
+% |\usepackage{color,soul}|\\
+% |\definecolor{orange}{rgb}{1,.5,0}|\\
+% |\sethlcolor{orange}|\\
+% |...|\\
+% |\hl{this is highlighted in orange color}|\\
+% \end{example}
+%
+%
+%
+%
+%
+%
+%
+% \bigskip ^^A why is this needed? bug in \LaTeX?
+% \subsection[Some things work]{Some things work \dots}
+%
+% The following examples may look redundant, because they describe
+% nothing else than common \LaTeX\ notation, but this is only the half story:
+% The \package{soul} package has to pre-process the argument before it
+% can split it into characters and syllables, and all described
+% constructs are only allowed because the package actively provides them.
+% This wasn't the case for versions prior to 2.0.
+%
+%
+% \begin{verblist}{1}
+% \item[Quotes: \so{``quotes''}]
+%   The \package{soul} package recognizes the quotes ligatures |``|, |''| and |,,|. 
+% \item[Accents: \so{na\"\i ve}]
+%   Accents can be used naturally. Even the |"| command
+%   is allowed, when the \package{german} package is loaded.
+% \item[Mathematics: \so{foo$x^3$bar}]
+%   Mathematic formulas are allowed, as long as they are
+%   surrounded by \texttt\$. Note that the \LaTeX\ 
+%   equivalent|\(...\)| does not work.
+% \item[Hyphens and dashes: \so{re-sent}]
+%   Explicit hyphens as well as en-dashes (|--|), em-dashes (|---|)
+%   and the |\slash| command work as usual.
+% \item[Newlines: \so{new\\line}]
+%   The |\\| command fills the current line with white space
+%   and starts a new line. Unlike the original \LaTeX\ command
+%   \package{soul}'s version can not handle an optional parameter.
+% \item[Unbreakable spaces: \so{don't~break}]
+%   The |~| command sets an unbreakable space.
+% \item[Breaking lines: \so{a\linebreak b}]
+%   The |\linebreak| command also breaks the line without
+%   filling it with white space at the end. |\break| can be
+%   used as a synonym.
+% \item[Grouping: \so{Virchow{sche}}]
+%   A pair of braces can be used to let a group of characters
+%   be seen as one item, so that \package{soul} does
+%   for instance not space it out. The character must, however,
+%   not contain a possible hyphenation point!
+% \item[Protecting: \so{a \mbox{little} b}]
+%   An |\mbox| does also keep \package{soul} from
+%   breaking up the contents, but it may even contain
+%   hyphenation points. |\hbox| can be used as a synonym.
+% \item[Breaking up ligatures: \ul{f{}inally}]
+%   Break up e.\,g. the `fi' ligature. Not needed for |\so| which breaks
+%   up every unprotected (ungrouped/unboxed) ligature, anyway.
+% \end{verblist}
+%
+%
+%
+%
+% \subsection{\dots\ others don't}
+%
+% There are, however, still some things that are not allowed in \package{soul}
+% arguments. This is due to the quite complex heart of soul, which has to
+% read in each character and inspect it, before \TeX's paragraph builder is
+% allowed to typeset it.
+%
+% \begin{verblist}{20}
+% \item[Grouping hyphenateable material: \so{foo {little} bar}]
+%   Grouped characters must not contain hyphenation points. Instead of
+%   |\so{foo {little}}| write |\so{foo \mbox{little}}|. You get a
+%   \texttt{Reconstruction failed} error and a black square like
+%   \errsquare\ in the document where you violated this rule.
+% \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
+%   \package{soul} arguments must not contain conditional statements like
+%   |\if|, |\else|, |\fi|, |\ifcase|, etc.
+% \item[Weird stuff: \so{foo \verb|\bar| baz}]
+%   They also must not contain \LaTeX\ environments, command definitions,
+%   and tricky stuff like |\vadjust|. As long as you are writing simple, `horizontal'
+%   material, you are on the safe side.
+% \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
+%   The input text must not contain discretionary hyphens. Thus you have to
+%   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
+% \item[Nested soul commands: \ul{foo \so{bar} baz}]
+%   \package{soul} commands must not be nested. If you really
+%   need such, put the inner stuff in a box and use this box.\\
+%   \null\qquad|\newbox\anyboxname|\\
+%   \null\qquad|\sbox\anyboxname{ \so{the worst} }|\\
+%   \null\qquad|\ul{This is by far\mbox{\usebox\anyboxname}example!}|\\
+%   yields:\\ 
+%   \newbox\anyboxname
+%   \sbox\anyboxname{ \so{the worst} }
+%   \null\qquad\ul{This is by far\mbox{\usebox\anyboxname}example!}
+% \end{verblist}
+%
+% \noindent
+% Note that with the exception of \ref{par:Grouping hyphenateable material}
+% you may get error messages that do not indicate that you violated one of the
+% above rules, but rather show some low-level problems that \TeX\ has detected.
+%
+%
+%
+%
+% \subsection{Command survey}
+%
+% \medskip\noindent
+% {\catcode`\|=12
+% \newcommand*\pref[1]{{\footnotesize\pageref{cmd:#1}}}
+% \newcommand*\Ast{\rlap{$^\ast$}}
+% \let\m\macro
+% \let\ti\textit
+% \begin{tabular}{r@{\hspace{.6em}}c@{\hspace{.6em}}l}
+% ^^A\hline\\[-1ex]
+% &\hbox to0pt{\hss\footnotesize page\hss}&\\[.5ex]
+% \m{\so{letterspacing}}&                \pref{so}           &\so{letterspacing}\\
+% \m{\caps{CAPITALS, Small Capitals}}&   \pref{caps}         &\caps{CAPITALS, Small Capitals}\\
+% \m{\ul{underlining}}&                  \pref{ul}           &\ul{underlining}\\
+% \m{\st{striking out}}&                 \pref{st}           &\st{striking out}\\
+% \m{\hl{highlighting}}&                 \pref{hl}           &\hl{highlighting}\\
+% \\
+% \m{\soulaccent{\cs}}&                  \pref{soulaccent}   &\ti{add accent} \macro{\cs} \ti{to accent list}\\
+% \m{\soulfont{\cs}}&                    \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
+% \m{\sloppyword{text}}&                 \pref{sloppyword}   &\ti{typset} \m{text} \ti{with strechable spaces}\\
+% \\
+% \m{\sodef\cs{1em}{2em}{3em}}&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
+% \m{\resetso}&                          \pref{resetso}      &\ti{reset} \m{\so} \ti{dimensions}\\
+% \m{\capsreset}\Ast&                    \pref{capsreset}    &\ti{clear caps data set}\\
+% \m{\capsdef{////}{1em}{2em}{3em}}\Ast& \pref{capsdef}      &\ti{define (default)} \m{\caps} \ti{data entry}\\
+% \m{\capssave\cs}\Ast&                  \pref{capssave}     &\ti{save} \m{\caps} \ti{data set under name} \rlap{\texttt{\string\cs}}\\
+% \m{\setul{1ex}{2ex}}&                  \pref{setul}        &\ti{set} \m{\ul} \ti{dimensions}\\
+% \m{\resetul}&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
+% \m{\setuldepth{y}}&                    \pref{setuldepth}   &\ti{set underline depth to depth of} \m{y}\\
+% \m{\setuloverlap{y}}&                  \pref{setuloverlap} &\ti{set underline overlap width to} \m{y}\\
+% \m{\setulcolor{y}}\Ast&                \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
+% \m{\setstcolor{y}}\Ast&                \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
+% \m{\sethlcolor{y}}\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\^^A[1.5ex]\hline
 % \end{tabular}}
+%
+%
+%
+%
+%
 %
 %
 %
@@ -410,7 +684,7 @@
 % \subsection{The macros}
 % \label{sec:somacros}
 %
-% The base macro for letterspacing is called |\so|\DescribeMacro{\so}.
+% The base macro for letterspacing is called \describemacro{\so}.
 % It typesets the given argument with a certain
 % amount of \textit{inter-letter space} between every two tokens,
 % \textit{inner space} between words, and \textit{outer space}
@@ -418,14 +692,14 @@
 % preceding and following,  whereby all kerning values are automatically
 % reinserted at the right places.  To enforce normal spaces instead of 
 % \textit{outer spaces}, you can `hide' preceding spaces with a 
-% |\null| before the |\so| command, and following spaces with any other
-% token such as |\relax| or just an opening or closing brace afterwards.
+% \macro{\null} before the \macro{\so} command, and following spaces with any other
+% token such as \macro{\relax} or just an opening or closing brace afterwards.
 %
 % The values are predefined for typesetting facsimiles mainly with
 % \emph{Fraktur} fonts.
 % You can define your own spacing
-% macros or overwrite the original |\so| meaning using the macro
-% |\sodef|\DescribeMacro{\sodef}:
+% macros or overwrite the original \macro{\so} meaning using the macro
+% \describemacro{\sodef}:
 %
 % \medskip\noindent
 % |\sodef|^^A
@@ -447,15 +721,15 @@
 % after which you can type `|\an{example}|' to get
 % {\sodef\an{}{.2em}{1em plus1em}{2em plus.1em minus.1em}^^A
 % `\an{example}'.}
-% \DescribeMacro{\resetso}The |\resetso| command resets |\so|
+% The \describemacro{\resetso} command resets \macro{\so}
 % to its original meaning.
 %
 %
 % For typesetting caps or caps-and-small-caps fonts there are
-% two different \DescribeMacro{\caps}|\caps| commands predefined with only
+% two different \describemacro{\caps} commands predefined with only
 % slight spacing, which are mainly thought to be used in running text
 % (see section \ref{sec:theory}). The following lines show the effect
-% of |\caps| in comparison with the normal textfont and with
+% of \macro{\caps} in comparison with the normal textfont and with
 % small-capitals shape: 
 %
 % \def\sampletext{DONAUDAMPFSCHIFFAHRTSGESELLSCHAFT}
@@ -467,8 +741,8 @@
 % \end{tabular}
 %
 % \medbreak\noindent
-% In \emph{plain} \TeX\ mode the |\caps| command is
-% simply defined with |\sodef|. It executes a command |\capsfont| that 
+% In \emph{plain} \TeX\ mode the \macro{\caps} command is
+% simply defined with \macro{\sodef}. It executes a command \macro{\capsfont} that 
 % is ignored by default and may be used to select a particular font.
 %
 % \medskip\noindent
@@ -479,7 +753,7 @@
 % `database' to hold sets of standard values for different
 % fonts, shapes, etc., which are then selected automatically.
 %
-% New fonts may be added to this list using the \DescribeMacro{\capsdef}|\capsdef| command,
+% New fonts may be added to this list using the \describemacro{\capsdef} command,
 % which takes five arguments. The first argument describes the font with
 % \emph{encoding, family, series, shape,} and \emph{size,} each optionally
 % (e.\,g.~|OT1/cmr/m/n/10| for this very font, or only |/ppl///12| for all
@@ -490,7 +764,7 @@
 % upper boundary is not included in the range, so, in the example below, all
 % fonts with sizes greater or equal 5\,pt and smaller than 15\,pt are accepted 
 % ($5\,\mbox{pt}\le size<15\,\mbox{pt}$).
-% The second argument may contain font switching commands such as |\scshape|, 
+% The second argument may contain font switching commands such as \macro{\scshape}, 
 % it may as well be empty or contain debugging commands (e.\,g.~|\message{*}|).
 % The remaining three, non-optional arguments are the spaces as described above.
 %
@@ -498,19 +772,20 @@
 % Example: |\capsdef{T1/ppl/m/n/5-15}{\scshape}{.16em}{.4em}{.2em}|
 %
 % \medbreak\noindent
-% The \LaTeX\ |\caps| command goes through the data list and takes the first
+% The \LaTeX\ \macro{\caps} command goes through the data list and takes the first
 % matching set, so the order of definition is essential.
 % There's only one default set for all font combinations predefined, 
 % which can be overridden.
 %
 % \medskip
-% The \DescribeMacro{\capsreset}|\capsreset| command deletes all font sets except the default set,
-% which can be overridden with a |\capsdef| command using the
+% The \describemacro{\capsreset} command
+% deletes all font sets except the default set,
+% which can be overridden with a \macro{\capsdef} command using the
 % default identifier |{////}|. This entry should be defined first, because
 % it matches any font, so that no entry behind can ever be reached.
-% The current |\caps| settings can be saved in a command sequence using the
-% \DescribeMacro{\capssave}|\capssave| command. This allows to predefine different groups 
-% of |\caps| sets.
+% The current \macro{\caps} settings can be saved in a command sequence using the
+% \describemacro{\capssave} command. This allows to predefine different groups 
+% of \macro{\caps} sets.
 %
 % \medskip\noindent
 % Example:
@@ -534,7 +809,7 @@
 % If you have defined a bunch of sets for different fonts and sizes,
 % you may lose control over what fonts are used by the package. With the
 % package option \DescribeOption{capsdefault}\textsf{capsdefault} selected, 
-% |\caps| prints its argument underlined, if no set was specified for a
+% \macro{\caps} prints its argument underlined, if no set was specified for a
 % particular font and the default set had to be used. 
 %
 %
@@ -542,8 +817,6 @@
 %
 %
 % \subsection{Some examples}
-%
-% See also section \ref{sec:restrictions}.
 %
 %^^A=====================================================
 % \begin{examples}
@@ -558,16 +831,16 @@
 %
 % \soultest{Tokens that belong together have to be grouped, text inside  
 %   groups is not spaced out. Grouped text must not contain hyphenation points}
-%   |\so{le th{\'e}{\^a}tre}|
-%   {\so{le th{\'e}{\^a}tre}}
+%   |\so{le th\'e\^atre}|
+%   {\so{le th\'e\^atre}}
 %
 % \soultest{To prevent material \emph{with} hyphenation points from being
 %   spaced out, you have to put it in an \texttt{\string\hbox}
 %   (\texttt{\string\mbox}) with two pairs of braces around it.
 %   However, it's better to end \so{spacing out} before and 
 %   restart it afterwards}
-%   |\so{just an {\hbox{example}}}|
-%   {\so{just an {\hbox{example}}}}
+%   |\so{just an \mbox{example}}|
+%   {\so{just an \mbox{example}}}
 %  
 % \soultest{Punctuation marks are spaced out, if they are
 %   put into the group}
@@ -575,11 +848,10 @@
 %   {\so{inside.} \&\ \so{outside}.}
 % 
 % \soultest{Spaceout skips may be removed by typing \texttt{\string\<}.
-% See also section \ref{sec:bugs}.
 % It's, however, desirable to put the quotation marks out of
 % the argument}
-%   |\so{{``}\<Pennsylvania\<{''}}|
-%   {\so{{``}\<Pennsylvania\<{''}}}
+%   |\so{``\<Pennsylvania\<''}|
+%   {\so{``\<Pennsylvania\<''}}
 % 
 % \soultest{Numbers should never be spaced out}  
 %   |\so{1\<3 December {1995}}|
@@ -592,8 +864,8 @@
 %   {\so{input\slash output}}
 %
 % \soultest{\texttt{\string\hyphen} must not be used for leading hyphens}  
-%   |\so{\dots and {\hbox{-}}jet}|
-%   {\so{\dots and {\hbox{-}}jet}}
+%   |\so{\dots and \mbox{-}jet}|
+%   {\so{\dots and \mbox{-}jet}}
 %
 % \soultest{The \texttt{\string\~}-command inhibits line breaks.
 %   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
@@ -646,11 +918,7 @@
 % weird sequence e.\,g.~|{\mbox{sz}}| or a properly defined command. The |\ss| command,
 % which is defined by the |yfonts| package, and similar commands will suffice as well.
 % 
-% Especially the `ygoth' font with its many ligatures is error-prone. You will
-% have to assist the |soul| package in protecting or separating some of the ligatures
-% as mentioned in section \ref{sec:restrictions}\slash number~6. This particular font,
-% however, is probably too beautiful to get spaced out or underlined, anyway.
-%
+% 
 %
 %
 %
@@ -660,7 +928,7 @@
 %
 % Narrow columns are hard to set, because they don't allow much spacing
 % flexibility, hence long words often cause overfull boxes. A macro---let us
-% call it |\magstylepar|---could use |\so| to insert stretchability between the single
+% call it \macro{\magstylepar}---could use \macro{\so} to insert stretchability between the single
 % characters. The following columns show some text typeset with such a funny
 % definition at the left side and under \emph{plain} conditions at
 % the right side, both with a width of~6\,pc.
@@ -678,16 +946,11 @@
 % \batchmode     ^^A  we don't want to see all these overfull boxes...
 % \leavevmode\hspace{0ptplus1fil}
 % \hbox{\parindent0pt\plainsetup\let\<\relax
-%   \vtop{\hsize6pc\expandafter\magstylepar\expandafter{\sampletext}}\hskip1em
+%   \vtop{\hsize6pc\magstylepar\sampletext}\hskip1em
 %   \vtop{\hsize6pc\sampletext}\hss}
-% \end{quote}
 % \errorstopmode
+% \end{quote}
 %
-% \noindent
-% Such a macro could only set one paragraph at once, it would be subject
-% to the same restrictions as mentioned in section
-% \ref{sec:restrictions}, so it would really be a dirty trick rather than a
-% glorious novelty \dots
 %
 %
 %
@@ -699,14 +962,14 @@
 %
 % \section{\ul{Underlining}}
 %
-% The underlining macros are my answer to Prof.~\caps{Knuth}'s exercise 18.26 from his 
-% \TeX{}book.~\texttt{:-)} All said about the macro |\ul| is also true of the
-% striking out macro |\st|, which is in fact derived from the former. 
+% The underlining macros are my answer to Prof.~\person{Knuth}'s exercise 18.26 from his 
+% \TeX{}book.~\texttt{:-)} All said about the macro \describemacro{\ul} is also true of the
+% striking out macro \describemacro{\st}, which is in fact derived from the former. 
 %
 % \subsection{Settings}
-% \DescribeMacro{\setul}
+% \describemacro{\setul}
 % The predefined \textit{underline depth} and \textit{thickness}
-% work well with most fonts. They can be changed using the macro |\setul|.
+% work well with most fonts. They can be changed using the macro \macro{\setul}.
 %
 % \medskip\noindent
 % |\setul{|$\langle$\textit{underline depth}$\rangle$^^A
@@ -717,15 +980,15 @@
 % an empty pair of braces.
 % Both values should be defined in terms of |ex|, letting them 
 % grow and shrink with the respective fonts.
-% \DescribeMacro{\resetul}
-% The |\resetul| command restores the standard values.
+% \describemacro{\resetul}
+% The \macro{\resetul} command restores the standard values.
 %
-% \DescribeMacro{\setuldepth}
+% \describemacro{\setuldepth}
 % Another way to set the \textit{underline depth} is to use the macro
-% |\setuldepth|. It sets the depth such that the
+% \macro{\setuldepth}. It sets the depth such that the
 % underline's upper edge lies 1\,pt beneath the given argument's
 % deepest depth. If the argument is empty, all
-% letters---i.\,e.\ all characters whose |\catcode| currently
+% letters---i.\,e.\ all characters whose \macro{\catcode} currently
 % equals 11---are taken:
 %
 % \medskip\noindent
@@ -734,9 +997,9 @@
 %
 %
 % \medskip\noindent
-% \DescribeMacro{\setulcolor}
+% \describemacro{\setulcolor}
 % The underlines are by default black. The color can be changed by
-% using the |\setulcolor| command. It takes one argument that can be any
+% using the \macro{\setulcolor} command. It takes one argument that can be any
 % of the color specifiers as described in the |color| package, which
 % has to be loaded explicitly.
 %
@@ -760,8 +1023,6 @@
 %
 % \subsection{Some examples}
 %
-% See also section \ref{sec:restrictions}.
-%
 %^^A=====================================================
 % \begin{examples}
 %
@@ -775,8 +1036,8 @@
 %  
 % \soultest{Tokens that belong together have to be grouped.
 %   Grouped text must not contain hyphenation points}  
-%   |\ul{le th{\'e}{\^a}tre}|
-%   {\ul{le th{\'e}{\^a}tre}}
+%   |\ul{le th\'e\^atre}|
+%   {\ul{le th\'e\^atre}}
 %  
 % \soultest{The \texttt{\string\~}-command inhibits line breaks.
 %   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
@@ -799,11 +1060,11 @@
 %
 %
 %
-% \subsection{The \texttt{dvips} problem}
+% \subsection{The \program{dvips} problem}
 % \label{sec:dvips}
 %
-% \ul{Underlining} and \st{striking out} build up their lines with many
-% short line segments. If you used the `dvips' program with
+% \ul{Underlining}, \st{striking out} and \hl{highlighting} build up
+% their lines with many short line segments. If you used the `dvips' program with
 % default settings, you would get little gaps on some places, because
 % the \textit{maxdrift} value allows the single objects to drift
 % this many pixels from their real positions.
@@ -815,18 +1076,136 @@
 % \begin{enumerate}
 % \item
 %   Set the \textit{maxdrift} value to zero, e.\,g.: |dvips -e 0 file.dvi|.
-%   (This is probably not a good idea, since the letters may then no longer be
-%   spaced equally on low resolution printers.)
+%   This is probably not a good idea, since the letters may then no longer be
+%   spaced equally on low resolution printers.
 % \item
 %   Use the \DescribeOption{overlap}\textsf{overlap} option. This option causes the single
 %   line segments to overlap each other letting them stick out
 %   0.5\,pt to the left and to the right. The option \DescribeOption{nooverlap}\textsf{nooverlap}
 %   turns this overlapping off.
 %
-%   \DescribeMacro{\nooverlap}Use the commands |\nooverlap| and |\overlap|
-%   for non-\LaTeX\ packages. \DescribeMacro{\overlap}Unlike the \LaTeX\
-%   options these commands can also be used \emph{after} loading the package.
 % \end{enumerate}
+%
+%
+%
+%
+%
+%
+%
+%
+% \section{Miscellaneous}
+%
+% \subsection{Using \package{soul} with other flavours of \TeX}
+%
+% The |soul| package has a \LaTeXe\ mode, which is selected if the |\documentclass|
+% command can be found, and a \emph{plain} \TeX\ mode, which is selected otherwise. These
+% modes differ in some points:
+%
+%
+% \subsubsection{\LaTeXe\ mode}
+%
+% This mode provides a package option \textsf{capsdefault} (see section \ref{sec:somacros}) and 
+% two package options \textsf{nooverlap} and \textsf{overlap},
+% where the latter is selected by default. These options deal with the way underlines
+% are typeset. They are described in section \ref{sec:dvips}, but you'll hardly
+% ever need to know about them. The \LaTeXe\ mode provides an intelligent |\caps| command
+% and makes commands `robust' where it is desired. Furthermore, it tries to load
+% a file `soul.cfg', where local stuff is to be placed in. (See the
+% file `example.cfg', which implements a fairly complete |\caps| data base.)
+%
+%
+% \subsubsection{Plain \TeX\ mode}
+% This mode implements the respective options as commands |\overlap| and |\nooverlap|,
+% and provides a simplified |\caps| command. The `fragile' commands
+% |\so|, |\caps|, |\ul|, and~|\st| are to be protected by the user, 
+% if they are used in expanding environments such as |\write| arguments.
+% 
+%
+%
+%
+% \subsection{Using \package{soul} commands in section headings}
+%
+% \cite{titlesec}
+%
+% \begin{example}
+% |\documentclass{article}|\\
+% |\usepackage[latin1]{inputenc}|\\
+% |\usepackage[T1]{fontenc}|\\
+% |\usepackage{german,soul,titlesec}|
+% \end{example}
+% 
+% \begin{example}
+% |\newcommand*\periodafter[2]{#1{#2.}}|\\
+% |\titleformat{\section}[display]|\\
+% |    {\normalfont\centering}|\\
+% |    {\S. \thesection.}|\\
+% |    {2ex}|\\
+% |    {\periodafter\caps}|
+% \end{example}
+%
+% \begin{example}
+% |\titleformat{\subsection}[block]|\\
+% |    {\normalfont\centering\bfseries}|\\
+% |    {\thesection.}|\\
+% |    {.66em}|\\
+% |    {\periodafter\so}|
+% \end{example}
+% 
+% \begin{example}
+% |\begin{document}|\\
+% |\section{VON DEN MAASSEN UND MAASSST\"ABEN}|\\
+% |\subsection{Das L\"angenmaass im Allgemeinen}|\\
+% \\
+% |Um L\"angen genau messen und vergleichen zu k\"onnen,|\\
+% |bedarf es einer gewissen, bestimmten Einheit, mit der|\\
+% |man untersucht, wie oft sie selbst, oder ihre Theile,|\\
+% |in der zu bestimmenden L\"ange enthalten sind.|\\
+% |...|\\
+% |\end{document}|
+% \end{example}
+%
+%
+%
+%
+%
+% \subsection{The configuration file}
+% \label{sec:config}
+%
+% If you want to change the predefined settings or add new features,
+% then create a file named `|soul.cfg|' and put it in a directory, where \TeX\
+% can find it. This configuration file will then be loaded
+% at the end of the |soul.sty| file, so you may redefine
+% any settings or commands therein, select package options and even
+% introduce new ones. But if you intend to give
+% your documents to others, don't forget to give them the
+% required configuration files, too! That's how such a file
+% could look like:                                                                                                           
+%
+% \begin{example}
+% |% define macros for logical markup|\\
+% |\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}|\\
+% \\
+% |\sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}|\\
+% |\DeclareRobustCommand*\versal[1]{%|\\
+% |    \MakeUppercase{\SOUL@@@versal{#1}}%|\\
+% |    \SOUL@socheck|\\
+% |}|\\
+% \end{example}
+%
+% \begin{example}[.95\textwidth]
+% |% load the color package and set a different highlighting color|\\
+% |\RequirePackage{color}|\\
+% |\definecolor{lightblue}{rgb}{.90,.95,1}|\\
+% |\sethlcolor{lightblue}|\\
+% |\endinput|
+% \end{example}
+%
+% You can safely use the |\SOUL@@@| namespace for internal macros---it
+% won't be used by the \package{soul} package in the future.
+%
+%
+%
+%
 %
 %
 %
@@ -1037,161 +1416,23 @@
 %
 %
 % 
-% \subsubsection{Modifying an interface}
-% 
-% It's of course not necessary to reinvent the wheel. The following example uses
-% the \ul{underlining} interface with a modified \st{striking out} preamble.\\
-% Guess what it does \dots\hspace{\fill}\texttt{;-)}
-% 
-%\begin{verbatim}
-%    \DeclareRobustCommand*\censor{%
-%      \SOUL@ulbody
-%      \def\SOUL@preamble{\setul{}{2.5ex}\SOUL@stpreamble}%
-%      \SOUL@}
-%\end{verbatim}
 %
-%
-%
-%
-%
-%
-%
-%
-% \subsection{Common restrictions}
-% \label{sec:restrictions}
-%
-% The |soul| mechanism is quite complicated, so you shouldn't be surprised
-% that there are a couple of restrictions to bear in mind:
-%
-% \begin{enumerate}
-% \item
-%   |soul| arguments must not contain more than one paragraph. In other words,
-%   they must not contain a |\par| (|\endgraf|) command, but that shouldn't really be
-%   considered to be a restriction.
-% \item
-%   Fonts can \emph{not} be changed within a |soul| argument. Instead you have
-%   to stop spacing out and underlining, etc., change the font, and then 
-%   restart it. It's, however, better to avoid such cases at all.
-% \item
-%   The input text must not contain discretionary hyphens. Thus you have to
-%   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
-% \item
-%   The |soul| mechanism doesn't recognize |-|, |--|, and |---|. Instead, you
-%   have to use the commands |\hyphen|, |\dash|, and |\emdash|, respectively.
-%   The command |\slash| is internally redefined and works as usual.
-% \item
-%   The mechanism needs \texttt{\char`\ }$_{10}$ (a normal space with
-%   |\catcode| 10) to separate words. Thus, you have to keep \TeX\ from
-%   discarding spaces after commands, e.\,g.:
-%   |\so{first line{\break}|\texttt{\char`\ }|second line}|
-% \item
-%   Ligatures are generally separated. Since the width of a ligature may
-%   differ from the overall width of the concerned characters, these might
-%   be displaced. Although the effect is hardly visible
-%   with most fonts, you can iron it out, if you either force the characters
-%   together using an |\mbox|, or separate them explicitly using a |\>|
-%   in between.
-% 
-%   Some ligatures cause displacements though, which are not neglectable.
-%   The `ygoth' font, for example, replaces `|a|' and `|e|' by a much narrower
-%   `\texttt{\ae}' character. That's why you should either type |\so{{\mbox{ae}}ra\-risch}|,
-%   or |\so{a\>era\-risch}|. Unfortunately, both versions disable automatical
-%   hyphenation, so you have to give some hints.
-%   (This particular problem doesn't encounter with fonts
-%   where `\ae' is created by a command |\ae| rather than by an entry in the
-%   \textit{ligtable}.)
-% \item
-%   Ambigous ligatures can cause troubles, which you can avoid by deciding whether you mean
-%   |\so{ff\>f}| or |\so{f\>ff}|, but this is supposed to be a German problem only.
-% \item
-%   Commands that are based on the |soul| mechanism must not be nested. If you really
-%   need such, put the inner stuff in a box, and use this box.
-%\begin{verbatim}
-%\newbox\anyboxname
-%\sbox\anyboxname{ \so{the worst} }
-%\ul{This is by far{{\usebox\anyboxname}}example!}
-%\end{verbatim}
-%   yields:\quad 
-%   \newbox\anyboxname
-%   \sbox\anyboxname{ \so{the worst} }
-%   \ul{This is by far{{\usebox\anyboxname}}example!}
-% \end{enumerate}
-%
-%
-%
-%
-%
-%
-%
-% \subsection{Known features (aka bugs)}^^A% my little joke 
-% \label{sec:bugs}
-%
-% There's only one error message for the moment. It warns about
-% failed reconstruction due to different length results in pass one
-% (analyzing) and pass two (reconstruction).
-%
-% \medbreak\noindent
-% Possible reasons are:\nopagebreak
-% \begin{itemize}
-% \item
-%   \emph{You protected a hyphenation point only with braces:}
-%   \emph{`input'} would normally be hyphenated \emph{`in-put'.} 
-%   If you typed (for some mysterious reason) |\so{i{np}ut}|,
-%   then pass one will see the hyphenation point and thus report two
-%   syllables \emph{`in'} and \emph{`put'}, while pass two will desparately try
-%   to reconstruct the length of \emph{`in'}  with a token `|i|' and a token `|np|'.
-%   You can solve the problem by typing\\
-%   \hspace*{2em} |\so{i{\mbox{np}}ut}|\\
-%    or, of course,\\
-%   \hspace*{2em} |\DeclareRobustCommand*\np{{\mbox{np}}}|\\
-%   \hspace*{2em} |\so{i\np ut}|
-% \item
-%   \emph{You used \emph{\texttt{-}, \texttt{--},} or \emph{\texttt{---},} 
-%   instead of the commands \emph{\texttt{\string\hyphen}, \texttt{\string\endash},} 
-%   and \emph{\texttt{\string\emdash},} respectively.} 
-% \item
-%   \emph{You used the |inputenc| package and stated a compound character in a 
-%   section heading, caption, etc.} The |inputenc| package allows to use e.\,g.\
-%   `\texttt{\"a}' instead of `|\"a|' in an input file, and that's usually no problem
-%   for |soul|. But if you use such a character in e.\,g.\ a section heading, that
-%   character gets decomposed when it is written to the |.toc| file. If that
-%   file is read in to typeset the table of contents, |soul| issues an error.
-%   You can work around this cumbersome error by putting braces around that character, e.\,g.:
-%   |\section{\so{Ger{|\texttt{\"a}|}t}}|
-% \item
-%   Quite unlikely: \emph{You forgot the funny \emph{\texttt{\string\|}} command at word boundaries:}   
-%   Some fonts have built-in kerning with the \emph{boundary character}. The
-%   EC-font's German opening quotes, for example, are followed by a certain kern,
-%   except when a word begins after them. Here again, the two passes disagree on how to
-%   hyphenate the argument. You can solve this
-%   problem by putting a \texttt{\string\|} command after the quotes to remove the unwanted kern.\\
-%   \hspace*{2em} |\so{noch ein {,,|\texttt{\string\|}|}dummes{``} Beispiel}|\\
-%   This is a somewhat silly example, since you should have typed\\
-%   \hspace*{2em} |\so{noch ein {,,}\<dummes\<{``} Beispiel}|,\\
-%   anyway, in which case the \texttt{\string\|} would not have been necessary.
-% \end{itemize}
-%
-% \noindent
-% The |soul| mechanism recovers from these errors by
-% simply omitting the rest of the current syllable. To make finding the responsible
-% syllable easier, a black square like \mbox{\vrule height.8em depth.2em width1em} is 
-% put right after it.
-% 
-% 
-% 
 %
 %
 %
 %
 %
 % \begin{thebibliography}{0}
+% ^^A\hbadness10000
+% \bibitem{color}{\person{Carlisle, D. P.}. The color package. CTAN-Archive, 1997, v1.0d.}
+%    
 % \bibitem{Duden}{Duden, Volume 1. \textit{Die Rechtschreibung.} Bibliographisches Institut, 
 %   Mannheim--Wien--Z\"urich, 1986, 19th~edition.}
 %
-% \bibitem{DEK}{\caps{Knuth, Donald Ervin}. \textit{The \TeX book.}
+% \bibitem{DEK}{\person{Knuth, Donald Ervin}. \textit{The \TeX book.}
 %   Addison--Wesley Publishing Company, Reading/Massachusetts, 1989, 16th~edition.}
 %
-% \bibitem{Muszynski}{\caps{Muszynski, Carl} and \caps{P{\v r}ihoda, Eduard}.
+% \bibitem{Muszynski}{\person{Muszynski, Carl} and \person{P{\v r}ihoda, Eduard}.
 %   \textit{Die Terrainlehre in Ver\-bin\-dung mit der Darstellung, Beurtheilung und
 %   Beschreibung des Terrains vom milit\"arischen
 %   Standpunkte.}
@@ -1201,11 +1442,13 @@
 %   \textit{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{Tschichold}{\caps{Tschichold, Jan}. \textit{Ausgew\"ahlte Aufs\"atze \"uber Fragen
+% \bibitem{titlesec}{\person{Bezos, Javier}. The titlesec and titletoc package. CTAN-Archive, 1999, v2.1.}
+%    
+% \bibitem{Tschichold}{\person{Tschichold, Jan}. \textit{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
 %   1987, 2nd~edition.}
 %
-% \bibitem{Willberg}{\caps{Willberg, Hans Peter} and \caps{Forssmann, Friedrich}.
+% \bibitem{Willberg}{\person{Willberg, Hans Peter} and \person{Forssmann, Friedrich}.
 %   \textit{Le\-se\-ty\-po\-gra\-phie.} H. Schmidt, Mainz, 1997.}
 %
 % \end{thebibliography}
@@ -1219,10 +1462,20 @@
 %
 %
 %
+%
+%^^A--------------------------------------------------------------------
+%^^A max 72 columns
+%
 % \section{The macros}
-% ^^A max 72 columns
 %
 % \subsection{The package preamble}
+% \subsection{The analyzer}
+% \subsection{The \so{letterspacing} driver}
+% \subsection{The \caps{caps} driver}
+% \subsection{The \ul{underlining} driver}
+% \subsection{The \st{overstriking} driver}
+% \subsection{The \hl{highlighting} driver}
+% \subsection{The package postamble}
 %
 % This piece of code makes sure that the package is only loaded 
 % once. While this is guaranteed by \LaTeX, we have to do it
@@ -1232,52 +1485,34 @@
 \expandafter\ifx\csname SOUL@\endcsname\relax\else
   \expandafter\endinput
 \fi
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \noindent
-% Because we need to know if we were loaded by \LaTeX\ on several
-% places in the package, we define a handy \emph{if} switch.
-%
-%    \begin{macrocode}
+
 \newif\if@SOUL@latex
 \expandafter\ifx\csname documentclass\endcsname\relax
     \@SOUL@latexfalse
 \else
     \@SOUL@latextrue
 \fi
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \noindent
-% |soul| tries to be a good \LaTeX\ citizen if used under \LaTeX\,
-% else it has to fake some of its commands.
-%
-%    \begin{macrocode}
+
 \if@SOUL@latex
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2001/99/99 v1.99 letterspacing/underlining  (mf)]
+        [2001/99/99 v1.99f letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{cmtt10}
+    \newcommand*\soulaccent{}
+    \newcommand*\sodef{}
+    \newcommand*\resetso{}
+    \newcommand*\capsdef{}
+    \newcommand*\capsfont{}
+    \newcommand*\setul{}
+    \newcommand*\resetul{}
+    \newcommand*\setuldepth{}
+    \newcommand*\setulcolor{}
+    \newcommand*\setstcolor{}
+    \newcommand*\sethlcolor{}
 \else
     \chardef\SOUL@atcode=\catcode`@
     \catcode`\@=11
     \def\DeclareRobustCommand*{\def}
-    \def\providecommand*{\def}
     \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
     \def\PackageError#1#2#3{{%
         \newlinechar`^^J%
@@ -1290,261 +1525,214 @@
     \def\@width{width}
     \def\@plus{plus}
     \def\@minus{minus}
-    \let\SOUL@tt\tt
+    \font\SOUL@tt=cmtt10
     \let\@xobeysp\space
+    \let\linebreak\break
+    \let\mbox\hbox
 \fi
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-% 
-% \noindent
-% Piles of |\newtoks| would be costly, so we try to get away with
-% |\toksdef|. If the future shows that it was a bad decision, we
-% can still switch. Local registers are always even, while global
-% ones are odd. This is a \TeX\ convention.
-%
-%    \begin{macrocode}
-\toksdef\SOUL@wordlist\z@
+
+\toksdef\SOUL@word\z@
 \toksdef\SOUL@lasttoken\tw@
-\toksdef\SOUL@remainder=4
-\toksdef\SOUL@replace=6
-\toksdef\SOUL@syllable=8
-\toksdef\SOUL@toklist\@ne
-\toksdef\SOUL@buffer\thr@@
-\toksdef\SOUL@token=5
+\toksdef\SOUL@syllable=4
+\toksdef\SOUL@temp=6
+\toksdef\SOUL@accents=8
+\toksdef\SOUL@buffer\@ne
+\toksdef\SOUL@token\thr@@
+
 \dimendef\SOUL@syllgoal\z@
 \dimendef\SOUL@syllwidth\tw@
 \dimendef\SOUL@charkern=4
 \dimendef\SOUL@hyphkern=6
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \subsection{The kernel}
-%
-% \begin{macro}{\SOUL@}
-% This macro is the entry to the |soul| package. It should only be
-% executed \emph{after} setting up a |soul| driver. |\count@| is the
-% recursion counter for |\SOUL@scanwords|.
-%
-%    \begin{macrocode}
+
+\countdef\SOUL@minus\z@
+\countdef\SOUL@comma\tw@
+\countdef\SOUL@apo=4
+\countdef\SOUL@grave=6
+
+\def\SOUL@stopM{\SOUL@stop}
+\let\SOUL@stop\relax
+\def\SOUL@lowerthan{}
+\def\SOUL@lowerthanM{\<}
+\def\SOUL@hyphenhintM{\-}
+\def\SOUL@*{\let\SOUL@spc= }\SOUL@* %
+
 \def\SOUL@#1{{%
-    \global\let\SOUL@errmsg\SOUL@error
-    \let\<\relax
-    \SOUL@wordlist={#1}%
-    \leavevmode 
+    \let\<\SOUL@lowerthan
+    \leavevmode
     \SOUL@preamble
-    \count@\m@ne
-    \SOUL@scanwords
+    \SOUL@word={}%
+    \SOUL@minus\z@
+    \SOUL@comma\z@
+    \SOUL@apo\z@
+    \SOUL@grave\z@
+    \SOUL@scan#1\SOUL@stop
     \SOUL@postamble
 }}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@scanwords}
-% The syllable analyzer can only deal with single words so we cut the
-% input text into pieces. Every |\ifcase| branch cuts only one token
-% or token sequence and replaces it by another token sequence. The
-% line with the two |\break| seems unnecessary, but it isn't: The
-% first argument of every |\SOUL@scan| command is only a literal
-% delimiter, while the second is executable code. 
-%
-%    \begin{macrocode}
-\def\SOUL@scanwords{{%
-    \advance\count@\@ne
-    \ifcase\count@
-        \SOUL@scan{ }{\SOUL@everyspace{}}%
-    \or \SOUL@scan{~}{\SOUL@everyspace{\nobreak}}%
-    \or \SOUL@scan{\\}{\unskip\nobreak\hfil\break}%
-    \or \SOUL@scan{\linebreak}{\linebreak}%
-    \or \SOUL@scan{\break}{\break}%
-    \or \SOUL@scan{---}{\SOUL@everyexhyphen{---}}%
-    \or \SOUL@scan{--}{\SOUL@everyexhyphen{--}}%
-    \or \SOUL@scan{-}{\SOUL@everyexhyphen{-}}%
-    \or \SOUL@scan{\slash}{\SOUL@everyexhyphen{/}}%
-    \or \SOUL@scani
-    \or \SOUL@scanii
-    \or \SOUL@scaniii
-    \or
-        \edef\x{\SOUL@toklist={\the\SOUL@wordlist}}%
-        \x
+
+\def\SOUL@scan{%
+    \futurelet\SOUL@@\SOUL@eval
+}
+
+\def\SOUL@eval{%
+    \def\SOUL@n*##1{\SOUL@scan}%
+    \ifnum\SOUL@minus=\thr@@
         \SOUL@doword
-    \fi    
-}}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@scan}
-% Prepares to replace every occurrence of argument |#1| by |#2|.
-% |\SOUL@ignore| is inserted, because when checking for |---| in
-% a string ``|a --|'' \TeX\ would otherwise recognise |---| and |--|
-% instead of |--| and |---|. (The latter has to be added for the
-% check to work with arguments that don't contain an em-dash at all.)
-%
-%    \begin{macrocode}
-\def\SOUL@scan#1#2{%
-    \def\split##1#1##2\SOUL@stop{%
-        \SOUL@wordlist={##1}%
-        \SOUL@remainder={##2}%
-    }%
-    \SOUL@replace={#2}%
-    \edef\x{\SOUL@wordlist={%
-        \the\SOUL@wordlist
-        \noexpand\SOUL@ignore
-        \noexpand#1%
-    }}%
-    \x
-    \SOUL@dolist
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@dolist}
-% Does the actual word splitting and re-enters |\SOUL@scanwords| for
-% every piece to check for further word delimiters. The |\SOUL@ignore|
-% macro is inserted to keep \TeX's argument scanner from discarding
-% an argument's surrounding pair of braces. Because this is done
-% in every recursion step, we finally end up with twelve |\SOUL@ignore|
-% tokens (and further twelve that were inserted by |\SOUL@scanwords|).
-%
-%    \begin{macrocode}
-\def\SOUL@dolist{%
-    \expandafter\split\expandafter\SOUL@ignore
-        \the\SOUL@wordlist\SOUL@stop
-    \edef\x{\the\SOUL@wordlist}%
-    \ifx\x\empty
-        \let\SOUL@\relax
+        \SOUL@everyexhyphen{---}%
+        \SOUL@minus\z@
+    \else\ifnum\SOUL@comma=\tw@
+        \edef\x{\SOUL@word={\the\SOUL@word{{,,}}}}\x
+        \SOUL@comma\z@
+    \else\ifnum\SOUL@apo=\tw@
+        \edef\x{\SOUL@word={\the\SOUL@word{{''}}}}\x
+        \SOUL@apo\z@
+    \else\ifnum\SOUL@grave=\tw@
+        \edef\x{\SOUL@word={\the\SOUL@word{{``}}}}\x
+        \SOUL@grave\z@
+    \fi\fi\fi\fi
+    \ifx\SOUL@@-%
+        \advance\SOUL@minus\@ne
+    \else\ifx\SOUL@@,%
+        \advance\SOUL@comma\@ne
+    \else\ifx\SOUL@@'%
+        \advance\SOUL@apo\@ne
+    \else\ifx\SOUL@@`%
+        \advance\SOUL@grave\@ne
     \else
-        \SOUL@scanwords
-        \SOUL@wordlist=\SOUL@remainder
-        \edef\x{\the\SOUL@wordlist}%
-        \ifx\x\empty
-            \let\SOUL@\relax
+        \ifnum\SOUL@minus=\tw@
+            \SOUL@doword
+            \SOUL@everyexhyphen{--}%
+            \SOUL@minus\z@
+        \else\ifnum\SOUL@minus=\@ne
+            \SOUL@doword
+            \SOUL@everyexhyphen{-}%
+            \SOUL@minus\z@
+        \else\ifnum\SOUL@comma=\@ne
+            \edef\x{\SOUL@word={\the\SOUL@word,}}\x
+            \SOUL@comma\z@
+        \else\ifnum\SOUL@apo=\@ne
+            \edef\x{\SOUL@word={\the\SOUL@word'}}\x
+            \SOUL@apo\z@
+        \else\ifnum\SOUL@grave=\@ne
+            \edef\x{\SOUL@word={\the\SOUL@word`}}\x
+            \SOUL@grave\z@
+        \fi\fi\fi\fi\fi
+        \ifx\SOUL@@\SOUL@stop
+            \def\SOUL@n*{\SOUL@doword}%
+        \else\if\noexpand\SOUL@@\SOUL@spc
+            \SOUL@doword
+            \SOUL@everyspace{}%
+            \def\SOUL@n* {\SOUL@scan}%
+        \else\ifx\SOUL@@\\%
+            \SOUL@doword
+            \unskip\nobreak\hfil\break
+        \else\ifx\SOUL@@~%
+            \SOUL@doword
+            \SOUL@everyspace{\nobreak}%
+        \else\ifx\SOUL@@\slash
+            \SOUL@doword
+            \SOUL@everyexhyphen{/}%
+        \else\ifx\SOUL@@\mbox
+            \def\SOUL@n*{\SOUL@addprotect}%
+        \else\ifx\SOUL@@\hbox
+            \def\SOUL@n*{\SOUL@addprotect}%
+        \else\ifx\SOUL@@\break
+            \SOUL@doword
+            \break
+        \else\ifx\SOUL@@\linebreak
+            \SOUL@doword
+            \SOUL@everyspace{\linebreak}%
+        \else\ifcat\bgroup\noexpand\SOUL@@
+            \def\SOUL@n*{\SOUL@addgroup{}}%
+        \else\ifcat$\noexpand\SOUL@@
+            \def\SOUL@n*{\SOUL@addmath}%
         \else
-            \the\SOUL@replace
-            \let\SOUL@\SOUL@dolist
-        \fi
+            \def\SOUL@n*{\SOUL@checktoken}%
+        \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+    \fi\fi\fi\fi
+    \SOUL@n*%
+}
+
+\def\SOUL@checktoken#1{%
+    \def\SOUL@@{\SOUL@addtoken{#1}}%
+    \ifcat\noexpand#1\noexpand\end
+        \def\\##1{%
+            \ifx##1#1%
+                \def\SOUL@@{\SOUL@addgroup{#1}}%
+            \fi
+        }%
+    \else
+        \def\\##1{%
+            \if\noexpand##1\noexpand#1%
+                \def\SOUL@@{\SOUL@addgroup{#1}}%
+            \fi
+        }%
     \fi
-    \SOUL@
+    \the\SOUL@accents
+    \SOUL@@    
 }
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@doword}
-% The only way to find out, where a given word can be broken into
-% syllables, is to let \TeX\ actually typeset the word under conditions
-% that force every possible hyphenation. The result is a box with one
-% line for every syllable.
-%
-%    \begin{macrocode}
+
+\def\SOUL@addgroup#1#2{%
+    \edef\x{\SOUL@word={\the\SOUL@word{{\noexpand#1#2}}}}\x
+    \SOUL@scan
+}
+
+\def\SOUL@addmath$#1${%
+    \edef\x{\SOUL@word={\the\SOUL@word{{\hbox{$#1$}}}}}\x
+    \SOUL@scan
+}    
+
+\def\SOUL@addprotect#1#2{%
+    \edef\x{\SOUL@word={\the\SOUL@word{{\hbox{#2}}}}}\x
+    \SOUL@scan
+}
+
+\def\SOUL@addtoken#1{%
+    \edef\x{\SOUL@word={\the\SOUL@word\noexpand#1}}\x
+    \SOUL@scan
+}
+
+\def\soulaccent#1{{%
+    \edef\x{\global\SOUL@accents={\the\SOUL@accents
+        \noexpand\\{\noexpand#1}}}\x
+}}
+
+\SOUL@accents={%
+    \\\`\\\'\\\^\\\"\\\~\\\=\\\.\\\u\\\v\\\H\\\t\\\c\\\d\\\b}
+
 \def\SOUL@doword{%
-    \SOUL@buffer={}%
-    \setbox\z@\vbox{%
-        \SOUL@tt
-        \hyphenchar\font`\-
-        \hfuzz\maxdimen
-        \hbadness\@M
-        \pretolerance\m@ne
-        \tolerance\@M
-        \leftskip\z@
-        \rightskip\z@
-        \hsize1sp
-        \everypar{}%
-        \parfillskip\z@\@plus1fil
-        \hyphenpenalty-\@M
-        \noindent
-        \hskip\z@
-        \relax
-        \the\SOUL@toklist}%
-    \count@\m@ne
-    \let\-\relax
-    \SOUL@analyze
+    \edef\x{\the\SOUL@word}%
+    \ifx\x\empty
+    \else
+        \SOUL@buffer={}%
+        \setbox\z@\vbox{%
+            \SOUL@tt
+            \hyphenchar\font`\-
+            \hfuzz\maxdimen
+            \hbadness\@M
+            \pretolerance\m@ne
+            \tolerance\@M
+            \leftskip\z@
+            \rightskip\z@
+            \hsize1sp
+            \everypar{}%
+            \parfillskip\z@\@plus1fil
+            \hyphenpenalty-\@M
+            \noindent
+            \hskip\z@
+            \relax
+            \the\SOUL@word}%
+        \let\SOUL@errmsg\SOUL@error
+        \let\-\relax
+        \count@\m@ne
+        \SOUL@analyze
+        \SOUL@word={}%
+    \fi
 }
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \noindent
-% We store the width of the hyphen character of the |cmtt10| font,
-% because we need it in |\SOUL@doword|. (|cmtt10| is a fixed width
-% font, so every other character would have worked, too.)
-% 
-%    \begin{macrocode}
+
 \setbox\z@\hbox{\SOUL@tt-}
 \newdimen\SOUL@ttwidth
 \SOUL@ttwidth\wd\z@
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@analyze}
-% This macro decomposes the box that |\SOUL@doword| has built.
-% Because we have to start at the bottom, we put every 
-% syllable onto the stack and execute ourselves recursively. If there
-% are no syllables left, we return from the recursion and pick syllable
-% after syllable from the stack again---this time from top to bottom---and
-% hand the syllable width |\SOUL@syllgoal| over to |\SOUL@dosyllable|.
-% All but the last syllable end with the hyphen character, whose
-% width has to be subtracted.
-%
-%    \begin{macrocode}
+
 \def\SOUL@analyze{{%
     \setbox\z@\vbox{%
         \unvcopy\z@
@@ -1562,7 +1750,7 @@
         \ifnum\count@>\z@
             \advance\SOUL@syllgoal-\SOUL@ttwidth
             \SOUL@dosyllable
-            \SOUL@getkern{\the\SOUL@token}{\SOUL@hyphkern}%
+            \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@hyphkern}%
                 {\char\hyphenchar\font}%
             \SOUL@everyhyphen
         \else
@@ -1570,113 +1758,43 @@
         \fi
     \fi
 }}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@ignorem}
-% \begin{macro}{\SOUL@ignore}
-% \begin{macro}{\SOUL@stopm}
-% \begin{macro}{\SOUL@stop}
-% \begin{macro}{\SOUL@relaxm}
-% \begin{macro}{\SOUL@lowerthanm}
-% \begin{macro}{\SOUL@hyphenhintm}
-% These macros are used as markers. To be able to check for such a
-% marker with |\ifx| we have also to create a macro that contains
-% the marker.
-%
-%    \begin{macrocode}
-\def\SOUL@ignorem{\SOUL@ignore}
-\let\SOUL@ignore\relax
-\def\SOUL@stopm{\SOUL@stop}
-\let\SOUL@stop\relax
-\def\SOUL@relaxm{\relax}
-\def\SOUL@lowerthanm{\<}
-\def\SOUL@hyphenhintm{\-}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@dosyllable}
-% 
-%
-%    \begin{macrocode}
+
 \def\SOUL@dosyllable{%
-    \SOUL@lasttoken=\SOUL@token
     \SOUL@gettoken
     \edef\x{\the\SOUL@token}%
-    \ifx\x\SOUL@lowerthanm
+    \ifx\x\SOUL@hyphenhintM
+        \let\SOUL@\SOUL@dosyllable
+    \else\ifx\x\SOUL@lowerthanM
         \SOUL@gettoken
-        \edef\x{\the\SOUL@token}%
-        \ifx\x\SOUL@stopm
-            \let\SOUL@\SOUL@dosyllable
-        \else
-            \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
-                {\the\SOUL@token}%
-            \SOUL@everylowerthan
-            \SOUL@puttoken
-            \let\SOUL@\SOUL@dosyllable
-        \fi
-    \else\ifx\x\SOUL@hyphenhintm
+        \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
+            {\the\SOUL@token}%
+        \SOUL@everylowerthan
+        \SOUL@puttoken    
+        \let\SOUL@\SOUL@dosyllable    
     \else\ifdim\SOUL@syllwidth=\SOUL@syllgoal
         \SOUL@everysyllable
         \SOUL@puttoken
         \let\SOUL@\relax
+    \else\ifx\x\SOUL@stopM    
+        \SOUL@errmsg
+        \global\let\SOUL@errmsg\relax
+        \let\SOUL@\relax
     \else
-        \edef\x{\the\SOUL@token}%
-        \ifx\x\SOUL@stopm
-            \SOUL@errmsg
-            \global\let\SOUL@errmsg\relax
-            \let\SOUL@\relax
-        \else
-            \setbox\tw@\hbox{\SOUL@tt\the\SOUL@token}%
-            \advance\SOUL@syllwidth\wd\tw@
-            \SOUL@lasttoken=\SOUL@token
-            \SOUL@gettoken
-            \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
-                {\the\SOUL@token}%
-            \SOUL@puttoken
-            \SOUL@token=\SOUL@lasttoken
-            \SOUL@everytoken
-            \edef\x{\SOUL@syllable={\the\SOUL@syllable\the\SOUL@token}}%
-            \x
-            \let\SOUL@\SOUL@dosyllable
-        \fi
-    \fi\fi\fi
+        \setbox\tw@\hbox{\SOUL@tt\the\SOUL@token}%
+        \advance\SOUL@syllwidth\wd\tw@
+        \global\SOUL@lasttoken=\SOUL@token
+        \SOUL@gettoken
+        \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
+            {\the\SOUL@token}%
+        \SOUL@puttoken
+        \global\SOUL@token=\SOUL@lasttoken    
+        \SOUL@everytoken
+        \edef\x{\SOUL@syllable={\the\SOUL@syllable\the\SOUL@token}}\x
+        \let\SOUL@\SOUL@dosyllable
+    \fi\fi\fi\fi
     \SOUL@
 }
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@gettoken{%
     \edef\x{\the\SOUL@buffer}%
     \ifx\x\empty
@@ -1686,17 +1804,7 @@
         \global\SOUL@buffer={}%
     \fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@puttoken{%
     \edef\x{\the\SOUL@buffer}%
     \ifx\x\empty
@@ -1706,115 +1814,31 @@
         \SOUL@debug{puttoken called twice}%
     \fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@nexttoken{%
-    \edef\x{\the\SOUL@toklist}%
+    \edef\x{\the\SOUL@word}%
     \ifx\x\empty
         \SOUL@token={\SOUL@stop}%
-        \let\SOUL@\relax
     \else
-        \expandafter\SOUL@splittoken\the\SOUL@toklist\SOUL@stop
-        \edef\x{\the\SOUL@token}%
-        \ifx\x\SOUL@ignorem
-            \let\SOUL@\SOUL@nexttoken
-        \else
-            \let\SOUL@\relax
-        \fi
+        \expandafter\SOUL@splittoken\the\SOUL@word\SOUL@stop
     \fi
-    \SOUL@
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@splittoken#1#2\SOUL@stop{%
     \global\SOUL@token={#1}%
-    \global\SOUL@toklist={#2}%
+    \global\SOUL@word={#2}%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@getkern#1#2#3{%
-    \setbox4\hbox{#1#3}%
-    #2\wd4
-    \setbox4\hbox{#1\null#3}%
-    \advance#2-\wd4
+    \setbox\tw@\hbox{#1#3}%
+    #2\wd\tw@
+    \setbox\tw@\hbox{#1\null#3}%
+    \advance#2-\wd\tw@
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@setkern#1{\ifdim#1=\z@\else\kern#1\fi}
 \def\SOUL@removelastkern{\ifdim\lastkern=\z@\else\kern-\lastkern\fi}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\let\SOUL@scani\SOUL@scanwords
-\let\SOUL@scanii\SOUL@scanwords
-\let\SOUL@scaniii\SOUL@scanwords
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\def\SOUL@debug#1{{[:#1:]}}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@error{%
     \vrule\@height.8em\@depth.2em\@width1em
     \PackageError{soul}{Reconstruction failed}{%
@@ -1826,17 +1850,7 @@
         a black square so that you can see where I am right now.%
     }%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@setup{%
     \let\SOUL@preamble\relax
     \let\SOUL@postamble\relax
@@ -1848,31 +1862,9 @@
     \let\SOUL@everylowerthan\relax
 }
 \SOUL@setup
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \subsection{The \so{letterspacing} driver}
-%
-%    \begin{macrocode}
+
 \def\SOUL@sosetletterskip{\nobreak\hskip\SOUL@soletterskip}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@sopreamble{%
     \ifdim\lastskip>5sp
         \unskip
@@ -1880,188 +1872,96 @@
     \fi
     \spaceskip\SOUL@soinnerskip
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\def\SOUL@sopostamble{
+
+\def\SOUL@sopostamble{%
     \unskip
+    \unpenalty    
     \global\skip@=\SOUL@soouterskip
     \aftergroup\SOUL@socheck
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@socheck{%
     \futurelet\SOUL@@\SOUL@sodoouter
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@sodoouter{%
     \bgroup
     \aftergroup\kern\aftergroup\z@
-    \def\\{\let\\= }\\ %
-    \def\~##1{\hskip\skip@\egroup}%
-    \ifx\SOUL@@\\%
-        \def\~ {\hskip\skip@\egroup}%
+    \def\SOUL@n*##1{\hskip\skip@\egroup}%
+    \ifx\SOUL@@\SOUL@spc
+        \def\SOUL@n* {\hskip\skip@\egroup}%
     \else
         \ifx\SOUL@@~%
-        \def\~~{\nobreak\hskip\skip@\egroup}%
+        \def\SOUL@n*~{\nobreak\hskip\skip@\egroup}%
     \else\ifx\SOUL@@\ %
     \else\ifx\SOUL@@\space
     \else\ifx\SOUL@@\@xobeysp
     \else
-        \let\~\egroup
+        \def\SOUL@n*{\egroup}%
     \fi\fi\fi\fi\fi
-    \~%
+    \SOUL@n*%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@soeverytoken{%
-    \the\SOUL@token
-    \SOUL@gettoken
     \edef\x{\the\SOUL@token}%
-    \ifx\x\SOUL@stopm
-    \else
+    \ifx\x\SOUL@lowerthanM
+        \unskip
+    \else    
+        \the\SOUL@token
         \SOUL@setkern\SOUL@charkern
         \SOUL@sosetletterskip
-    \fi
-    \SOUL@puttoken
+    \fi    
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
+\def\SOUL@soeveryspace#1{%
+    \unskip
+    \unpenalty
+    #1%
+    \space
+    \kern\z@
+}
+
+% gets the last token in \SOUL@lasttoken
 \def\SOUL@soeveryhyphen{%
     \discretionary{%
+        \SOUL@removelastkern
         \hbox{%
-            \SOUL@removelastkern
             \SOUL@setkern\SOUL@hyphkern
             \char\hyphenchar\font
             \penalty\hyphenpenalty
         }%
     }{}{}%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@soeveryexhyphen#1{%
-    \SOUL@sosetletterskip
     #1%
     \penalty\exhyphenpenalty
-    \hskip\SOUL@soletterskip
+    \SOUL@sosetletterskip
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@soeverylowerthan{%
-    \SOUL@removelastkern
     \unskip
+    \unpenalty
     \SOUL@setkern\SOUL@charkern
-}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+}%
+
 \def\SOUL@sosetup{%
     \SOUL@setup
     \let\SOUL@preamble\SOUL@sopreamble
     \let\SOUL@postamble\SOUL@sopostamble
     \let\SOUL@everytoken\SOUL@soeverytoken
+    \let\SOUL@everyspace\SOUL@soeveryspace
     \let\SOUL@everyhyphen\SOUL@soeveryhyphen
     \let\SOUL@everyexhyphen\SOUL@soeveryexhyphen
     \let\SOUL@everylowerthan\SOUL@soeverylowerthan
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@setso#1#2#3{%
     \def\SOUL@soletterskip{#1}%
     \def\SOUL@soinnerskip{#2}%
     \def\SOUL@soouterskip{#3}%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\sodef#1#2#3#4#5{%
     \DeclareRobustCommand*#1{\SOUL@sosetup
         \def\SOUL@preamble{%
@@ -2072,33 +1972,13 @@
         \SOUL@
     }%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\resetso{%
     \sodef\so{}{.25em}{.65em\@plus.08em\@minus.06em}%
         {.55em\@plus.275em\@minus.183em}%
 }
 \resetso
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \sodef\sloppyword{%
     \linepenalty10
     \hyphenpenalty10
@@ -2109,60 +1989,20 @@
     {\z@\@plus.1em}%
     {.33em\@plus.11em\@minus.11em}%
     {.33em\@plus.11em\@minus.11em}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \if@SOUL@latex
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \DeclareRobustCommand\capsreset{%
     \let\SOUL@capsbase\empty
     \SOUL@capsdefault
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\capsdef#1#2#3#4#5{{%
     \toks\z@{\\{#1/#2/#3/#4/#5}}%
     \toks\tw@=\expandafter{\SOUL@capsbase}%
     \xdef\SOUL@capsbase{\the\toks\z@\the\toks\tw@}%
 }}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \DeclareRobustCommand*\capssave[1]{%
     \expandafter\global\expandafter\let
         \csname SOUL@@\string#1\endcsname\SOUL@capsbase
@@ -2170,17 +2010,7 @@
     \expandafter\SOUL@next\expandafter{%
         \csname SOUL@@\string#1\endcsname}%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@capsfind#1/#2/#3/#4/#5/#6/#7/#8/#9/{%
     \let\SOUL@match=1%
     \SOUL@chk{#1}\f@encoding
@@ -2197,47 +2027,17 @@
             \SOUL@}%
     \fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@chk#1#2{%
     \if$#1$%
     \else
-        \def\~{#1}%
-        \ifx#2\~\else\let\SOUL@match=0\fi
+        \def\SOUL@n{#1}%
+        \ifx#2\SOUL@n\else\let\SOUL@match=0\fi
     \fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@dimchk#1#2{\if$#1$\else\SOUL@rangechk{#2}#1--\@ne\@@\fi}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@rangechk#1#2-#3-#4\@@{%
     \count@=#4%
     \ifnum\count@>\z@
@@ -2249,33 +2049,13 @@
         \ifdim#1\p@<\dimen@\else\let\SOUL@match=0\fi
     \fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \DeclareRobustCommand*\caps{{%
     \def\\##1{\expandafter\SOUL@capsfind##1/}%
     \SOUL@capsbase
     \aftergroup\SOUL@caps
 }}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@capsdefault{%
     \capsdef{////}%
     \SOUL@capsdfltfnt
@@ -2283,42 +2063,12 @@
     {.37em\@plus.1667em\@minus.1em}%
     {.37em\@plus.111em\@minus.14em}%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \let\SOUL@capsdfltfnt\scshape
 \capsreset
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \else
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \let\capsfont\relax
 \let\capsreset\relax
 \def\capsdef#1#2#3#4#5{}
@@ -2328,47 +2078,14 @@
     {.37em\@plus.1667em\@minus.111em}%
     {.37em\@plus.1em\@minus.14em}
 \fi
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \subsection{The \ul{underlining} driver}
-%
-%    \begin{macrocode}
+
 \newdimen\SOUL@uldp
 \newdimen\SOUL@ulht
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@ulleaders{%
-    \leaders\hrule\@depth\SOUL@uldp\@height\SOUL@ulht
-    \relax
+    \leaders\hrule\@depth\SOUL@uldp\@height\SOUL@ulht\relax
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@ulunderline#1{{%
     \setbox\z@\hbox{#1}%
     \dimen@=\wd\z@
@@ -2380,17 +2097,7 @@
     }%
     \unhcopy\z@
 }}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@ulpreamble{%
     \SOUL@uldp=\SOUL@uldepth
     \SOUL@ulht=-\SOUL@uldp
@@ -2398,34 +2105,14 @@
     \spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
         \@minus\fontdimen4\font
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@uleverysyllable{%
     \SOUL@ulunderline{%
         \the\SOUL@syllable
         \SOUL@setkern\SOUL@charkern
     }%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@uleveryspace#1{%
     \SOUL@ulcolor{%
         #1%
@@ -2433,17 +2120,7 @@
         \hskip\spaceskip
     }%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@uleveryhyphen{%
     \discretionary{%
         \hbox{%
@@ -2455,64 +2132,24 @@
         }%
     }{}{}%
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@uleveryexhyphen#1{%
     \SOUL@ulunderline{#1}%
     \penalty\exhyphenpenalty
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \let\SOUL@ulcolor\relax
 \def\setulcolor#1{%
-    \def\SOUL@ulcolor{%
-        \textcolor{#1}%
-    }%
+    \if$#1$
+        \let\SOUL@ulcolor\relax
+    \else    
+        \def\SOUL@ulcolor{\textcolor{#1}}%
+    \fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\def\setuloverlap#1{%
-    \def\SOUL@uloverlap{#1}%
-}
+
+\def\setuloverlap#1{\def\SOUL@uloverlap{#1}}
 \setuloverlap{.5pt}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@ulsetup{%
     \SOUL@setup
     \let\SOUL@preamble\SOUL@ulpreamble
@@ -2521,64 +2158,22 @@
     \let\SOUL@everyhyphen\SOUL@uleveryhyphen
     \let\SOUL@everyexhyphen\SOUL@uleveryexhyphen
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\DeclareRobustCommand*\ul{%
-    \SOUL@ulsetup
-    \SOUL@
-}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
+\DeclareRobustCommand*\ul{\SOUL@ulsetup\SOUL@}
+
 \def\setul#1#2{%
     \if$#1$\else\def\SOUL@uldepth{#1}\fi
     \if$#2$\else\def\SOUL@ulthickness{#2}\fi
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\resetul{\setul{.65ex}{.1ex}}
 \resetul
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\def\setuldepth#1{{\def\SOUL@@{#1}%
+
+\def\setuldepth#1{{%
+    \def\SOUL@n{#1}%
     \setbox\z@\hbox{%
         \tracinglostchars\z@
-        \ifx\SOUL@@\empty
+        \ifx\SOUL@n\empty
             \count@\z@
             \loop
                 \ifnum\catcode\count@=11\char\count@\fi
@@ -2593,143 +2188,96 @@
     \advance\dimen@\p@
     \xdef\SOUL@uldepth{\the\dimen@}%
 }}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \subsection{The \st{overstriking} driver}
-%
-%    \begin{macrocode}
+
 \def\SOUL@stpreamble{%
     \dimen@\SOUL@ulthickness
     \dimen@i=-.5ex
     \advance\dimen@i-.5\dimen@
     \edef\SOUL@uldepth{\the\dimen@i}%
+    \let\SOUL@ulcolor\SOUL@stcolor
     \SOUL@ulpreamble
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
+
 \def\SOUL@stsetup{%
     \SOUL@ulsetup
     \let\SOUL@preamble\SOUL@stpreamble
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\DeclareRobustCommand*\st{%
+
+\DeclareRobustCommand*\st{\SOUL@stsetup\SOUL@}
+
+\let\SOUL@stcolor\relax
+\def\setstcolor#1{%
+    \if$#1$
+        \let\SOUL@stcolor\relax
+    \else
+        \def\SOUL@stcolor{\textcolor{#1}}%
+    \fi
+}    
+
+\def\SOUL@hlpreamble{%
+    \setul{}{2.5ex}%
+    \setstcolor{\SOUL@hlcolor}%
+    \let\SOUL@stcolor\SOUL@hlcolor
+    \SOUL@stpreamble
+}
+
+\def\SOUL@hlsetup{%
     \SOUL@stsetup
-    \SOUL@
+    \let\SOUL@preamble\SOUL@hlpreamble    
 }
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\DeclareRobustCommand*\hl{%
-    \SOUL@stsetup
-    \def\SOUL@preamble{%
-        \setul{}{2.5ex}%
-        \setulcolor{\SOUL@hlcolor}%
-        \SOUL@stpreamble
-    }%    
-    \SOUL@
-}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
-\def\sethlcolor#1{%
-    \def\SOUL@hlcolor{#1}%
-}
+
+\DeclareRobustCommand*\hl{\SOUL@hlsetup\SOUL@}
+
+\def\sethlcolor#1{\if$#1$\else\def\SOUL@hlcolor{\textcolor{#1}}\fi}
 \sethlcolor{yellow}
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \subsection{The package postamble}
-%
-%    \begin{macrocode}
+
 \if@SOUL@latex
     \AtBeginDocument{%
-        \expandafter\ifx\csname color\endcsname\relax
+        \@ifundefined{color}{%
             \let\SOUL@color\relax
             \let\setulcolor\@gobble
+            \let\setstcolor\@gobble
             \let\sethlcolor\@gobble
             \let\hl\ul
-        \fi    
+        }{}
+        \@ifundefined{mdqoff}{}{\soulaccent{"}}
     }
-\DeclareOption{capsdefault}{%
-    \AtBeginDocument{%
-        \def\SOUL@capsdfltfnt#1{\SOUL@ulsetup\SOUL@ulpreamble}%
-    }%
-}
+    \DeclareOption{capsdefault}{%
+        \AtBeginDocument{%
+            \def\SOUL@capsdfltfnt#1{\SOUL@ulsetup\SOUL@ulpreamble}%
+        }%
+    }
     \InputIfFileExists{soul.cfg}%
         {\PackageInfo{soul}{Local config file soul.cfg used}}{}
     \ProcessOptions
 \else
+    \expandafter\ifx\csname mdqoff\endcsname\relax
+    \else
+        \soulaccent{"}%
+    \fi
     \def\setulcolor#1{}
+    \let\setstcolor\setulcolor
     \let\sethlcolor\setulcolor
     \let\hl\ul
     \catcode`\@=\SOUL@atcode
 \fi
-%    \end{macrocode}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-%    \begin{macrocode}
 \endinput
 %    \end{macrocode}
 %
+%
+%
+%
+% ^^A ?????
+% \describemacro{\setstcolor}
+% \describemacro{\sethlcolor}
+% \describemacro{\soulaccent}
+% \describemacro{\soulfont}
+% \describemacro{\setuloverlap}
+% \describemacro{\hl}
+% \describemacro{\sloppyword}
 %
 % \Finale
 % 
 %                                     
 %                                                       ^^A.E.I.O.U.^^
+%^^A vim:ts=4:sw=4:et
