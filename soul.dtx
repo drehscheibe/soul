@@ -337,6 +337,8 @@
 %   \dospecials
 %   \catcode`{=1
 %   \catcode`}=2
+%   \def\{{\char"7B}^^A
+%   \def\}{\char"7D}^^A
 %   \SOUL@@@code
 % }
 %
@@ -487,6 +489,7 @@
 % The \package{soul} package provides five commands that are aimed at emphasizing
 % text parts. Each of the commands takes one argument that can either be
 % the text itself, or a macro that contains text (e.\,g. |\so\text|).
+% See table \ref{tab:survey} for a complete command survey.
 %
 % {\catcode`\|=12
 % \begin{center}    
@@ -547,26 +550,29 @@
 % The \package{soul} package has to pre-process the argument before it
 % can split it into characters and syllables, and all described
 % constructs are only allowed because the package actively provides them.
-% This wasn't the case for versions prior to 2.0.
-%
 %
 % \begin{verblist}{1}
 % \item[Quotes: \so{``quotes''}]
 %   The \package{soul} package recognizes the quotes ligatures |``|, |''| and |,,|. 
 % \item[Accents: \so{na\"\i ve}]
-%   Accents can be used naturally. Even the |"| command
-%   is allowed, when the \package{german} package is loaded.
+%   Accents can be used naturally.
+%   Support for the following accents is built-in: |\`|, |\'|, |\^|, |\"|, |\~|,
+%   |\=|, |\.|, |\u|, |\v|, |\H|, |\t|, |\c|, |\d| and |\b|. Additionally,
+%   if the \package{german} package is loaded you can also use the |"| command
+%   and write |\so{na"ive}|. See \ref{sec:soulaccent} for how to add
+%   further accents.
 % \item[Mathematics: \so{foo$x^3$bar}]
 %   Mathematic formulas are allowed, as long as they are
 %   surrounded by \texttt\$. Note that the \LaTeX\ 
-%   equivalent|\(...\)| does not work.
+%   equivalent |\(...\)| does not work.
 % \item[Hyphens and dashes: \so{re-sent}]
 %   Explicit hyphens as well as en-dashes (|--|), em-dashes (|---|)
 %   and the |\slash| command work as usual.
 % \item[Newlines: \so{new\\line}]
 %   The |\\| command fills the current line with white space
 %   and starts a new line. Unlike the original \LaTeX\ command
-%   \package{soul}'s version can not handle an optional parameter.
+%   \package{soul}'s version does not handle an optional parameter
+%   like in |\\[1ex]|.
 % \item[Unbreakable spaces: \so{don't~break}]
 %   The |~| command sets an unbreakable space.
 % \item[Breaking lines: \so{a\linebreak b}]
@@ -577,14 +583,16 @@
 %   A pair of braces can be used to let a group of characters
 %   be seen as one item, so that \package{soul} does
 %   for instance not space it out. The character must, however,
-%   not contain a possible hyphenation point!
+%   not contain a possible hyphenation point! (See \ref{par:Protecting})
 % \item[Protecting: \so{a \mbox{little} b}]
 %   An |\mbox| does also keep \package{soul} from
 %   breaking up the contents, but it may even contain
 %   hyphenation points. |\hbox| can be used as a synonym.
 % \item[Breaking up ligatures: \ul{f{}inally}]
-%   Break up e.\,g. the `fi' ligature. Not needed for |\so| which breaks
-%   up every unprotected (ungrouped/unboxed) ligature, anyway.
+%   Break up ligatures like `fi' in |\ul|, |\st| and |\hl|.
+%   |\so| and |\caps| break up every unprotected (ungrouped/unboxed)
+%   ligature, anyway, and would just add undesirable extra space around
+%   braces.
 % \end{verblist}
 %
 %
@@ -592,24 +600,18 @@
 %
 % \subsection{\dots\ others don't}
 %
-% There are, however, still some things that are not allowed in \package{soul}
-% arguments. This is due to the quite complex heart of soul, which has to
-% read in each character and inspect it, before \TeX's paragraph builder is
-% allowed to typeset it.
+% Although the new \package{soul} is much more robust and forgiving than
+% versions prior to 2.0 were, there are
+% still some things that are not allowed in \package{soul} arguments.
+% This is due its quite complex engine, which has to read and inspect every
+% character before it can hand it over to \TeX's paragraph builder.
 %
 % \begin{verblist}{20}
 % \item[Grouping hyphenateable material: \so{foo {little} bar}]
 %   Grouped characters must not contain hyphenation points. Instead of
 %   |\so{foo {little}}| write |\so{foo \mbox{little}}|. You get a
-%   \texttt{Reconstruction failed} error and a black square like
+%   \texttt{`Reconstruction failed'} error and a black square like
 %   \errsquare\ in the document where you violated this rule.
-% \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
-%   \package{soul} arguments must not contain conditional statements like
-%   |\if|, |\else|, |\fi|, |\ifcase|, etc.
-% \item[Weird stuff: \so{foo \verb|\bar| baz}]
-%   They also must not contain \LaTeX\ environments, command definitions,
-%   and tricky stuff like |\vadjust|. As long as you are writing simple, `horizontal'
-%   material, you are on the safe side.
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
 %   The input text must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
@@ -623,19 +625,26 @@
 %   \newbox\anyboxname
 %   \sbox\anyboxname{ \so{the worst} }
 %   \null\qquad\ul{This is by far\mbox{\usebox\anyboxname}example!}
+% \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
+%   \package{soul} arguments must not contain conditional statements like
+%   |\if|, |\else|, |\fi|, |\ifcase|, etc.
+% \item[Other weird stuff: \so{foo \verb|\bar| baz}]
+%   They also must not contain \LaTeX\ environments, command definitions,
+%   and tricky stuff like |\vadjust|. As long as you are writing simple, `horizontal'
+%   material, you are on the safe side.
 % \end{verblist}
 %
 % \noindent
 % Note that with the exception of \ref{par:Grouping hyphenateable material}
 % you may get error messages that do not indicate that you violated one of the
 % above rules, but rather show some low-level problems that \TeX\ has detected.
+% \texttt{`Incomplete }\macro{\ifcat}\texttt{'} in a line with a \package{soul}
+% command is such a message.
 %
 %
 %
-%
-% \subsection{Command survey}
-%
-% \medskip\noindent
+% \begin{table}
+% \begin{center}
 % {\catcode`\|=12
 % \newcommand*\pref[1]{{\footnotesize\pageref{cmd:#1}}}
 % \newcommand*\Ast{\rlap{$^\ast$}}
@@ -644,29 +653,34 @@
 % \begin{tabular}{r@{\hspace{.6em}}c@{\hspace{.6em}}l}
 % ^^A\hline\\[-1ex]
 % &\hbox to0pt{\hss\footnotesize page\hss}&\\[.5ex]
-% \m{\so{letterspacing}}&                \pref{so}           &\so{letterspacing}\\
-% \m{\caps{CAPITALS, Small Capitals}}&   \pref{caps}         &\caps{CAPITALS, Small Capitals}\\
-% \m{\ul{underlining}}&                  \pref{ul}           &\ul{underlining}\\
-% \m{\st{striking out}}&                 \pref{st}           &\st{striking out}\\
-% \m{\hl{highlighting}}&                 \pref{hl}           &\hl{highlighting}\\
+% \verb+\so{letterspacing}+&                \pref{so}           &\so{letterspacing}\\
+% \verb+\caps{CAPITALS, Small Capitals}+&   \pref{caps}         &\caps{CAPITALS, Small Capitals}\\
+% \verb+\ul{underlining}+&                  \pref{ul}           &\ul{underlining}\\
+% \verb+\st{striking out}+&                 \pref{st}           &\st{striking out}\\
+% \verb+\hl{highlighting}+&                 \pref{hl}           &\hl{highlighting}\\
 % \\
-% \m{\soulaccent{\cs}}&                  \pref{soulaccent}   &\ti{add accent} \macro{\cs} \ti{to accent list}\\
-% \m{\soulfont{\cs}}&                    \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
-% \m{\sloppyword{text}}&                 \pref{sloppyword}   &\ti{typset} \m{text} \ti{with strechable spaces}\\
+% \verb+\soulaccent{\cs}+&                  \pref{soulaccent}   &\ti{add accent} \macro{\cs} \ti{to accent list}\\
+% \verb+\soulfont{\cs}+&                    \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
+% \verb+\sloppyword{text}+&                 \pref{sloppyword}   &\ti{typset} \m{text} \ti{with stretchable spaces}\\
 % \\
-% \m{\sodef\cs{1em}{2em}{3em}}&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
-% \m{\resetso}&                          \pref{resetso}      &\ti{reset} \m{\so} \ti{dimensions}\\
-% \m{\capsreset}\Ast&                    \pref{capsreset}    &\ti{clear caps data set}\\
-% \m{\capsdef{////}{1em}{2em}{3em}}\Ast& \pref{capsdef}      &\ti{define (default)} \m{\caps} \ti{data entry}\\
-% \m{\capssave\cs}\Ast&                  \pref{capssave}     &\ti{save} \m{\caps} \ti{data set under name} \rlap{\texttt{\string\cs}}\\
-% \m{\setul{1ex}{2ex}}&                  \pref{setul}        &\ti{set} \m{\ul} \ti{dimensions}\\
-% \m{\resetul}&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
-% \m{\setuldepth{y}}&                    \pref{setuldepth}   &\ti{set underline depth to depth of} \m{y}\\
-% \m{\setuloverlap{y}}&                  \pref{setuloverlap} &\ti{set underline overlap width to} \m{y}\\
-% \m{\setulcolor{y}}\Ast&                \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
-% \m{\setstcolor{y}}\Ast&                \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
-% \m{\sethlcolor{y}}\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\^^A[1.5ex]\hline
+% \verb+\sodef\cs{1em}{2em}{3em}+&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
+% \verb+\resetso+&                          \pref{resetso}      &\ti{reset} \m{\so} \ti{dimensions}\\
+% \verb+\capsreset+\Ast&                    \pref{capsreset}    &\ti{clear caps data set}\\
+% \verb+\capsdef{////}{1em}{2em}{3em}+\Ast& \pref{capsdef}      &\ti{define (default)} \m{\caps} \ti{data entry}\\
+% \verb+\capssave\cs+\Ast&                  \pref{capssave}     &\ti{save} \m{\caps} \ti{data set under name} \rlap{\texttt{\string\cs}}\\
+% \verb+\setul{1ex}{2ex}+&                  \pref{setul}        &\ti{set} \m{\ul} \ti{dimensions}\\
+% \verb+\resetul+&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
+% \verb+\setuldepth{y}+&                    \pref{setuldepth}   &\ti{set underline depth to depth of} \m{y}\\
+% \verb+\setuloverlap{y}+&                  \pref{setuloverlap} &\ti{set underline overlap width to} \m{y}\\
+% \verb+\setulcolor{y}+\Ast&                \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
+% \verb+\setstcolor{y}+\Ast&                \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
+% \verb+\sethlcolor{y}+\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\^^A[1.5ex]\hline
 % \end{tabular}}
+% \caption{List of all available commands. The number points to the
+%          page where the command is described.}
+% \label{tab:survey}
+% \end{center}
+% \end{table}
 %
 %
 %
@@ -685,12 +699,30 @@
 % \label{sec:somacros}
 %
 % The base macro for letterspacing is called \describemacro{\so}.
-% It typesets the given argument with a certain
-% amount of \textit{inter-letter space} between every two tokens,
-% \textit{inner space} between words, and \textit{outer space}
-% before and after the spaced out text in case there is a space
-% preceding and following,  whereby all kerning values are automatically
-% reinserted at the right places.  To enforce normal spaces instead of 
+% It typesets the given argument with \textit{inter-letter space} ($\cdot$)
+% between every two characters, \textit{inner space} ($\sqcup$) between words
+% and \textit{outer space} ($\bigtriangleup$) before and after the spaced out text.
+%
+% \bigbreak
+% \bgroup
+% \def\.{$\cdot$}
+% \def\_{~$\sqcup$~}
+% \def\*{~$\bigtriangleup$~}
+% |xxxx \so{aaaa bbbb cccc} yyyy|\par
+% xxxx \so{aaaa bbbb cccc} yyyy\par
+% {\large xxxx\*a\.a\.a\.a\_b\.b\.b\.b\_c\.c\.c\.c\*yyyy}\par
+% \bigbreak
+% in case there is a space
+% preceding and following. All kerning values are automatically
+% inserted at the right places.
+% \bigbreak
+% |xxxx\so{aaaa bbbb cccc}yyyy|\par
+% xxxx\so{aaaa bbbb cccc}yyyy\par
+% {\large xxxxa\.a\.a\.a\_b\.b\.b\.b\_c\.c\.c\.c\*yyyy}\par
+% \bigbreak
+% \egroup
+%
+% To enforce normal spaces instead of 
 % \textit{outer spaces}, you can `hide' preceding spaces with a 
 % \macro{\null} before the \macro{\so} command, and following spaces with any other
 % token such as \macro{\relax} or just an opening or closing brace afterwards.
