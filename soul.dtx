@@ -1,10 +1,10 @@
 % \iffalse
-%% File: soul.dtx  Copyright (C) 1998, 1999, 2001  Melchior FRANZ
+%% File: soul.dtx  Copyright (C) 1998, 1999, 2002  Melchior FRANZ
 %% $Id$
 %
 %<*batchfile>
 %
-% on Unix/Linux just run "make" to get the style file and the documentation
+% on Unix/Linux just run "make" to get the style file and the documentation;
 % else generate the driver soul.ins (if you don't already have it):
 %
 %     $ latex soul.dtx
@@ -26,7 +26,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.0",
-%%     date            = "99 December 2001",
+%%     date            = "3 January 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -79,7 +79,7 @@
 %
 %<*driver>
 \def\fileversion{2.0}
-\def\filedate{2001/12/99}
+\def\filedate{2002/01/03}
 %
 %
 %
@@ -90,7 +90,7 @@
 %
 %
 \IfFileExists{soul.sty}{%
-    \usepackage{soul}[2001/12/99]
+    \usepackage{soul}[2002/01/03]
     \let\SOULSTYfound\active
 }{%
     \GenericWarning{soul.dtx}{%
@@ -133,7 +133,7 @@
 %
 %
 %
-% \CheckSum{1902}
+% \CheckSum{1898}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -156,7 +156,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{December ??, 2001}
+% \date{January 3, 2002}
 %
 %^^A=====================================================
 %
@@ -327,13 +327,20 @@
 % 
 %   \def\SOUL@@@X#1{\textbf{??}}%
 %   \let\so\SOUL@@@X
+%   \let\textso\SOUL@@@X
 %   \let\caps\SOUL@@@X
+%   \let\textcaps\SOUL@@@X
 %   \let\ul\SOUL@@@X
+%   \let\textul\SOUL@@@X
 %   \let\st\SOUL@@@X
+%   \let\textst\SOUL@@@X
+%   \let\hl\SOUL@@@X
+%   \let\texthl\SOUL@@@X
 %   \let\sy\SOUL@@@X
 %   \let\an\SOUL@@@X
 %   \let\magstylepar\SOUL@@@X
-%   \def\sodef#1#2#3#4{\SOUL@@@X}%
+%   \let\sloppyword\SOUL@@@X
+%   \def\sodef#1#2#3#4{\let#1\relax\SOUL@@@X}%
 % \fi
 %
 % \newcommand*\path{^^A
@@ -363,6 +370,7 @@
 % }
 %
 % \def\ConTeXt{Con\TeX t}
+% \def\CTAN{{\small\caps{CTAN}}}
 % \def\soul{\package{soul}}
 %
 % ^^A  set some parameters as used in Plain TeX
@@ -401,7 +409,7 @@
 % \changes{v1.3}{1999/05/15}{changed allowhyphen, preambles; added a paragraph
 %   in the `features' section}
 %
-% \changes{v2.0}{2001/12/??}{almost complete rewrite}
+% \changes{v2.0}{2002/01/03}{(almost) complete rewrite}
 %
 %
 %
@@ -423,7 +431,7 @@
 % and some derivatives such as \st{overstriking} and \hl{highlighting}.
 % Although the package is optimized for \LaTeXe, it also works with
 % Plain \TeX\ and with other flavors of \TeX\ like, for instance, \ConTeXt.
-% By the way, the package name |soul| was originally only a combination
+% By the way, the package name |soul| is only a combination
 % of the two macro names \cs{\so} (\emph{space out}) and \cs{\ul}
 % (\emph{underline})---nothing poetic at all.^^A  :-( 
 % \end{abstract}
@@ -441,6 +449,7 @@
 %
 %
 % \section{Typesetting rules}
+% \label{sec:typesetting}
 % 
 % There are several possibilities to emphasize parts of a paragraph,
 % where not all are considered good style. While underlining
@@ -489,7 +498,7 @@
 % non-latin glyphs. Letterspacing has a strong tradition in eastern countries
 % where cyrillic fonts are used.
 %
-% The \person{Duden} \cite{Duden}, a well known German dictionary, describes how to space out properly:
+% The \person{Duden} \cite{Duden}, a well known German dictionary, explains how to space out properly:
 % \emph{Punctuation marks are spaced out like letters, except quotation marks and periods.
 % Numbers are never spaced out. The German syllable \mbox{\emph{-sche}} is not spaced
 % out in cases like \emph{``der {\so{Virchow{sche}}} Versuch''}\footnote{the \person{Virchow} experiment}. 
@@ -527,8 +536,8 @@
 % }
 %
 % \noindent
-% The |\hl| command does only highlight if the \package{color} package was
-% loaded, otherwise it falls back to underlining. The highlighting
+% The |\hl| command does only highlight if the \package{color} package
+% was loaded, otherwise it falls back to underlining. The highlighting
 % color is by default yellow, underlines and overstriking lines are by
 % default black. The colors can be changed using the following commands:
 %
@@ -578,8 +587,8 @@
 %   Accents can be used naturally.
 %   Support for the following accents is built-in: |\`|, |\'|, |\^|, |\"|, |\~|,
 %   |\=|, |\.|, |\u|, |\v|, |\H|, |\t|, |\c|, |\d| and |\b|. Additionally,
-%   if the \package{german} package is loaded you can also use the |"| command
-%   and write |\so{na"ive}|. See section~\ref{sec:soulaccent} for how to add
+%   if the \package{german} package \cite{german} is loaded you can also use the |"|
+%   accent commands and write |\so{na"ive}|. See section~\ref{sec:soulaccent} for how to add
 %   further accents.
 % \item[Mathematics: \so{foo$x^3$bar}]
 %   Mathematic formulas are allowed, as long as they are
@@ -594,7 +603,7 @@
 %   \soul's version does not handle optional parameters
 %   like in |\\[1ex]|.
 % \item[Breaking lines: \so{foo\linebreak bar}]
-%   The |\linebreak| command also breaks the line without
+%   The |\linebreak| command breaks the line without
 %   filling it with white space at the end. \soul's version
 %   does not handle optional parameters like in |\linebreak[1]|.
 %   |\break| can be used as a synonym.
@@ -611,7 +620,7 @@
 %   breakable material. |\hbox| can be used as a synonym.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
 %   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
-%   well as the \package{yfonts} package font commands like \cs{\textfrak} etc.\
+%   well as the \package{yfonts} package \cite{yfonts} font commands like \cs{\textfrak} etc.
 %   Further commands have to be registered using the \cs{\soulfont}
 %   command (see section~\ref{sec:soulfont}).
 % \item[Breaking up ligatures: \ul{Auf{}lage}]
@@ -725,16 +734,16 @@
 % \subsection{Troubleshooting}
 %
 % Unfortunately, there's just one helpful error message provided by
-% the \soul\ package, that actually describes the problem. All other
+% the \soul\ package, that actually describes the underlying problem. All other
 % messages are generated directly by \TeX\ and show the low-level
 % commands that \TeX\ wasn't happy with. They'll hardly point you
 % to the violated rule as described in the above paragraphs.
 % If you get such a mysterious error message for a line that contains
-% a soul statement, then comment that statement out and see if the message
+% a \soul\ statement, then comment that statement out and see if the message
 % still appears.
 % \texttt{`Incomplete }\cs{\ifcat}\texttt{'} is such a non-obvious message.
 % If the message doesn't appear now, then check the argument for 
-% violations of the rules listed in~\S\S\,20--26.
+% violations of the rules as listed in~\S\S\,20--26.
 %
 %
 %
@@ -744,7 +753,7 @@
 % \ref{par:Material without ectt10 representation} were
 % violated. It is caused by the fact that the reconstruction pass
 % couldn't collect tokens with an overall width of the syllable that
-% was measured by the analyzer. This does either occurr when you
+% was measured by the analyzer. This does either occur when you
 % grouped hyphenateable text or used an unregistered command
 % that influences the syllable width. Font switching commands belong
 % to the latter group. See the cited paragraphs for how to fix
@@ -799,13 +808,13 @@
 % \noindent
 % Case~1 shows how letterspacing macros (\cs{\so} and \cs{\caps}) behave if
 % they aren't following or followed by a space: they omit outer space around
-% \soul\ command. Case~2 is what you'll mostly need---letterspaced
-% text amidst running text. Following and leading space gets replaced by
-% \syn{outer space}. It doesn't matter if there are opening brace before
+% the \soul\ statement. Case~2 is what you'll mostly need---letterspaced
+% text amidst running text. Following and leading space get replaced by
+% \syn{outer space}. It doesn't matter if there are opening braces before
 % or closing braces afterwards. \soul\ can see though both of them (case~3).
 % Note that leading space has to be at least |5sp| wide to be accepted as
 % space, because \LaTeX\ uses tiny spaces with |\hskip1sp| internally as marker.
-% Case~3 shows how to enforce normal spaces instead of \syn{outer spaces:}
+% Case~4 shows how to enforce normal spaces instead of \syn{outer spaces:}
 % Preceding space can be hidden by any token or |\kern0pt|. Following space
 % can also be hidden by any token, but note that a typical macro name
 % like \cs{\relax} or \cs{\null} would also hide the space after.
@@ -825,11 +834,11 @@
 % letting them grow and shrink with the respective fonts.
 %
 % \begin{example}
-% |\sodef\an{}{.2em}{1em plus1em}{2em plus.1em minus.1em}|
+% |\sodef\an{}{.4em}{1em plus1em}{2em plus.1em minus.1em}|
 % \end{example}
 %
-% after which you can type `|\an{example}|' to get
-% {\sodef\an{}{.2em}{1em plus1em}{2em plus.1em minus.1em}^^A
+% After that you can type `|\an{example}|' to get
+% {\sodef\an{}{.4em}{1em plus1em}{2em plus.1em minus.1em}^^A
 % `\an{example}'.}
 % The \describemacro{\resetso} command resets \cs{\so}
 % to the default values.
@@ -875,7 +884,7 @@
 %   {\so{1\<3 December {1995}}}
 %
 % \soultest{Explicit hyphens like |-|, |--| and |---| are recognized.
-%   \texttt{\string\slash} outputs a slash with the possibility to break the line
+%   \texttt{\string\slash} outputs a slash and enables \TeX\ to break the line
 %   afterwards}
 %   |\so{input\slash output}|
 %   {\so{input\slash output}}
@@ -1019,7 +1028,7 @@
 %   kindly provided, and the \package{oldgerm} and \package{yfonts} package
 %   as their \LaTeX\ interfaces.}
 %^^A%%
-% deserve some additional considerations. As stated above,
+% deserve some additional considerations. As stated in section~\ref{sec:typesetting},
 % the ligatures |ch|, |ck|, |sz|~(\cs{\ss}), and~|tz| have to remain unbroken in spaced out
 % \emph{Fraktur} text.  This may look strange at first glance, but you'll get used to it:
 % 
@@ -1077,7 +1086,7 @@
 % \section{\ul{Underlining}}
 %
 % The underlining macros are my answer to Prof.~\person{Knuth{\normalfont's}} exercise 18.26 from his 
-% \TeX{}book.~\texttt{:-)} All said about the macro \describemacro{\ul} is also true of the
+% \TeX{}book~\cite{DEK}. \texttt{:-)} All said about the macro \describemacro{\ul} is also true of the
 % striking out macro \describemacro{\st} and the highlighting macro \describemacro{\hl},
 % both of which are in fact derived from the former.
 %
@@ -1106,7 +1115,7 @@
 % underline's upper edge lies 1\,pt beneath the given argument's
 % deepest depth. If the argument is empty, all
 % letters---i.\,e.\ all characters whose \cs{\catcode} currently
-% equals 11---are taken:
+% equals 11---are taken. Examples:
 %
 % \begin{example}
 % |\setuldepth{ygp}|\\
@@ -1118,9 +1127,8 @@
 %
 % \subsubsection{Line color}
 %
-% \describemacro{\setulcolor}
 % The underlines are by default black. The color can be changed by
-% using the \cs{\setulcolor} command. It takes one argument that can be any
+% using the \describemacro{\setulcolor} command. It takes one argument that can be any
 % of the color specifiers as described in the |color| package. This package
 % has to be loaded explicitly.
 %
@@ -1206,7 +1214,7 @@
 %   {\ul{just an \mbox{example}}}
 %  
 % \soultest{Explicit hyphens like |-|, |--| and |---| are recognized.
-%   \texttt{\string\slash} outputs a slash with the possibility to break the line
+%   \texttt{\string\slash} outputs a slash and enables \TeX\ to break the line
 %   afterwards}
 %   |\ul{input\slash output}|
 %   {\ul{input\slash output}}
@@ -1262,8 +1270,9 @@
 % |\`|, |\'|, |\^|, |\"|, |\~|, |\=|, |\.|, |\u|, |\v|, |\H|, |\t|,
 % |\c|, |\d| and |\b|. If used together with the \package{german}
 % package, \soul\ automatically adds the |"| command.
-% Let's assume you have defined |\%e| to produce some weird accent on
-% an `e'. Simply put the following line into your |soul.cfg|:
+% Let's assume you have defined |\%| to put some weird accent on
+% the next character. Simply put the following line into your |soul.cfg|
+% file (see section~\ref{sec:config}):
 %
 % \begin{example}
 % |\soulaccent{\%}|
@@ -1278,14 +1287,23 @@
 % \label{sec:soulfont}
 %
 % To convince \soul\ not to feed font switching
-% commands to the analyzer, but rather to execute these immediately,
+% commands to the analyzer, but rather to execute them immediately,
 % they have to be registered, too. The \describemacro{\soulfont} macro
 % takes the name of the font switching command and either
-% |0| or |1| as the number of arguments:
+% |0| or |1| for the number of arguments:
 % 
 % \begin{syntax}
 % |\soulfont{|\<font command>|}{|\<number of arguments>|}|
 % \end{syntax}
+%
+% If \cs{\bf} and \cs{\emph} weren't already registered, you would
+% write the following into your |soul.cfg| configuration file:
+%
+% \begin{example}
+% |\soulfont{\bf}{0}        % {\bf foo}| \\
+% |\soulfont{\emph}{1}      % \emph{bar}|\\
+% \end{example}
+%
 %
 % The standard commands of \TeX\ and \LaTeX\, as well as the
 % \package{yfonts} commands are already pre-registered:
@@ -1320,15 +1338,15 @@
 % \label{sec:internalfont}
 %
 % The \soul\ package uses the |ectt10| font to
-% analyze the syllables. This font belongs to \person{J\"org Knappen'\textrm{s}}
+% analyze the syllables. This font is used, because it
+% has 256~mono-spaced characters without any kerning.
+% It belongs to \person{J\"org Knappen'\textrm{s}}
 % \caps{EC}-fonts, which should be part of every modern \TeX\ installation.
-% If \TeX\ reports ``\texttt{I can't find file `ectt10'.}'' you don't
-% seem to have this font installed. This font is used, because it
-% has 256~mono-spaced characters without any kerning. It is recommended that
+% If \TeX\ reports ``\texttt{I can't find file `ectt10'}'' you don't
+% seem to have this font installed. It is recommended that
 % you install at least the file |ectt10.tfm| which has less than 1.4\,kB\null.
-% Alternatively, you can let the \soul\ package use another
-% font like the |cmtt10| font that is part of any installation, or
-% some other mono-spaced font.
+% Alternatively, you can let the \soul\ package use the |cmtt10| font that
+% is part of any installation, or some other mono-spaced font:
 % 
 % \begin{example}
 % |\font\SOUL@tt=cmtt10|
@@ -1337,7 +1355,7 @@
 % Note, however, that \soul\ does only handle characters,
 % for which the internal font has a character with the same
 % character code. As |cmtt10| contains only characters with codes
-% 0 to~127, you can't typeset character with codes 128 to~256.
+% 0 to~127, you can't typeset characters with codes 128 to~255.
 % These 8-bit character codes are used by many fonts with non-ascii
 % glyphs. So the |cmtt10| font will, for example, not work for |T2A|
 % encoded cyrillic characters.
@@ -1434,7 +1452,7 @@
 % in running text. There should always be some reasoning behind changing
 % the style, such as ``names of persons shall be typeset in a caps-an-small-caps
 % font''. Then you declare in your text just that some words are the name of a
-% person, while you define in the preamble or even better in a separate
+% person, while you define in the preamble or, even better, in a separate
 % style file how to deal with persons:
 %
 % \begin{example}
@@ -1514,9 +1532,43 @@
 %
 % Letterspacing was often used for section titles in the past,
 % mostly centered and with a closing period. The following example
-% shows how to achieve such using the \package{titlesec}
-% package \cite{titlesec}.
+% shows how to achieve this using the \package{titlesec}
+% package \cite{titlesec}:
 % 
+% \begin{example}
+% |\newcommand*\periodafter[2]{#1{#2.}}|\\
+% |\titleformat{\section}[block]|\\
+% |    {\normalfont\centering}|\\
+% |    {\thesection.}|\\
+% |    {.66em}|\\
+% |    {\periodafter\so}|\\
+% |...|\\
+% |\section{VON DEN MAASSEN UND MAASSST\"ABEN}|\\
+% \end{example}
+%
+% \bigbreak
+% This yields the following output:
+%
+% \bigskip
+% \newbox\examplebox
+% \sbox\examplebox{
+% \begin{minipage}{.9\textwidth}
+% \small
+% \bigskip
+% \begin{center}
+% \so{1. VON DEN MAASSEN UND MAASSST\"ABEN.}
+% \bigskip
+% \end{center}
+% \end{minipage}}
+% \fbox{\usebox\examplebox}
+% \bigbreak
+%
+% \noindent
+% The \cs{\periodafter} macro adds a period to the title, but not to
+% the entry in the table of contents. It takes the name of a command as
+% argument, that shall be applied to the title, like e.\,g.~\cs{\so}.
+% Here's a more complicated and complete example:
+%
 % \begin{example}
 % |\documentclass{article}|\\
 % |\usepackage[latin1]{inputenc}|\\
@@ -1565,11 +1617,11 @@
 % |\end{document}|
 % \end{example}
 %
-% This short example gives you roughly the following output,
+% \bigbreak
+% This example gives you roughly the following output,
 % which is a faksimile from~\cite{Muszynski}.
 %
-% \bigbreak
-% \newbox\examplebox
+% \bigskip
 % \sbox\examplebox{
 % \begin{minipage}{.9\textwidth}
 % \small
@@ -1590,37 +1642,6 @@
 % \fbox{\usebox\examplebox}
 % \bigbreak
 %
-% \noindent
-% The \cs{\periodafter} macro takes one argument which isn't needed
-% in this example and thus fed with \cs{\relax}. We could
-% have written |{\periodafter\so}|, though, to add a period that would get spaced
-% out with the section title, but wouldn't appear in the table of contents. 
-%
-% \indent
-% \begin{example}
-% |\titleformat{\section}[block]|\\
-% |    {\normalfont\centering}|\\
-% |    {\thesection.}|\\
-% |    {.66em}|\\
-% |    {\periodafter\so}|\\
-% \end{example}
-%
-% \bigbreak
-% This would have typeset the section title like this:
-% \bigskip
-%
-% \sbox\examplebox{
-% \begin{minipage}{.9\textwidth}
-% \small
-% \bigskip
-% \begin{center}
-% \so{1. VON DEN MAASSEN UND MAASSST\"ABEN.}
-% \bigskip
-% \end{center}
-% \end{minipage}}
-% \fbox{\usebox\examplebox}
-% \bigbreak
-%
 %
 %
 %
@@ -1634,7 +1655,7 @@
 % when a certain amount is reached (quotes and dashes). Three subsequent `|-|', for example,
 % trigger |\SOUL@everyexhyphen{---}|. A third group leads to special actions,
 % like |\mbox| that starts reading-in a whole group to protect its contents and let them be
-% seen as just one atom. All other tokens, mostly characters and digits, are collected in
+% seen as one entity. All other tokens, mostly characters and digits, are collected in
 % a word register and whenever a whole word is read-in, it is passed to
 % the analyzer. 
 %
@@ -1642,8 +1663,8 @@
 % hence encouraging \TeX\ to break lines at every possible hyphenation point. It
 % uses the mono-spaced \cs{\SOUL@tt} font (|ectt10|), so as to avoid any inter-character
 % kerning. Now the \cs{\vbox} is decomposed splitting off \cs{\hbox} after \cs{\hbox}
-% from the bottom. All boxes, each of which contains one syllable, are pushed onto the
-% ``stack'', which is provided by \TeX's grouping mechanism. When returning from the
+% from the bottom. All boxes, each of which contains one syllable, are pushed onto a
+% stack, which is provided by \TeX's grouping mechanism. When returning from the
 % recursion, box after box is fetched from the stack, its width measured and fed to the
 %``reconstructor''.
 %
@@ -1659,7 +1680,7 @@
 % There's a default driver (\cs{\SOUL@setup}) that does only set the
 % interface macros to a reasonable default state, but doesn't really do anything.
 % Further drivers can safely inherit these settings and only need to
-% redefine what it wants to change.
+% redefine what they want to change.
 %
 %
 %
@@ -1677,8 +1698,8 @@
 % 
 % \begin{labeling}{\hspace{.36\hsize}}
 % \item[\texttt{\string\SOUL@token}]
-%   This token register contains the current token. To be used as |\the\SOUL@token|.
-%   \cs{\SOUL@gettoken} reads the next token into \cs{\SOUL@token} and
+%   This token register contains the current token. It has to be used as |\the\SOUL@token|.
+%   The macro \cs{\SOUL@gettoken} reads the next token into \cs{\SOUL@token} and
 %   can be used in any interface macro. If you don't want to lose the old meaning,
 %   you have to save it explicitly. \cs{\SOUL@puttoken} pushes the token
 %   back into the queue, without changing \cs{\SOUL@token}. You can only
@@ -1687,17 +1708,18 @@
 %   This token register contains the last token.
 % \item[\texttt{\string\SOUL@syllable}]
 %   This token register contains all tokens that were already collected for
-%   the current syllable. When used in \cs{\SOUL@everysyllable} it
+%   the current syllable. When used in \cs{\SOUL@everysyllable}, it
 %   contains the \emph{whole} syllable.
 % \item[\texttt{\string\SOUL@charkern}]
-%   Dimen register with the kerning value between the current and the next character.
+%   This dimen register contains the kerning value between the current and the next character.
 %   Since most character pairs don't require a kerning value to be applied and the
 %   output in the logfile shouldn't be cluttered with |\kern0pt| it is
 %   recommended to write |\SOUL@setkern\SOUL@charkern|, which sets
 %   kerning for non-zero values only.
 % \item[\texttt{\string\SOUL@hyphkern}]
-%   Dimen register with the kerning value between the current character
-%   and the hyphen character.
+%   This dimen register contains the kerning value between the current character
+%   and the hyphen character or, when used in \cs{\SOUL@everyexhyphen}, the
+%   kerning between the last character and the explicit hyphen.
 % \end{labeling}
 %
 %
@@ -1720,29 +1742,35 @@
 % \item[\texttt{\string\SOUL@postamble}]\m{$E$}^^A
 %   executed once at the end
 % \item[\texttt{\string\SOUL@everytoken}]\m{$T$}^^A
-%   executed after scanning a token; It may access the 
-%   current token in \texttt{\string\SOUL@actual}, the next two tokens in
-%   \texttt{\string\SOUL@prefetch} and \texttt{\string\SOUL@pprefetch}, where 
-%   \texttt{\string\SOUL@next} points to the first of them, which doesn't
-%   contain an \texttt{\string\empty} token. The
-%   character kern is accessible via \texttt{\string\dimen@}. This
-%   interface macro is responsible for reinserting the
-%   character kern.
+%   executed after scanning a token; It gets that 
+%   token in \cs{\SOUL@token} and has to care for inserting
+%   the kerning value between this and the next character (\cs{\SOUL@charkern}).
+%   To look at the next character, execute \cs{\SOUL@gettoken}, which
+%   replaces \cs{\SOUL@token} by the next token. This token has to
+%   be put back into the queue using \cs{\SOUL@puttoken}.
 % \item[\texttt{\string\SOUL@everysyllable}]\m{$S$}^^A
 %   This macro is executed after scanning a whole syllable. It gets the
-%   syllable in \cs{\SOUL@syllable} 
+%   syllable in \cs{\SOUL@syllable}.
 % \item[\texttt{\string\SOUL@everyhyphen}]\m{$-$}^^A
 %   This macro is executed at every implicit hyphenation point.
 %   It is responsible for setting the hyphen and will likely do this
 %   in a \cs{\discretionary} command. It has also to care about the
 %   kerning values. May access \cs{\SOUL@lasttoken}, \cs{\SOUL@syllable},
 %   \cs{\SOUL@charkern} and \cs{\SOUL@hyphkern}.
+%   Note that \cs{\discretionary} inserts \cs{\penalty\exhyphenpenalty}
+%   if the first part of the discretionary is empty, and of
+%   \cs{\penalty\hyphenpenalty} else.
 % \item[\texttt{\string\SOUL@everyexhyphen\#1}]\m{$=$}^^A
 %   This macro is executed at every explicit hyphenation point. The
 %   hyphen character is passed as parameter |#1|, that is one of
 %   hyphen, en-dash, em-dash or \cs{\slash}. The minimal implementation
-%   should be |{#1\penalty\exhyphenpenalty}|. May access \cs{\SOUL@lasttoken}
-%   and \cs{\SOUL@syllable}. 
+%   should be |{#1\penalty\exhyphenpenalty}|. The kerning value
+%   before the hyphen is stored in \cs{\SOUL@hyphkern} and that after
+%   the hyphen in \cs{\SOUL@charkern}. Thus, if the argument was
+%   |{foo-bar}| then \cs{\SOUL@hyphkern} is set to the kerning value
+%   between `|o|' and~`|-|', and \cs{\SOUL@charkern} to the kerning
+%   value between `|-|' and~`|b|'. 
+%   May access \cs{\SOUL@lasttoken} and \cs{\SOUL@syllable}. 
 % \item[\texttt{\string\SOUL@everyspace\#1}]\m{\texttt{\char`\ }}^^A
 %   This macro is executed between every two words. It is responsible for
 %   setting the space. The engine submits a \cs{\penalty} setting as
@@ -1777,7 +1805,7 @@
 %   The macro |\SOUL@everyhyphen| is executed at every possible
 %   imcplicit hyphenation point.
 % \item[\normalfont\an{beta-test}]
-%   An explicit |\hyphen| belongs to the left syllable.
+%   ??????????? An explicit |\hyphen| belongs to the left syllable. No, it doesn't!
 % \end{labeling}
 %
 %
@@ -1806,7 +1834,7 @@
 %
 %
 %
-% \subsection{An driver example}
+% \subsection{A driver example}
 %
 % Let's define a \soul\ driver that allows to typeset text
 % with a hyphen at every potential hyphenation point. The name of
@@ -1870,6 +1898,8 @@
 %\end{example}
 %
 % Explicit hyphens like dashes and slashes shall be set in boldface type.
+% To make the example simple, kerning is omitted. See the implementation
+% of \cs{\so} and \cs{\ul} for details.
 %
 % \begin{example}
 % |    \def\SOUL@everyexhyphen##1{\textbf{##1}}|\\
@@ -1911,12 +1941,14 @@
 %
 %
 %
-% \begin{thebibliography}{0}
-% \hbadness4000
-% \bibitem{color}{\person{Carlisle, D. P.} \bibtitle{The color package.} \versal{ctan}-Archive, 1997, v1.0d.}
-%    
+% \begin{thebibliography}{00}
+% \bibitem{titlesec}{\person{Bezos, Javier}. \bibtitle{The titlesec and titletoc package.}
+%   \CTAN-Archive, 1999, v2.1.}
+%
+% \bibitem{color}{\person{Carlisle, D. P.} \bibtitle{The color package.} \CTAN-Archive, 1997, v1.0d.}
+%
 % \bibitem{Duden}{Duden, Volume 1. \bibtitle{Die Rechtschreibung.} Bibliographisches Institut, 
-%   Mannheim--Wien--Z\"urich, 1986, 19th~edition.}
+%   Mann\-heim--\hskip0pt Wien--Z\"urich, 1986, 19th~edition.}
 %
 % \bibitem{DEK}{\person{Knuth, Donald Ervin}. \bibtitle{The \TeX book.}
 %   Addison--Wesley Publishing Company, Reading/Massachusetts, 1989, 16th~edition.}
@@ -1931,8 +1963,9 @@
 %   \bibtitle{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{titlesec}{\person{Bezos, Javier}. \bibtitle{The titlesec and titletoc package.}
-%   \versal{ctan}-Archive, 1999, v2.1.}
+% \bibitem{german}{\person{Raichle, Bernd} \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
+%    
+% \bibitem{yfonts}{\person{Schmidt, Walter} \bibtitle{The yfonts package.} \CTAN-Archive, 1998, v1.2.}
 %    
 % \bibitem{Tschichold}{\person{Tschichold, Jan}. \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
@@ -2028,7 +2061,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2001/12/99 v2.0 letterspacing/underlining  (mf)]
+        [2002/01/03 v2.0 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt10}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2447,7 +2480,7 @@
 % \begin{macro}{\SOUL@addprotect}
 % \begin{macro}{\SOUL@addtoken}
 % The macro names say it all. Each of these macros adds some
-% token to the workd buffer \cs{\SOUL@word}.
+% token to the word buffer \cs{\SOUL@word}.
 %
 %    \begin{macrocode}
 \def\SOUL@addgroup#1#2{%
@@ -2481,7 +2514,10 @@
 %
 %
 % \begin{macro}{\SOUL@exhyphen}
-%
+% Dealing with explicit hyphens can't be done before we know the
+% following character, because we need eventual kerning values,
+% hence we delay the \cs{\SOUL@everyexhyphen} call. Unfortunately,
+% the word scanner has no look-ahead mechanism.
 %
 %    \begin{macrocode}
 \def\SOUL@exhyphen#1{%
@@ -3095,11 +3131,8 @@
 \def\SOUL@soeveryhyphen{%
     \discretionary{%
         \unkern
-        \hbox{%
-            \SOUL@setkern\SOUL@hyphkern
-            \char\hyphenchar\font
-            \penalty\hyphenpenalty
-        }%
+        \SOUL@setkern\SOUL@hyphkern
+        \char\hyphenchar\font
     }{}{}%
 }
 %    \end{macrocode}
@@ -3643,18 +3676,16 @@
 %
 %
 % \begin{macro}{\SOUL@uleveryhyphen}
-% If hyphenation takes place, output an underlines hyphen with the
+% If hyphenation takes place, output an underlined hyphen with the
 % required hyphen kerning value.
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryhyphen{%
     \discretionary{%
-        \hbox{%
-            \unkern
-            \SOUL@ulunderline{%
-                \SOUL@setkern\SOUL@hyphkern
-                \char\hyphenchar\font
-            }%
+        \unkern
+        \SOUL@ulunderline{%
+            \SOUL@setkern\SOUL@hyphkern
+            \char\hyphenchar\font
         }%
     }{}{}%
 }
