@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1918}
+% \CheckSum{1936}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -688,25 +688,23 @@
 %   solutions yield slightly different results. 
 % \item[Material that needs expansion: \so{\romannumeral\year}]
 %   In this example \cs{\so} would try to put space between \cs{\romannumeral}
-%   and \cs{\year}, which can, of course, not work. Putting group braces
-%   around the argument would work, but keep the contents from being
-%   letterspaced.
-%   You have to expand them before you feed them to \soul, or even better:
+%   and \cs{\year}, which can, of course, not work.
+%   You have to expand the argument before you feed it to \soul, or even better:
 %   Wrap the material up in a command sequence and let \soul\ expand it:
-%   |\def\x{\romannumeral\year}\so\x|. \soul\ is careful to expand
+%   |\def\x{\romannumeral\year}| |\so\x|. \soul\ tries hard to expand
 %   enough, yet not too much.
 % \item[Unexpandable material in command sequences: \def\foo{\bar} \so\foo]
-%   Some commands---don't ask for examples--- must not be used in an \cs{\edef} statement^^A
+%   Some macros might not be expandable in an \cs{\edef} definition^^A
 %   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.
 %   Yet \texttt{\string\copyright} works in \soul\ arguments, because it is
 %   explicitly taken care of by the package}.
-%   As \soul\ does this when its argument is
-%   a command sequence, it has to protect such commands with \cs{\noexpand} in
-%   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
+%   They have to be protected with \cs{\noexpand} in front. This is done
+%   for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
 %   \cs{\S}, \cs{\slash}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright},
 %   as well as for all registered fonts and accents.
 %   You can put \cs{\noexpand} manually in front of similar commands, that
-%   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|
+%   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo| or register
+%   it as font (see section \ref{sec:soulfont}).
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
 %   \soul\ arguments must not contain \LaTeX\ environments, command definitions,
 %   and fancy stuff like |\vadjust|. As long as you are writing simple,
@@ -2206,6 +2204,7 @@
 \countdef\SOUL@apo=4
 \countdef\SOUL@grave=6
 \countdef\SOUL@level=8
+\newskip\SOUL@spaceskip
 \newif\ifSOUL@ignorespaces
 %    \end{macrocode}
 %
@@ -2217,6 +2216,7 @@
 %
 %
 %
+% \begin{macro}{\soulomit}
 % \begin{macro}{\SOUL@ignorem}
 % \begin{macro}{\SOUL@ignore}
 % \begin{macro}{\SOUL@stopm}
@@ -2230,6 +2230,7 @@
 % \cs{\catcode} of~10.
 %
 %    \begin{macrocode}
+\newcommand*\soulomit{\noexpand\soulomit}
 \def\SOUL@stopM{\SOUL@stop}
 \let\SOUL@stop\relax
 \def\SOUL@lowerthan{}
@@ -2237,6 +2238,7 @@
 \def\SOUL@hyphenhintM{\-}
 \def\SOUL@n*{\let\SOUL@spc= }\SOUL@n* %
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -2292,6 +2294,8 @@
         \let\<\SOUL@lowerthan
         \gdef\SOUL@eventuallyexhyphen##1{}%
         \let\SOUL@soeventuallyskip\relax
+        \SOUL@spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
+            \@minus\fontdimen4\font
         \SOUL@ignorespacesfalse
         \leavevmode
         \SOUL@preamble
@@ -2318,9 +2322,8 @@
             \def\TeX{\noexpand\TeX}%
             \def\LaTeX{\noexpand\LaTeX}%
             \let\protect\noexpand
-            \xdef\SOUL@x{{\SOUL@@}}%
-        \egroup%
-        \def\SOUL@n{\expandafter\SOUL@\SOUL@x}%
+            \xdef\SOUL@n{\noexpand\SOUL@{\SOUL@@}}%
+        \egroup
     \fi
     \SOUL@n
 }
@@ -2450,6 +2453,8 @@
             \def\SOUL@n*{\SOUL@addprotect}%
         \else\ifx\SOUL@@\hbox
             \def\SOUL@n*{\SOUL@addprotect}%
+        \else\ifx\SOUL@@\soulomit
+            \def\SOUL@n*\soulomit##1{\SOUL@doword##1\SOUL@scan}%
         \else\ifx\SOUL@@\break
             \SOUL@doword
             \break
@@ -2462,7 +2467,7 @@
             \def\SOUL@n*{\SOUL@addmath}%
         \else
             \def\SOUL@n*{\SOUL@dotoken}%
-        \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+        \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
     \fi\fi\fi\fi
     \SOUL@n*%
 }
@@ -3144,7 +3149,7 @@
     \ifcat\egroup\noexpand\SOUL@@
         \unkern
         \egroup
-        \def\SOUL@n*{\afterassignment\SOUL@socheck\let\SOUL@n=}%
+        \def\SOUL@n*{\afterassignment\SOUL@socheck\let\SOUL@x=}%
     \else\ifx\SOUL@spc\SOUL@@
         \def\SOUL@n* {\hskip\skip@}%
     \else\ifx~\SOUL@@
@@ -3154,6 +3159,7 @@
     \else\ifx\@xobeysp\SOUL@@
     \else
         \def\SOUL@n*{}%
+        \let\SOUL@@\relax
     \fi\fi\fi\fi\fi\fi
     \SOUL@n*%
 }
@@ -3718,8 +3724,7 @@
     \SOUL@uldp=\SOUL@uldepth
     \SOUL@ulht=-\SOUL@uldp
     \advance\SOUL@uldp\SOUL@ulthickness
-    \spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
-        \@minus\fontdimen4\font
+    \spaceskip\SOUL@spaceskip
 }
 %    \end{macrocode}
 % \end{macro}
