@@ -711,9 +711,9 @@
 %   \null\qquad\ul{This is by far{\usebox\anyboxname}example!}
 % \item[Leaking font switches: \def\foo{\bf bar} \so{\foo baz}]
 %   A hidden font switching command that leaks into its neighborship
-%   causes a \texttt{`Reconstruction failed'} error. To avoid this either limit its
-%   scope as in |\def\foo{{\bf bar}}| or register the `container'
-%   as font switching command: |\soulregister{\foo}{0}|. Note that both
+%   causes a \texttt{`Reconstruction failed'} error. To avoid this either
+%   register the `container' (|\soulregister{\foo}{0}|), or limit its
+%   scope as in |\def\foo{{\bf bar}}|. Note that both
 %   solutions yield slightly different results.
 % \item[Material that needs expansion: \so{\romannumeral\year}]
 %   In this example \cs{\so} would try to put space between \cs{\romannumeral}
@@ -732,7 +732,7 @@
 %   \cs{\S}, \cs{\slash}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright},
 %   as well as for all registered fonts and accents. Instead of putting \cs{\noexpand}
 %   manually in front of such commands, as in |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|,
-%   you can also register them as font (see section \ref{sec:soulregister}).
+%   you can also register them as special (see section \ref{sec:soulregister}).
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
 %   \soul\ arguments must not contain \LaTeX\ environments, command definitions,
 %   and fancy stuff like |\vadjust|. \soul's |\footnote| command replacement
@@ -762,7 +762,7 @@
 % \verb+\hl{highlighting}+&                 \pref{hl}           &highlighting\\
 % \\
 % \verb+\soulaccent{\cs}+&                  \pref{soulaccent}   &\ti{add accent} \cs{\cs} \ti{to accent list}\\
-% \verb+\soulregister{\cs}{0}+&             \pref{soulregister} &\ti{add font switching command} \m{\cs}\\
+% \verb+\soulregister{\cs}{0}+&             \pref{soulregister} &\ti{register command} \m{\cs}\\
 % \verb+\sloppyword{text}+&                 \pref{sloppyword}   &\ti{typeset} \m{text} \ti{with stretchable spaces}\\
 % \\
 % \verb+\sodef\cs{1em}{2em}{3em}+&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
@@ -1368,14 +1368,14 @@
 % \subsection{Adding font commands}
 % \label{sec:soulregister}
 %
-% To convince \soul\ not to feed font switching
+% To convince \soul\ not to feed font switching (or other)
 % commands to the analyzer, but rather to execute them immediately,
 % they have to be registered, too. The \describemacro{\soulregister} macro
-% takes the name of the font switching command and either
-% |0| or |1| for the number of arguments:
+% takes the name of a command name and either |0| or |1| for the number
+% of arguments:
 %
 % \begin{syntax}
-% |\soulregister{|\<font command>|}{|\<number of arguments>|}|
+% |\soulregister{|\<command name>|}{|\<number of arguments>|}|
 % \end{syntax}
 %
 % If \cs{\bf} and \cs{\emph} weren't already registered, you would
@@ -1635,8 +1635,8 @@
 % the look-ahead scanner is blinded by further commands that follow
 % in the \package{jurabib} package. Now we run into the next problem:
 % cited names may contain commands
-% that must not get expanded. We have to register them as font
-% switching commands (even though they aren't):
+% that must not get expanded. We have to register them as special
+% command:
 %
 % \begin{example}
 % |\soulregister\jbbtasep{0}|\\
@@ -1874,7 +1874,7 @@
 % \end{example}
 %
 % \noindent
-% The \cs{\titlefont} command is provided by the \textsc{KOMA}~script
+% The \cs{\titlefont} command is provided by the \caps{``\small{KOMA}}~script''
 % package. You can write |\normalfont\sffamily\bfseries| instead.
 % The following example does also underline the section number:
 %
@@ -2925,6 +2925,8 @@
 % the number of arguments (|0|~or~|1|). Example: |\soulregister{\bold}{0}|.
 % \cs{\soulaccent} has only one argument---the accent macro name.
 % Example: |\soulaccent{\~}|. It is a shortcut for |\soulregister{\~}{9}|.
+% The \cs{\soulfont} command is a synonym for \cs{\soulregister}
+% and is kept for compatibility reasons.
 %
 %    \begin{macrocode}
 \def\soulregister#1#2{{%
