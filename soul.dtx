@@ -1,5 +1,5 @@
 % \iffalse
-%% File: soul.dtx   Copyright (C) 1998, 1999   Melchior FRANZ
+%% File: soul.dtx  Copyright (C) 1998, 1999, 2001  Melchior FRANZ
 %
 %<*batchfile>
 %
@@ -23,10 +23,11 @@
 %%     date            = "15 May 1999",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
-%%                        A-5212 SCHNEEGATTERN 34
+%%                        Rieder Hauptstrasse 52
+%%                        A-5212 SCHNEEGATTERN
 %%                        AUSTRIA",
 %%     telephone       = "++43 7746 3109",
-%%     URL             = "http://unet.univie.ac.at/~a8603365",
+%%     URL             = "http://www.unet.univie.ac.at/~a8603365/",
 %%     email           = "a8603365@unet.univie.ac.at",
 %%     codetable       = "ISO/ASCII",
 %%     keywords        = "spacing out, letterspacing, underlining, striking out",
@@ -1301,8 +1302,9 @@
   \if$#1$\else
     \expandafter\SOUL@word{#1}%
     \if$#2$\else
-      \unskip\SOUL@penalty
-      \SOUL@interword
+      \SOUL@color{%
+        \unskip\SOUL@penalty
+        \SOUL@interword}%
     \fi
   \fi}
 %    \end{macrocode}
@@ -1924,7 +1926,6 @@
 %
 % \begin{macro}{\SOUL@ulbody}
 % \begin{macro}{\ul}
-% \begin{macro}{\SOUL@ulcolor}
 % Set up the underlining interface and define the
 % |\ul| command.
 %
@@ -1937,9 +1938,7 @@
   \let\SOUL@everysyllable\relax
   \let\SOUL@everytoken\SOUL@uleverytoken}
 \DeclareRobustCommand*\ul{\SOUL@ulbody\SOUL@}
-\let\SOUL@ulcolor\relax
 %    \end{macrocode}
-% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1969,7 +1968,7 @@
 % Spaces are expandable and shrinkable, underlined skips.
 %
 %    \begin{macrocode}
-\def\SOUL@ulinterword{\SOUL@ulcolor{\SOUL@ulleaders\hskip\spaceskip}}
+\def\SOUL@ulinterword{\SOUL@ulleaders\hskip\spaceskip}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1986,12 +1985,12 @@
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
     \dimen@ii\wd\z@
-    \unhbox\z@\llap{\SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@ii}}}}}
+    \unhbox\z@\llap{\SOUL@color{\SOUL@ulleaders\hskip\dimen@ii}}}}}
 \DeclareOption{overlap}{%
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
     \dimen@ii\wd\z@\advance\dimen@ii\p@
-    \rlap{\SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@ii\kern-.5\p@}}\unhbox\z@}}}
+    \rlap{\SOUL@color{\SOUL@ulleaders\hskip\dimen@ii\kern-.5\p@}}\unhbox\z@}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2008,8 +2007,8 @@
 \def\SOUL@uleveryhyphen{\discretionary
   {\advance\dimen3-\dimen@\ifdim\dimen3=\z@\else\kern\dimen3\fi
   \setbox4\hbox{\unhcopy\tw@}%
-  \rlap{\SOUL@ulcolor{\SOUL@ulleaders\hskip\wd4}}\box4}{}%
-  {\hbox{\SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@}}}}
+  \rlap{\SOUL@color{\SOUL@ulleaders\hskip\wd4}}\box4}{}%
+  {\hbox{\SOUL@color{\SOUL@ulleaders\hskip\dimen@}}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2083,7 +2082,7 @@
 % |color| package to be loaded.
 %
 %    \begin{macrocode}
-\def\setulcolor#1{\def\SOUL@ulcolor{\textcolor{#1}}}
+\def\setulcolor#1{\def\SOUL@color{\textcolor{#1}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2126,6 +2125,8 @@
 %
 %
 % \subsection{The postamble}
+%
+% \begin{macro}{\SOUL@color}
 % Set the default options and values. In case we are in \LaTeXe\ mode,
 % add the \textsf{capsdefault} option, reset the |\caps| data base, and
 % include the local configuration file.
@@ -2134,6 +2135,7 @@
 %    \begin{macrocode}
 \resetso
 \resetul
+\let\SOUL@color\relax
 \expandafter\ifx\csname documentclass\endcsname\relax
   \catcode`\@=\atcode
   \overlap
@@ -2149,6 +2151,7 @@
 \fi
 \endinput
 %    \end{macrocode}
+% \end{macro}
 %
 %
 %

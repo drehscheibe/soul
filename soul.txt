@@ -14,10 +14,11 @@ author          = "Melchior FRANZ"
 version         = "1.3"
 date            = "15 May 1999"
 address         = "Melchior FRANZ
-                   A-5212 SCHNEEGATTERN 34
+                   Rieder Hauptstrasse 52
+                   A-5212 SCHNEEGATTERN
                    AUSTRIA"
 telephone       = "++43 7746 3109"
-URL             = "http://unet.univie.ac.at/~a8603365"
+URL             = "http://www.unet.univie.ac.at/~a8603365/"
 email           = "a8603365@unet.univie.ac.at"
 codetable       = "ISO/ASCII"
 keywords        = "spacing out, letterspacing, underlining, striking out"
