@@ -1,0 +1,5 @@
+v2.2:
+-----
+* make \hl work in plain mode (explain /tex-archive/macros/plain/graphics use)
+* fix \SOUL@uleveryexhyphen (#1 -> \hbox{#1})
+
