@@ -25,8 +25,8 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "2.0",
-%%     date            = "3 January 2002",
+%%     version         = "2.1",
+%%     date            = "6 January 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -78,8 +78,8 @@
 %
 %
 %<*driver>
-\def\fileversion{2.0}
-\def\filedate{2002/01/03}
+\def\fileversion{2.1}
+\def\filedate{2002/01/06}
 %
 %
 %
@@ -90,10 +90,10 @@
 %
 %
 \IfFileExists{soul.sty}{%
-    \usepackage{soul}[2002/01/03]
+    \usepackage{soul}[2002/01/06]
     \expandafter\ifx\csname setulcolor\endcsname\relax
         \GenericError{soul.dtx}{soul.dtx error}{%
-            Wrong soul.sty version found. Stop here (by typing `x<return>')^^J^^A
+            Wrong soul.sty version found. Stop here (by typing X)^^J^^A
             and process soul.dtx again.}%
             {You have an older soul.sty version installed. This^^J^^A
             documentation needs the version that will be generated^^J^^A
@@ -113,7 +113,7 @@
 %
 \ifx\SOULSTYfound\active
 
-\IfFileExists{color.sty}{%
+\iffalse\IfFileExists{color.sty}{%
     \usepackage{color}
     \definecolor{darkblue}{rgb}{0,0,.7}
     \definecolor{lightblue}{rgb}{.90,.95,1}
@@ -123,7 +123,9 @@
     \def\textcolor##1{}
     \AtBeginDocument{\let\hl\relax}
 }  
-\fi
+\fi\fi
+%
+\AtBeginDocument{\let\hl\relax}
 %
 %
 %
@@ -165,7 +167,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{January 3, 2002}
+% \date{January 6, 2002}
 %
 %^^A=====================================================
 %
@@ -428,6 +430,10 @@
 %
 % \changes{v2.0}{2002/01/03}{(almost) complete rewrite}
 %
+% \changes{v2.1}{2002/01/06}{"The now-traditional fix for the
+%   now-traditional brown-paper-bag major release."
+%   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
+%
 %
 %
 %
@@ -547,9 +553,14 @@
 % \verb+\caps{CAPITALS, Small Capitals}+&\caps{CAPITALS, Small Capitals}\\
 % \verb+\ul{underlining}+&\ul{underlining}\\
 % \verb+\st{overstriking}+&\st{overstriking}\\
-% \verb+\hl{highlighting}+&\hl{highlighting}\\
+% \verb+\hl{highlighting}+&\hl{highlighting}\footnotemark\\
 % \end{tabular}
 % \end{center}
+% \footnotetext{The look of highlighting is nowhere demonstrated
+%   in this documentation, because it requires a PostScript aware
+%   output driver and would come out as ugly black bars on other
+%   devices, looking very much like censoring bars. Think of it as
+%   the effect of one of those coloring text markers.}
 % }
 %
 % \noindent
@@ -577,10 +588,10 @@
 %
 % \begin{example}
 % |\usepackage{color,soul}|\\
-% |\definecolor{orange}{rgb}{1,.5,0}|\\
-% |\sethlcolor{orange}|\\
+% |\definecolor{lightblue}{rgb}{.90,.95,1}|\\
+% |\sethlcolor{lightblue}|\\
 % |...|\\
-% |\hl{this is highlighted in orange color}|\\
+% |\hl{this is highlighted in light blue color}|\\
 % \end{example}
 %
 %
@@ -605,7 +616,7 @@
 %   Support for the following accents is built-in: |\`|, |\'|, |\^|, |\"|, |\~|,
 %   |\=|, |\.|, |\u|, |\v|, |\H|, |\t|, |\c|, |\d| and |\b|. Additionally,
 %   if the \package{german} package \cite{german} is loaded you can also use the |"|
-%   accent commands and write |\so{na"ive}|. See section~\ref{sec:soulaccent} for how to add
+%   accent command and write |\so{na"ive}|. See section~\ref{sec:soulaccent} for how to add
 %   further accents.
 % \item[Mathematics: \so{foo$x^3$bar}]
 %   Mathematic formulas are allowed, as long as they are
@@ -618,32 +629,32 @@
 %   The |\\|~command fills the current line with white space
 %   and starts a new line. Unlike the original \LaTeX\ command
 %   \soul's version does not handle optional parameters
-%   like in |\\[1ex]|.
+%   like in |\\*[1ex]|.
 % \item[Breaking lines: \so{foo\linebreak bar}]
-%   The |\linebreak| command breaks the line without
+%   The \cs{\linebreak} command breaks the line without
 %   filling it with white space at the end. \soul's version
 %   does not handle optional parameters like in |\linebreak[1]|.
-%   |\break| can be used as a synonym.
+%   \cs{\break} can be used as a synonym.
 % \item[Unbreakable spaces: \so{don't~break}]
 %   The |~|~command sets an unbreakable space.
 % \item[Grouping: \so{Virchow{sche}}]
 %   A pair of braces can be used to let a group of characters
-%   be seen as one item, so that \soul\ does
+%   be seen as one entity, so that \soul\ does
 %   for instance not space it out. The contents must, however,
 %   not contain potential hyphenation points. (See~\ref{par:Protecting})
 % \item[Protecting: \so{foo \mbox{little} bar}]
-%   An |\mbox| does also keep \soul\ from
-%   breaking up the contents, but they may even contain
-%   breakable material. |\hbox| can be used as a synonym.
+%   An \cs{\mbox} also lets \package{soul} see the contents as one
+%   item, but they may even contain hyphenation points. \cs{\hbox} can
+%   be used as a synonym.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
 %   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
 %   well as the \package{yfonts} package \cite{yfonts} font commands like \cs{\textfrak} etc.
 %   Further commands have to be registered using the \cs{\soulfont}
 %   command (see section~\ref{sec:soulfont}).
 % \item[Breaking up ligatures: \ul{Auf{}lage}]
-%   Use |{}| or \cs{\null} to break up ligatures like `fl' in |\ul|, |\st| and |\hl|
+%   Use |{}| or \cs{\null} to break up ligatures like `fl' in \cs{\ul}, \cs{\st} and \cs{\hl}
 %   arguments.
-%   This won't work conveniently for |\so| and |\caps|, because they break up
+%   This won't work conveniently for \cs{\so} and \cs{\caps}, because they break up
 %   every unprotected (ungrouped\slash unboxed) ligature, anyway, and would
 %   then just add undesirable extra space around the additional item.
 % \end{verblist}
@@ -673,7 +684,7 @@
 %   the |cmtt10| font leads to a reconstruction error. This can be
 %   avoided by enclosing the token in braces, e.\,g.~|\so{foo {\TeX} bar}|, or registering
 %   it as font, e.\,g.~|\soulfont{\TeX}{0}| |\so{foo \TeX\ bar}|. It doesn't matter
-%   if it isn't really a font at all. |\TeX| is actually a bad example,
+%   if it isn't really a font at all. \cs{\TeX} is actually a bad example,
 %   because it \emph{is} already pre-registered as font switching command.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
 %   \soul\ commands must not be nested. If you really
@@ -1553,14 +1564,14 @@
 % package \cite{titlesec}:
 % 
 % \begin{example}
-% |\newcommand*\periodafter[2]{#1{#2.}}|\\
+% |\newcommand*\periodafter[2]{#1{#2}.}|\\
 % |\titleformat{\section}[block]|\\
 % |    {\normalfont\centering}|\\
 % |    {\thesection.}|\\
 % |    {.66em}|\\
 % |    {\periodafter\so}|\\
 % |...|\\
-% |\section{VON DEN MAASSEN UND MAASSST\"ABEN}|\\
+% |\section{Von den Maassen und Maassst\"aben}|\\
 % \end{example}
 %
 % \bigbreak
@@ -1573,7 +1584,7 @@
 % \small
 % \bigskip
 % \begin{center}
-% \so{1\<. VON DEN MAASSEN UND MAASSST\"ABEN.}
+% \so{1\<. Von den Maassen und Maassst\"aben}.
 % \bigskip
 % \end{center}
 % \end{minipage}}
@@ -1659,6 +1670,15 @@
 % \fbox{\usebox\examplebox}
 % \bigbreak
 %
+% \noindent
+% Note that the defintion of \cs{\periodafter} decides if
+% the closing period shall be spaced out with the title (1), or
+% follow without space (2):
+%
+% \begin{example}
+% 1.\qquad|\newcommand*\periodafter[2]{#1{#2.}}|\\
+% 2.\qquad|\newcommand*\periodafter[2]{#1{#2}.}|\\
+% \end{example}
 %
 %
 %
@@ -2081,7 +2101,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/01/03 v2.0 letterspacing/underlining  (mf)]
+        [2002/01/06 v2.1 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -4127,7 +4147,7 @@
 % If we have been loaded by a \LaTeX\ environment and the \package{color}
 % package wasn't also loaded, we disable all colors. Then we add the umlaut accent
 % |"| if the \package{german} package is present. The \option{capsdefault}
-% option swallows the \cs{\caps} command and sets an underline instead.
+% option overrides the \cs{\caps} driver and lets \cs{\SOUL@} set an underline.
 % Finally load the local configuration, process the |capsdefault|
 % option and exit.
 %
