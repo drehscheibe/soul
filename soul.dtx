@@ -26,7 +26,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.2",
-%%     date            = "30 April 2002",
+%%     date            = "30 May 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -79,7 +79,7 @@
 %
 %<*driver>
 \def\fileversion{2.2}
-\def\filedate{2002/04/30}
+\def\filedate{2002/05/08}
 %
 %
 %
@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1939}
+% \CheckSum{1962}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -147,7 +147,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{April 30, 2002}
+% \date{May 30, 2002}
 %
 %^^A=====================================================
 %
@@ -211,6 +211,7 @@
 %
 % \def\SOUL@@@verbscan#1#2]{^^A
 %   \egroup
+%   \goodbreak
 %   \def\@currentlabel{\S\,\the\SOUL@@@itemnr}^^A 
 %   \label{par:#1}^^A
 %   \SOUL@@@item[\textbf{\@currentlabel\hskip.6em#1:}]\hfil\break
@@ -414,7 +415,7 @@
 %   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
-% \changes{v2.2}{2002/04/30}{fixed a couple of bugs; added support for
+% \changes{v2.2}{2002/05/08}{fixed a couple of bugs; added support for
 %   the Plain TeX color.sty wrapper}
 %
 %
@@ -1026,18 +1027,18 @@
 % |\capsdef{/cmss///}{}{10pt}{20pt}{30pt}|\\
 % |...|\\
 % |\capssave\widecaps|\\
-% |%---------------------------------------|\\
 % \end{example}
 % \indent
 % \begin{example}
+% |%---------------------------------------|\\
 % |\capsreset|\\
 % |\capsdef{/cmss///}{}{.1pt}{.2pt}{.3pt}|\\
 % |...|\\
 % |\capssave\narrowcaps|\\
-% |%---------------------------------------|\\
 % \end{example}
 % \indent
 % \begin{example}
+% |%---------------------------------------|\\
 % |{\widecaps|\\
 % |\title{\caps{Yet Another Silly Example}}|\\
 % |}|\\
@@ -1098,22 +1099,32 @@
 % Narrow columns are hard to set, because they don't allow much spacing
 % flexibility, hence long words often cause overfull boxes. A macro
 % could use \cs{\so} to insert stretchability between the single
-% characters. The following columns show some text typeset with such a funny
-% definition at the left side and under \emph{plain} conditions at
+% characters. Table~\ref{tab:dirtytricks} shows some text typeset with such
+% a macro at the left side and under \emph{plain} conditions at
 % the right side, both with a width of~6\,pc.
 %
 % \def\sampletext{Some magazines and newspapers prefer this kind of spacing 
 % because it reduces hyphenation problems to a minimum\<. Unfortunately\<, such 
 % paragraphs aren't especially beautiful\<.}
-%
-% \begin{quote}
+% \newbox\dirtytrick
+% \setbox\dirtytrick\vbox{
 % \batchmode     ^^A  we don't want to see all these overfull boxes ...
 % \leavevmode\hspace{0ptplus1fil}
 % \hbox{\parindent0pt\plainsetup\let\<\relax
+%   \vtop{\hsize6pc\raggedright\sampletext}\hskip1em
 %   \vtop{\hsize6pc\magstylepar\sampletext}\hskip1em
 %   \vtop{\hsize6pc\sampletext}\hss}
-% \errorstopmode
-% \end{quote}
+% \errorstopmode}
+%
+% \begin{table}
+% \begin{center}
+% \usebox\dirtytrick
+% \caption{Ragged-right, magazine style (using \soul), and Plain \TeX\
+%          in comparison. Frankly, none of them is really acceptable.
+%          (Don't do this at home, kids!)}
+% \label{tab:dirtytricks}
+% \end{center}
+% \end{table}
 %
 %
 % 
@@ -2104,17 +2115,21 @@
 %
 %
 %
-% \section*{Acknowledgments}
+% \section*{Acknowledgements}
 %
 % A big thank you goes to \person{Stefan Ulrich} for his tips and bug reports
-% during the development of versions 1.* and for his lessons on high quality
+% during the development of versions 1.\lower2pt\hbox{*} and for his lessons on high quality
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
 % suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach,}
 % who sent me a couple of bug reports and feature requests, and finally encouraged
-% me to (almost) completely rewrite \soul. 
+% me to (almost) completely rewrite \soul. \person{Thorsten Manegold} contributed
+% a series of bug reports, helping to fix \soul's macro expander and hence making
+% it work together with the \package{jurabib} package.
+% Thanks to \person{Axel Reichert, Anshuman Pandey,} and \person{Peter Kreynin} for
+% detailed bug reports.
 % \person{Rowland McDonnel} gave useful hints for how to improve the documentation,
 % but I'm afraid he will still not be satisfied, and rightfully so. If only documentation
-% writing weren't that boring.\qquad\texttt{;-)}
+% writing weren't that boring.~~\texttt{;-)}
 %
 %
 %
@@ -2180,7 +2195,7 @@
 %
 % \section{The implementation}
 %
-% ^^A\subsection{The package preamble}
+% \subsection*{The package preamble}
 %
 % This piece of code makes sure that the package is only loaded 
 % once. While this is guaranteed by \LaTeX, we have to do it
@@ -2247,7 +2262,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/04/30 v2.2 letterspacing/underlining  (mf)]
+        [2002/05/08 v2.2 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2594,6 +2609,18 @@
 % The empty braces are there for commands that expect an argument.
 %
 %    \begin{macrocode}
+\expandafter\ifx\csname documentclass\endcsname\relax
+\def\SOUL@dotoken#1{%
+    \def\SOUL@@{\SOUL@addtoken{#1}}%
+    \def\\##1##2{%
+        \ifx#1##2%
+            \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
+        \fi
+    }%
+    \the\SOUL@cmds
+    \SOUL@@    
+}
+\else
 \def\SOUL@dotoken#1{%
     \def\SOUL@@{\SOUL@addtoken{#1}}%
     \def\\##1##2{%
@@ -2614,6 +2641,7 @@
     \the\SOUL@cmds
     \SOUL@@    
 }
+\fi
 %    \end{macrocode}
 % \end{macro}
 %
@@ -3541,7 +3569,7 @@
 \let\capsreset\relax
 \def\capsdef#1#2#3#4#5{}
 \def\capssave#1{}
-\sodef\caps{\capsfont}
+\sodef\textcaps{\capsfont}
     {.028em\@plus.005em\@minus.01em}%
     {.37em\@plus.1667em\@minus.111em}%
     {.37em\@plus.1em\@minus.14em}
@@ -4259,7 +4287,7 @@
 %
 %
 %
-% ^^A\subsection{The package postamble}
+% \subsection*{The package postamble}
 %
 % \begin{macro}{\so}
 % \begin{macro}{\ul}
