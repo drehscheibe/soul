@@ -690,7 +690,7 @@
 %   |\so{foo {little}}| write |\so{foo \mbox{little}}|. You get a
 %   \texttt{`Re\-con\-struction failed'} error and a black square like
 %   \errsquare\ in the \caps{DVI} file where you violated this rule.
-% \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
+% \item[Discretionary hyphens: \so{Zu\discretionary{k-}{}{c}ker}]
 %   The argument must not contain discretionary hyphens. Thus, you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
@@ -1386,6 +1386,7 @@
 % |\ttfamily, \mdseries, \upshape, \slshape, \itshape,|\\
 % |\scshape, \normalfont, \tiny, \scriptsize, \footnotesize,|\\
 % |\small, \normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
+% |\MakeUppercase, \textsuperscript,|\\
 % |\textfrak, \textswab, \textgoth, \frakfamily,|\\
 % |\swabfamily, \gothfamily|\\
 % \end{example}
@@ -1481,7 +1482,7 @@
 %
 % \section{Miscellaneous}
 %
-% \subsection{Using \texorpdfstring{\soul\ }{soul} with other flavors of \texorpdfstring{\TeX}{TeX}}
+% \subsection{Using \texorpdfstring{\soul\ }{soul }with other flavors of \texorpdfstring{\TeX}{TeX}}
 % \label{sec:plain}
 %
 % This documentation describes how to use \soul\ together
@@ -1524,7 +1525,7 @@
 %
 %
 %
-% \subsection{Using \texorpdfstring{\soul\ }{soul} commands for logical markup}
+% \subsection{Using \texorpdfstring{\soul\ }{soul }commands for logical markup}
 % \label{sec:markup}
 %
 % It's generally a bad idea to use font style commands like \cs{\textsc}
@@ -1721,7 +1722,7 @@
 %
 %
 %
-% \subsection{Using \texorpdfstring{\soul\ }{soul} commands in section headings}
+% \subsection{Using \texorpdfstring{\soul\ }{soul }commands in section headings}
 %
 % Letterspacing was often used for section titles in the past,
 % mostly centered and with a closing period. The following example
@@ -2221,7 +2222,7 @@
 % manually for all other flavors of \TeX.
 %
 %    \begin{macrocode}
-\ifx\SOUL@\@undefined\else
+\expandafter\ifx\csname SOUL@\endcsname\relax\else
     \expandafter\endinput
 \fi
 %    \end{macrocode}
@@ -2240,7 +2241,7 @@
 % if e.\,g.~\cs{\mbox} was already in use. But we don't care \dots
 %
 %    \begin{macrocode}
-\ifx\documentclass\@undefined
+\ifx\documentclass\SOULundefined
     \chardef\atcode=\catcode`@
     \catcode`\@=11
     \def\DeclareRobustCommand*{\def}
