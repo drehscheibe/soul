@@ -2432,10 +2432,11 @@
         \bgroup
             \def\\##1##2{\def##2{\noexpand##2}}%
             \the\SOUL@cmds
-            \SOUL@buffer={\\\TeX\\\LaTeX\\\soulomit\\\mbox\\\hbox
-                \\\slash\\\textregistered\\\textcircled\\\copyright
-                \\\S\\\,\\\<\\\>\\~\\\\
-            }
+            \SOUL@buffer={%
+                \\\TeX\\\LaTeX\\\soulomit\\\mbox\\\hbox\\\textregistered
+                \\\slash\\\textcircled\\\copyright\\\S\\\,\\\<\\\>\\~
+                \\\\
+            }%
             \def\\##1{\def##1{\noexpand##1}}%
             \the\SOUL@buffer
             \let\protect\noexpand
@@ -2735,7 +2736,7 @@
     \else
         \SOUL@doword
         #2%
-        \def\SOUL@@{\SOUL@scan}%
+        \let\SOUL@@\SOUL@scan
     \fi\fi
     \SOUL@@
 }
