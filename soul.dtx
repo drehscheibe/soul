@@ -2615,49 +2615,53 @@
 %
 %    \begin{macrocode}
 \def\SOUL@flushminus{%
-    \ifnum\SOUL@minus=\thr@@
-        \SOUL@doword
-        \SOUL@eventuallyexhyphen{-}%
-        \SOUL@exhyphen{---}%
-        \SOUL@minus\z@
-    \else\ifnum\SOUL@minus=\tw@
-        \SOUL@doword
-        \SOUL@eventuallyexhyphen{-}%
-        \SOUL@exhyphen{--}%
-        \SOUL@minus\z@
-    \else\ifnum\SOUL@minus=\@ne
+    \ifcase\SOUL@minus
+    \or
         \SOUL@doword
         \SOUL@eventuallyexhyphen{-}%
         \SOUL@exhyphen{-}%
         \SOUL@minus\z@
-    \fi\fi\fi
+    \or
+        \SOUL@doword
+        \SOUL@eventuallyexhyphen{-}%
+        \SOUL@exhyphen{--}%
+        \SOUL@minus\z@
+    \or
+        \SOUL@doword
+        \SOUL@eventuallyexhyphen{-}%
+        \SOUL@exhyphen{---}%
+        \SOUL@minus\z@
+    \fi
 }
 \def\SOUL@flushcomma{%
-    \ifnum\SOUL@comma=\tw@
-        \edef\x{\SOUL@word={\the\SOUL@word{{,,}}}}\x
-        \SOUL@comma\z@
-    \else\ifnum\SOUL@comma=\@ne
+    \ifcase\SOUL@comma
+    \or
         \edef\x{\SOUL@word={\the\SOUL@word,}}\x
         \SOUL@comma\z@
-    \fi\fi
+    \or
+        \edef\x{\SOUL@word={\the\SOUL@word{{,,}}}}\x
+        \SOUL@comma\z@
+    \fi
 }
 \def\SOUL@flushapo{%
-    \ifnum\SOUL@apo=\tw@
-        \edef\x{\SOUL@word={\the\SOUL@word{{''}}}}\x
-        \SOUL@apo\z@
-    \else\ifnum\SOUL@apo=\@ne
+    \ifcase\SOUL@apo
+    \or
         \edef\x{\SOUL@word={\the\SOUL@word'}}\x
         \SOUL@apo\z@
-    \fi\fi
+    \or
+        \edef\x{\SOUL@word={\the\SOUL@word{{''}}}}\x
+        \SOUL@apo\z@
+    \fi
 }
 \def\SOUL@flushgrave{%
-    \ifnum\SOUL@grave=\tw@
-        \edef\x{\SOUL@word={\the\SOUL@word{{``}}}}\x
-        \SOUL@grave\z@
-    \else\ifnum\SOUL@grave=\@ne
+    \ifcase\SOUL@grave
+    \or
         \edef\x{\SOUL@word={\the\SOUL@word`}}\x
         \SOUL@grave\z@
-    \fi\fi
+    \or
+        \edef\x{\SOUL@word={\the\SOUL@word{{``}}}}\x
+        \SOUL@grave\z@
+    \fi
 }
 %    \end{macrocode}
 % \end{macro}
