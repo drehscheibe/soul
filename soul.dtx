@@ -143,7 +143,7 @@
 %
 %
 %
-% \CheckSum{1996}
+% \CheckSum{2001}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -294,7 +294,7 @@
 %   \def\SOUL@everyhyphen{^^A
 %       \discretionary{^^A
 %           \SOUL@setkern\SOUL@hyphkern
-%           \char\hyphenchar\font
+%           \SOUL@sethyphenchar
 %       }{}{^^A
 %           \hbox{\kern1pt$\cdot$}^^A
 %       }^^A
@@ -2130,7 +2130,7 @@
 % |    \def\SOUL@everyhyphen{%|\\
 % |        \discretionary{%|\\
 % |            \SOUL@setkern\SOUL@hyphkern|\\
-% |            \char\hyphenchar\font|\\
+% |            \SOUL@sethyphenchar|\\
 % |        }{}{%|\\
 % |            \hbox{\kern1pt$\cdot$}%|\\
 % |        }%|\\
@@ -2994,6 +2994,12 @@
 \setbox\z@\hbox{\SOUL@tt-}
 \newdimen\SOUL@ttwidth
 \SOUL@ttwidth\wd\z@
+\def\SOUL@sethyphenchar{%
+    \ifnum\hyphenchar\font=\m@ne
+    \else
+        \char\hyphenchar\font
+    \fi
+}
 %    \end{macrocode}
 %
 %
@@ -3036,7 +3042,7 @@
             \advance\SOUL@syllgoal-\SOUL@ttwidth
             \SOUL@dosyllable
             \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@hyphkern}%
-                {\char\hyphenchar\font}%
+                {\SOUL@sethyphenchar}%
             \SOUL@everyhyphen
         \else
             \SOUL@dosyllable
@@ -3463,7 +3469,7 @@
     \discretionary{%
         \unkern
         \SOUL@setkern\SOUL@hyphkern
-        \char\hyphenchar\font
+        \SOUL@sethyphenchar
     }{}{}%
 }
 %    \end{macrocode}
@@ -4023,7 +4029,7 @@
         \unkern
         \SOUL@ulunderline{%
             \SOUL@setkern\SOUL@hyphkern
-            \char\hyphenchar\font
+            \SOUL@sethyphenchar
         }%
     }{}{}%
 }
