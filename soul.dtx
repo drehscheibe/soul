@@ -143,7 +143,7 @@
 %
 %
 %
-% \CheckSum{2001}
+% ^^A\CheckSum{2001}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -668,8 +668,8 @@
 % \item[Font switching commands: \so{foo \texttt{bar}}]
 %   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
 %   well as the \package{yfonts} package \cite{yfonts} font commands like \cs{\textfrak} etc.
-%   Further commands have to be registered using the \cs{\soulfont}
-%   command (see section~\ref{sec:soulfont}).
+%   Further commands have to be registered using the \cs{\soulregister}
+%   command (see section~\ref{sec:soulregister}).
 % \item[Breaking up ligatures: \ul{Auf{}lage}]
 %   Use |{}| or \cs{\null} to break up ligatures like `fl' in \cs{\ul}, \cs{\st} and \cs{\hl}
 %   arguments.
@@ -713,7 +713,7 @@
 %   A hidden font switching command that leaks into its neighborship
 %   causes a \texttt{`Reconstruction failed'} error. To avoid this either limit its
 %   scope as in |\def\foo{{\bf bar}}| or register the `container'
-%   as font switching command: |\soulfont{\foo}{0}|. Note that both
+%   as font switching command: |\soulregister{\foo}{0}|. Note that both
 %   solutions yield slightly different results.
 % \item[Material that needs expansion: \so{\romannumeral\year}]
 %   In this example \cs{\so} would try to put space between \cs{\romannumeral}
@@ -732,7 +732,7 @@
 %   \cs{\S}, \cs{\slash}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright},
 %   as well as for all registered fonts and accents. Instead of putting \cs{\noexpand}
 %   manually in front of such commands, as in |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|,
-%   you can also register them as font (see section \ref{sec:soulfont}).
+%   you can also register them as font (see section \ref{sec:soulregister}).
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
 %   \soul\ arguments must not contain \LaTeX\ environments, command definitions,
 %   and fancy stuff like |\vadjust|. \soul's |\footnote| command replacement
@@ -762,7 +762,7 @@
 % \verb+\hl{highlighting}+&                 \pref{hl}           &highlighting\\
 % \\
 % \verb+\soulaccent{\cs}+&                  \pref{soulaccent}   &\ti{add accent} \cs{\cs} \ti{to accent list}\\
-% \verb+\soulfont{\cs}{0}+&                 \pref{soulfont}     &\ti{add font switching command} \m{\cs}\\
+% \verb+\soulregister{\cs}{0}+&             \pref{soulregister} &\ti{add font switching command} \m{\cs}\\
 % \verb+\sloppyword{text}+&                 \pref{sloppyword}   &\ti{typeset} \m{text} \ti{with stretchable spaces}\\
 % \\
 % \verb+\sodef\cs{1em}{2em}{3em}+&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
@@ -1366,24 +1366,24 @@
 %
 %
 % \subsection{Adding font commands}
-% \label{sec:soulfont}
+% \label{sec:soulregister}
 %
 % To convince \soul\ not to feed font switching
 % commands to the analyzer, but rather to execute them immediately,
-% they have to be registered, too. The \describemacro{\soulfont} macro
+% they have to be registered, too. The \describemacro{\soulregister} macro
 % takes the name of the font switching command and either
 % |0| or |1| for the number of arguments:
 %
 % \begin{syntax}
-% |\soulfont{|\<font command>|}{|\<number of arguments>|}|
+% |\soulregister{|\<font command>|}{|\<number of arguments>|}|
 % \end{syntax}
 %
 % If \cs{\bf} and \cs{\emph} weren't already registered, you would
 % write the following into your |soul.cfg| configuration file:
 %
 % \begin{example}
-% |\soulfont{\bf}{0}        % {\bf foo}| \\
-% |\soulfont{\emph}{1}      % \emph{bar}|\\
+% |\soulregister{\bf}{0}        % {\bf foo}| \\
+% |\soulregister{\emph}{1}      % \emph{bar}|\\
 % \end{example}
 %
 %
@@ -1639,7 +1639,7 @@
 % switching commands (even though they aren't):
 %
 % \begin{example}
-% |\soulfont\jbbtasep{0}|\\
+% |\soulregister\jbbtasep{0}|\\
 % |...|\\
 % \end{example}
 %
@@ -1666,7 +1666,7 @@
 %
 % \begin{example}
 % |\newcommand*\together[1]{#1}|\\
-% |\soulfont\together{1}|\\
+% |\soulregister\together{1}|\\
 % \end{example}
 %
 % Now you can write ``|Author = {\together{Don Knuth}}|'' and
@@ -1859,10 +1859,11 @@
 %
 %
 %
-% \noindent\FIXME{URKS}
-% Sometimes people are forced to underline section titles. The
-% \cs{\titlefont} command is provided by the \textsc{KOMA} script
-% package. You can write |\normalfont\sffamily\bfseries| instead.
+% \noindent
+% If you need to underline section titles, you can easily
+% do it using the \package{titlesec} package. The following
+% example underlines the section title, but not the section
+% number:
 %
 % \begin{example}
 % |\titleformat{\section}|\\
@@ -1872,11 +1873,15 @@
 % |    {\ul}|\\
 % \end{example}
 %
-% \indent
+% \noindent
+% The \cs{\titlefont} command is provided by the \textsc{KOMA}~script
+% package. You can write |\normalfont\sffamily\bfseries| instead.
+% The following example does also underline the section number:
+%
 % \begin{example}
 % |\titleformat{\section}|\\
 % |    {\LARGE\titlefont}|\\
-% |    {\ul{\thesubsubsection{\kern.66em}}}|\\
+% |    {\ul{\thesection{\kern.66em}}}|\\
 % |    {0pt}|\\
 % |    {\ul}|\\
 % \end{example}
@@ -1896,7 +1901,7 @@
 % \subsection{The kernel}
 % \so{Letterspacing,} \ul{underlining}, \st{striking out} and highlighting
 % use the same kernel. It lets a \emph{word scanner} run over the given argument,
-% which inspects every token. If a token is a command registered via \cs{\soulfont},
+% which inspects every token. If a token is a command registered via \cs{\soulregister},
 % it is executed immediately. Other tokens are only counted and trigger some action
 % when a certain number is reached (quotes and dashes). Three subsequent `|-|', for example,
 % trigger |\SOUL@everyexhyphen{---}|. A third group leads to special actions,
@@ -2339,6 +2344,7 @@
     \newcommand*\hl{}
     \newcommand*\caps{}
     \newcommand*\soulaccent{}
+    \newcommand*\soulregister{}
     \newcommand*\soulfont{}
     \newcommand*\soulomit{}
 \fi
@@ -2743,8 +2749,8 @@
 %
 %
 % \begin{macro}{\SOUL@docmd}
-% Here we deal with commands that were registered with \cs{\soulaccent}
-% or \cs{\soulfont} or were already predefined in \cs{\SOUL@cmds}.
+% Here we deal with commands that were registered with \cs{\soulregister}
+% or \cs{\soulaccent} or were already predefined in \cs{\SOUL@cmds}.
 % Commands with identifier |9| are accents that are put in a
 % group with their argument. The others are mostly (but not necessarily)
 % font switching commands, which may (|1|) or may not (|0|) take
@@ -2911,21 +2917,24 @@
 %
 %
 %
+% \begin{macro}{\soulregister}
 % \begin{macro}{\soulfont}
 % \begin{macro}{\soulaccent}
 % Register a font switching command (or some other command) for the
 % scanner. The first argument is the macro name, the second is
-% the number of arguments (|0|~or~|1|). Example: |\soulfont{\bold}{0}|.
+% the number of arguments (|0|~or~|1|). Example: |\soulregister{\bold}{0}|.
 % \cs{\soulaccent} has only one argument---the accent macro name.
-% Example: |\soulaccent{\~}|. It is a shortcut for |\soulfont{\~}{9}|.
+% Example: |\soulaccent{\~}|. It is a shortcut for |\soulregister{\~}{9}|.
 %
 %    \begin{macrocode}
-\def\soulfont#1#2{{%
+\def\soulregister#1#2{{%
     \edef\x{\global\SOUL@cmds={\the\SOUL@cmds
         \noexpand\\#2\noexpand#1}}\x
 }}
-\def\soulaccent#1{\soulfont{#1}9}
+\def\soulaccent#1{\soulregister{#1}9}
+\let\soulfont\soulregister
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
