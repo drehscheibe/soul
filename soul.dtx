@@ -501,11 +501,11 @@
 %\subsection*{\dots\ and Practice}
 %
 % However, in the last centuries letterspacing was excessively used,
-% underlining at least sometimes, because the old \emph{Fraktur} fonts
-% could not use capitals or italic shape for emphasizing. This tradition is widely
-% continued until today. Furthermore italic shape is not an option in many languages with
-% non-latin glyphs. Letterspacing has a strong tradition in eastern countries
-% where Cyrillic fonts are used.
+% underlining at least sometimes, because capitals and italic shape could
+% not be used together with the old German fonts like the \emph{Fraktur} font.
+% This tradition is widely continued until today. The same limitations apply still today
+% to many languages with non-latin glyphs, which is why letterspacing has a strong
+% tradition in eastern countries where Cyrillic fonts are used.
 %
 % The \person{Duden} \cite{Duden}, a well known German dictionary, explains how to space out properly:
 % \emph{Punctuation marks are spaced out like letters, except quotation marks and periods.
@@ -644,7 +644,7 @@
 % \item[Omitting: \so{\soulomit{foo}}]
 %   The contents of \cs{\soulomit} bypass the soul core and are typeset
 %   as is, without being letterspaced or underlined. Hyphenation points are
-%   allowed within the argument. The current font pertains, but can be
+%   allowed within the argument. The current font remains active, but can be
 %   overridden with \cs{\normalfont} etc.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
 %   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
@@ -1027,7 +1027,7 @@
 % \begin{example}
 % |\capsreset|\\
 % |\capsdef{/cmss///12}{}{12pt}{23pt}{34pt}|\\
-% |\capsdef{/cmss///}{}{10pt}{20pt}{30pt}|\\
+% |\capsdef{/cmss///}{}{1em}{2em}{3em}|\\
 % |...|\\
 % |\capssave\widecaps|\\
 % \end{example}
@@ -1035,7 +1035,7 @@
 % \begin{example}
 % |%---------------------------------------|\\
 % |\capsreset|\\
-% |\capsdef{/cmss///}{}{.1pt}{.2pt}{.3pt}|\\
+% |\capsdef{/cmss///}{}{.1em}{.2em}{.3em}|\\
 % |...|\\
 % |\capssave\narrowcaps|\\
 % \end{example}
