@@ -356,7 +356,7 @@
 %   \MakeUppercase{\SOUL@@@versal{#1}}^^A
 %   \SOUL@socheck} 
 %
-%
+% \def\ConTeXt{Con\TeX t}
 %
 %
 % \makeatother
@@ -378,7 +378,7 @@
 % \changes{v1.3}{1999/05/15}{changed allowhyphen, preambles; added a paragraph
 %   in the `features' section}
 %
-% \changes{v???}{????/??/??}{Alexander SHIBAKOV}
+% \changes{v2.0}{????/??/??}{almost complete rewrite}
 %
 %
 %
@@ -399,17 +399,17 @@
 % which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
 % and some derivatives such as \st{overstriking} and \hl{highlighting}.
 % Although the package is optimized for \LaTeXe, it also works with
-% Plain \TeX\ and with other flavors of \TeX, for instance Con{\TeX}t.
+% Plain \TeX\ and with other flavors of \TeX\ like for instance \ConTeXt.
 % By the way, the package name |soul|
-% is only a combination of the two macro names |\so| (\emph{space out})
-% and |\ul| (\emph{underline})---nothing poetic at all.^^A  :-( 
+% is only a combination of the two macro names \cs{\so} (\emph{space out})
+% and \cs{\ul} (\emph{underline})---nothing poetic at all.^^A  :-( 
 % \end{abstract}
 %
 %
 %
 %
 %
-% {\parskip0pt\tableofcontents }
+% {\setlength\parskip{0pt}\tableofcontents }
 % \addtocontents{toc}{\protect\begin{multicols}{2}}
 %
 %
@@ -678,7 +678,9 @@
 % \verb+\sethlcolor{y}+\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\^^A[1.5ex]\hline
 % \end{tabular}}
 % \caption{List of all available commands. The number points to the
-%          page where the command is described.}
+%          page where the command is described. Those that are marked
+%          with a little asterisk are only available when the package
+%          is used together with \LaTeX.}
 % \label{tab:survey}
 % \end{center}
 % \end{table}
@@ -839,7 +841,8 @@
 %
 %
 %
-% \subsection{Typesetting \caps{capitals and small capitals} fonts}
+% \subsection[Typesetting \caps{capitals-and-small-capitals}\\fonts]
+%       {Typesetting capitals-and-small-capitals fonts}
 %
 % There is a special letterspacing command called \describemacro{\caps}.
 % It differs from \cs{\so} in that it switches to caps-and-small-caps
@@ -1124,26 +1127,24 @@
 % \label{sec:dvips}
 %
 % \ul{Underlining}, \st{striking out} and \hl{highlighting} build up
-% their lines with many short line segments. If you used the `dvips' program with
-% default settings, you would get little gaps on some places, because
-% the \textit{maxdrift} value allows the single objects to drift
+% their lines with many short line segments. If you used the `\program{dvips}'
+% program with default settings, you would get little gaps on some places, because
+% the \emph{maxdrift} value allows the single objects to drift
 % this many pixels from their real positions.
 % \bigbreak
 %
 % \noindent
-% There are two ways to avoid the problem, where the |soul| package
+% There are two ways to avoid the problem, where the \package{soul} package
 % chooses the second by default:
 % \begin{enumerate}
 % \item
-%   Set the \textit{maxdrift} value to zero, e.\,g.: |dvips -e 0 file.dvi|.
+%   Set the \emph{maxdrift} value to zero, e.\,g.: |dvips -e 0 file.dvi|.
 %   This is probably not a good idea, since the letters may then no longer be
 %   spaced equally on low resolution printers.
 % \item
-%   Use the \DescribeOption{overlap}\textsf{overlap} option. This option causes the single
-%   line segments to overlap each other letting them stick out
-%   0.5\,pt to the left and to the right. The option \DescribeOption{nooverlap}\textsf{nooverlap}
-%   turns this overlapping off.
-%
+%   Let the lines stick out by a certain amount on each side so that they
+%   overlap. This overlap amount can be set using the \describemacro{\setuloverlap}.
+%   It is set to 0.25\,pt by default. |\setuloverlap{0pt}| turns overlapping off.
 % \end{enumerate}
 %
 %
@@ -1161,25 +1162,14 @@
 % command can be found, and a \emph{plain} \TeX\ mode, which is selected otherwise. These
 % modes differ in some points:
 %
-%
-%
-%
-%
 % In \emph{plain} \TeX\ mode the \cs{\caps} command is
 % simply defined with \cs{\sodef}. It executes a command \cs{\capsfont} that 
-% is ignored by default and may be used to select a particular font.
-%
-%
-%
-%
-%
 %
 % \begin{example}
 % |\font\capsfont=cmcsc10|\\
 % |\caps{Tschichold}|\\
 % \end{example}
 %
-% \subsubsection{\LaTeXe\ mode}
 %
 % This mode provides a package option \textsf{capsdefault} (see section \ref{sec:somacros}) and 
 % two package options \textsf{nooverlap} and \textsf{overlap},
@@ -1191,7 +1181,6 @@
 % file `example.cfg', which implements a fairly complete |\caps| data base.)
 %
 %
-% \subsubsection{Plain \TeX\ mode}
 % This mode implements the respective options as commands |\overlap| and |\nooverlap|,
 % and provides a simplified |\caps| command. The `fragile' commands
 % |\so|, |\caps|, |\ul|, and~|\st| are to be protected by the user, 
@@ -1203,6 +1192,7 @@
 %
 %
 % \subsection{Using \package{soul} commands in logical markup}
+% \label{sec:markup}
 %
 % It's generally a bad idea to use font style commands like \cs{\textsc}
 % in running text. There should always be some reasoning behind changing
@@ -2290,8 +2280,8 @@
 %
 %
 % \begin{macro}{\SOUL@dosyllable}
-% This macro typesets token after token from \cs{\SOUL@word} (fetched
-% by \cs{\SOUL@gettoken}) until \cs{\SOUL@syllwidth} has reached
+% This macro typesets token after token from \cs{\SOUL@word}
+% until \cs{\SOUL@syllwidth} has reached
 % the requested width \cs{\SOUL@syllgoal}. Furthermore the kerning
 % values are prepared in case \cs{\SOUL@everytoken} needs them.
 %
@@ -3080,9 +3070,9 @@
     \setbox\z@\hbox{#1}%
     \dimen@=\wd\z@
     \dimen@i=\SOUL@uloverlap
-    \advance\dimen@\dimen@i
+    \advance\dimen@2\dimen@i
     \rlap{%
-        \null\kern-.5\dimen@i
+        \null\kern-\dimen@i
         \SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@}%
     }%
     \unhcopy\z@
@@ -3232,7 +3222,7 @@
 %
 %    \begin{macrocode}
 \def\setuloverlap#1{\def\SOUL@uloverlap{#1}}
-\setuloverlap{.5pt}
+\setuloverlap{.25pt}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -3581,8 +3571,8 @@
 % \describemacro{\sethlcolor}\par
 % \describemacro{\soulaccent}\par
 % \describemacro{\soulfont}\par
-% \describemacro{\setuloverlap}\par
-%
+% \label{sec:soulaccent}
+% \label{sec:soulfont}
 % \Finale
 % 
 %                                     
