@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1899}
+% \CheckSum{1911}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -736,9 +736,9 @@
 % \verb+\resetul+&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
 % \verb+\setuldepth{y}+&                    \pref{setuldepth}   &\ti{set underline depth to depth of} \m{y}\\
 % \verb+\setuloverlap{y}+&                  \pref{setuloverlap} &\ti{set underline overlap width to} \m{y}\\
-% \verb+\setulcolor{y}+\Ast&                \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
-% \verb+\setstcolor{y}+\Ast&                \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
-% \verb+\sethlcolor{y}+\Ast&                \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\
+% \verb+\setulcolor{y}+&                    \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
+% \verb+\setstcolor{y}+&                    \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
+% \verb+\sethlcolor{y}+&                    \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\
 % \end{tabular}
 % \caption{List of all available commands. The number points to the
 %          page where the command is described. Those marked
@@ -2545,19 +2545,23 @@
 % \begin{macro}{\SOUL@addprotect}
 % \begin{macro}{\SOUL@addtoken}
 % The macro names say it all. Each of these macros adds some
-% token to the word buffer \cs{\SOUL@word}.
+% token to the word buffer \cs{\SOUL@word}. Setting \cs{\protect}
+% is necessary to make things like |\so{{a\itshape b}}| work.
 %
 %    \begin{macrocode}
 \def\SOUL@addgroup#1#2{%
-    \edef\x{\SOUL@word={\the\SOUL@word{{\noexpand#1#2}}}}\x
+    {\let\protect\noexpand
+    \edef\x{\global\SOUL@word={\the\SOUL@word{{\noexpand#1#2}}}}\x}%
     \SOUL@scan
 }
 \def\SOUL@addmath$#1${%
-    \edef\x{\SOUL@word={\the\SOUL@word{{\hbox{$#1$}}}}}\x
+    {\let\protect\noexpand
+    \edef\x{\global\SOUL@word={\the\SOUL@word{{\hbox{$#1$}}}}}\x}%
     \SOUL@scan
 }    
 \def\SOUL@addprotect#1#2{%
-    \edef\x{\SOUL@word={\the\SOUL@word{{\hbox{#2}}}}}\x
+    {\let\protect\noexpand
+    \edef\x{\global\SOUL@word={\the\SOUL@word{{\hbox{#2}}}}}\x}%
     \SOUL@scan
 }
 \def\SOUL@addtoken#1{%
@@ -2788,7 +2792,7 @@
 % the requested width \cs{\SOUL@syllgoal}. Furthermore the kerning
 % values are prepared in case \cs{\SOUL@everytoken} needs them.
 % The \cs{\<} command used by \cs{\so} and \cs{\caps} needs some
-% special treatment: It has to be checked for even before
+% special treatment: It has to be checked for, even before
 % we can end a syllable.
 %
 %    \begin{macrocode}
@@ -3857,7 +3861,7 @@
 %
 %
 % \begin{macro}{\SOUL@textul}
-% Describing self-explanatory macros is so boring!
+% Describing self-explanatory macros is \emph{so} boring!
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textul{\SOUL@ulsetup\SOUL@}
