@@ -1586,7 +1586,7 @@
 %
 %    \begin{macrocode}
 \expandafter\ifx\csname documentclass\endcsname\relax
-    \chardef\SOULatcode=\catcode`@
+    \chardef\atcode=\catcode`@
     \catcode`\@=11
     \def\DeclareRobustCommand*{\def}
     \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
@@ -3302,7 +3302,7 @@
     \let\setstcolor\setulcolor
     \let\sethlcolor\setulcolor
     \let\hl\ul
-    \catcode`\@=\SOULatcode
+    \catcode`\@=\atcode
 %    \end{macrocode}
 %
 %
