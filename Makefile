@@ -22,7 +22,6 @@ $(NAME).pdf: $(NAME).dtx $(NAME).sty
 
 archive:
 	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
-	@ echo ""
 	@ echo $(ARCHNAME)		
 
 clean: 
