@@ -19,8 +19,8 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.3",
-%%     date            = "15 May 1999",
+%%     version         = "2.0",
+%%     date            = "99 999 2001",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -67,8 +67,8 @@
 %
 %
 %<*driver>
-\def\fileversion{1.3}
-\def\filedate{1999/05/15}
+\def\fileversion{2.0}
+\def\filedate{2001/99/99}
 %
 %
 %^^A  the `draft' option is needed for demonstration
@@ -76,13 +76,12 @@
 %
 %
 \IfFileExists{soul.sty}
-  {\usepackage{soul}[1999/05/15]\let\SOULSTYfound\active}%
+  {\usepackage{soul}[2001/99/99]\let\SOULSTYfound\active}%
   {\GenericWarning{soul.dtx}%
-    {Aaarrgghhh...^^J^^A
-     Package file `soul.sty' not found.^^J^^A
-     All the instructive examples are replaced by ??.^^J^^A
-     Generate `soul.sty' by (La)TeXing `soul.ins',^^J^^A
-     process `soul.dtx' again.)}}%
+    {Package file `soul.sty' couldn't be found. You should however find^^J^^A
+     a file `soul.ins' in the current directory. If you type "tex soul.ins"^^J^^A
+     on the command line, `soul.sty' will be processed for you. After that
+     run "latex soul.dtx" again and you won't see that message again.}}%
 %
 %
 %
@@ -93,23 +92,25 @@
 % 
   \DeclareRobustCommand*\sy{%
     \def\SOUL@preamble{\lefthyphenmin0\righthyphenmin0}%
-    \let\SOUL@interword\space
+    \def\SOUL@everyspace##1{##1\space}%
     \let\SOUL@postamble\relax
-    \def\SOUL@everyhyphen{\kern-\dimen@
-      \discretionary{\kern\dimen3\unhcopy\tw@}{}{\hbox{\kern.5pt$\cdot$\kern.5pt}}}%
+    \def\SOUL@everyhyphen{\SOUL@removelastkern
+      \discretionary{\SOUL@setkern\SOUL@charkern\char\hyphenchar\font}%
+      {}{\hbox{\kern.5pt$\cdot$\kern.5pt}}}%
     \let\SOUL@everysyllable\relax
-    \def\SOUL@everytoken{\SOUL@actual\kern\dimen@}%
+    \def\SOUL@everytoken{\the\SOUL@token\SOUL@setkern\SOUL@charkern}%
     \SOUL@}%
 %
 %^^A  analyze the interface -- described somewhere below, too
 %
   \DeclareRobustCommand*\an{%
     \def\SOUL@preamble{$^{^P}$}%
-    \def\SOUL@interword{\texttt{\char`\ }}%
+    \def\SOUL@everyspace##1{##1\texttt{\char`\ }}%
     \def\SOUL@postamble{$^{^E}$}%
-    \def\SOUL@everyhyphen{$^{^H}$}%
+    \def\SOUL@everyhyphen{$^{^h}$}%
+    \def\SOUL@everyexhyphen##1{##1$^{^H}$}%
     \def\SOUL@everysyllable{$^{^S}$}%
-    \def\SOUL@everytoken{\SOUL@actual$^{^T}$}%
+    \def\SOUL@everytoken{\the\SOUL@token$^{^T}$}%
     \SOUL@}
 %
 %^^A  magazine-like (truly awful) paragraphs
@@ -118,12 +119,12 @@
 %^^A  M$-Wood and TeX documents in the future, after which I had sleepless nights...   ;-)
 %^^A  If you know what you're doing, you can copy it to your personal `soul.cfg' file.
 %
-  \DeclareRobustCommand*\magstylepar{\SOUL@sobody
+  \DeclareRobustCommand*\magstylepar{\SOUL@sosetup
     \def\SOUL@preamble{%
-      \edef\SOUL@soskip{\z@\@plus\fontdimen2\font\@minus\z@}%
-      \edef\SOUL@soinner{\the\fontdimen2\font
+      \edef\SOUL@soletterskip{\z@\@plus\fontdimen2\font\@minus\z@}%
+      \edef\SOUL@soinnerskip{\the\fontdimen2\font
         \@plus\the\fontdimen3\font\@minus\the\fontdimen4\font}%
-      \let\SOUL@soouter\SOUL@soinner
+      \let\SOUL@soouterskip\SOUL@soinnerskip
       \SOUL@sopreamble}%
     \lefthyphenmin2\righthyphenmin2\SOUL@}
 %
@@ -146,12 +147,19 @@
 %
 %^^A  similar to the `description' environment
 %
-\newenvironment{labeling}[1]
-  {\list{}{\settowidth{\labelwidth}{\textbf{#1}}
-  \leftmargin\labelwidth\advance\leftmargin\labelsep
-  \def\makelabel##1{\textbf{##1}\hfil}}}{\endlist}
+\newenvironment{labeling}[1]{%
+  \list{}{%
+    \settowidth{\labelwidth}{\textbf{#1}}%
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \def\makelabel##1{\textbf{##1}\hfil}%
+  }}%
+  {\endlist}
+%
 %
 \newcommand*\DescribeOption[1]{\marginpar{\raggedleft\textsf{#1}\ignorespaces}}
+%
+%
 %
 %
 %
@@ -165,7 +173,7 @@
 % \fi
 %
 %
-% \CheckSum{1106}
+% \CheckSum{1249}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -188,7 +196,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{May 15, 1999}
+% \date{??? ??, 2001}
 %
 % \maketitle
 %
@@ -254,8 +262,8 @@
 % and some derivatives such as \caps{majuscules letterspacing} that
 % might be needed for high quality typesetting.
 % All features are based upon a common mechanism that allows to
-% typeset text syllable by syllable, where \TeX's excellent
-% hyphenation algorithm is used to find the proper hyphenation points.
+% typeset text syllable by syllable using \TeX's excellent
+% hyphenation algorithm to find the proper hyphenation points.
 % Two examples show how to use the provided interface to
 % implement things such as `\sy{analyzing syllables}'.
 %
@@ -283,7 +291,6 @@
 % should be used or not, and in which cases. If you are not interested
 % in such debates, you may well skip over the next section.
 % 
-%
 %
 %
 % 
@@ -558,8 +565,8 @@
 %   (\texttt{\string\mbox}) with two pairs of braces around it.
 %   However, it's better to end \so{spacing out} before and 
 %   restart it afterwards}
-%   |\so{just an {{\hbox{example}}}}|
-%   {\so{just an {{\hbox{example}}}}}
+%   |\so{just an {\hbox{example}}}|
+%   {\so{just an {\hbox{example}}}}
 %  
 % \soultest{Punctuation marks are spaced out, if they are
 %   put into the group}
@@ -574,8 +581,8 @@
 %   {\so{{``}\<Pennsylvania\<{''}}}
 % 
 % \soultest{Numbers should never be spaced out}  
-%   |\so{1\<3 December {{1995}}}|
-%   {\so{1\<3 December {{1995}}}}
+%   |\so{1\<3 December {1995}}|
+%   {\so{1\<3 December {1995}}}
 %
 % \soultest{\texttt{\string\slash}, \texttt{\string\hyphen},
 %   \texttt{\string\endash}, and \texttt{\string\emdash} allow 
@@ -590,17 +597,17 @@
 % \soultest{The \texttt{\string\~}-command inhibits line breaks.
 %   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
 %   to mark the word boundaries}
-%   |\so{unbreakable~ space}|
-%   {\so{unbreakable~ space}}
+%   |\so{unbreakable~space}|
+%   {\so{unbreakable~space}}
 %
 % \soultest{\texttt{\string\\} works as usual. Additional arguments
 %   like \texttt{*} or vertical space are not accepted. Mind the space}
-%   |\so{broken\\ line}|
-%   {\so{broken\\ line}}
+%   |\so{broken\\line}|
+%   {\so{broken\\line}}
 %  
 % \soultest{The braces keep \TeX\ from discarding the space}
-%   |\so{pretty awful{\break} test}|
-%   {\so{pretty awful{\break} test}}
+%   |\so{pretty awful\break test}|
+%   {\so{pretty awful\break test}}
 %
 % \end{examples}
 %^^A=====================================================
@@ -773,13 +780,13 @@
 % \soultest{The \texttt{\string\~}-command inhibits line breaks.
 %   A space \emph{\texttt{\char`\ }}$_{10}$ is mandatory here
 %   to mark the word boundaries}
-%   |\ul{unbreakable~ space}|
-%   {\ul{unbreakable~ space}}
+%   |\ul{unbreakable~space}|
+%   {\ul{unbreakable~space}}
 %  
 % \soultest{The braces keep \TeX\ from discarding
 %   the space}  
-%   |\ul{pretty awful{\break} test}|
-%   {\ul{pretty awful{\break} test}}
+%   |\ul{pretty awful\break test}|
+%   {\ul{pretty awful\break test}}
 %
 % \end{examples}
 %^^A=====================================================
@@ -917,7 +924,7 @@
 % \item[\normalfont\an{example}\kern-1em]
 %   The macro |\SOUL@everyhyphen| is executed at every possible
 %   imcplicit hyphenation point.
-% \item[\normalfont\an{beta\hyphen test}]
+% \item[\normalfont\an{beta-test}]
 %   An explicit |\hyphen| belongs to the left syllable.
 % \end{labeling}
 % \rule[2ex]{\hsize}{.4pt}
@@ -932,9 +939,10 @@
 %\begin{verbatim}
 %    \DeclareRobustCommand*\an{%
 %      \def\SOUL@preamble{$^{^P}$}%
-%      \def\SOUL@interword{\texttt{\char`\ }}%
+%      \def\SOUL@everyspace##1{##1\texttt{\char`\ }}%
 %      \def\SOUL@postamble{$^{^E}$}%
 %      \def\SOUL@everyhyphen{$^{^H}$}%
+%      \def\SOUL@everyexhyphen##1{##1$^{^ExH}$}%
 %      \def\SOUL@everysyllable{$^{^S}$}%
 %      \def\SOUL@everytoken{\SOUL@actual$^{^T}$}%
 %      \SOUL@}
@@ -1210,15 +1218,15 @@
 %
 %
 %
-%
 % \section{The macros}
+% ^^A max 72 columns
 %
-% \subsection{The preamble}
+% \subsection{The package preamble}
 %
+% This piece of code makes sure that the package is only loaded 
+% once. While this is guaranteed by \LaTeX, we have to do it
+% manually for all other flavors of \TeX.
 %
-% This piece of code makes sure that the package is only included 
-% once. This is automatically provided by \LaTeX, but not 
-% necessarily by other packages.
 %    \begin{macrocode}
 \expandafter\ifx\csname SOUL@\endcsname\relax\else
   \expandafter\endinput
@@ -1228,1041 +1236,1499 @@
 %
 %
 %
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
 % \noindent
-% The following lines decide whether the package was loaded by
-% \LaTeX\ or by another package, in which case the \LaTeX\ commands
-% have to be provided (somehow). Older \LaTeX\ versions are not
-% recognized as \LaTeX, but that shouldn't be a problem.
-% 
+% Because we need to know if we were loaded by \LaTeX\ on several
+% places in the package, we define a handy \emph{if} switch.
+%
 %    \begin{macrocode}
+\newif\if@SOUL@latex
 \expandafter\ifx\csname documentclass\endcsname\relax
-  \chardef\atcode=\catcode`@
-  \catcode`\@=11
-  \def\DeclareRobustCommand*{\def}
-  \def\providecommand*{\def}
-  \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
-  \def\PackageError#1#2#3{{\newlinechar`^^J\errorcontextlines\z@
-    \edef\\{\errhelp{#3}}\\\errmessage{Package #1 error: #2}}}
-  \def\@height{height}
-  \def\@depth{depth}
-  \def\@width{width}
-  \def\@plus{plus}
-  \def\@minus{minus}
+    \@SOUL@latexfalse
 \else
-  \NeedsTeXFormat{LaTeX2e}
-  \ProvidesPackage{soul}
-    [1999/05/15 v1.3 letterspacing/underlining  (mf)]
+    \@SOUL@latextrue
 \fi
 %    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \noindent
+% |soul| tries to be a good \LaTeX\ citizen if used under \LaTeX\,
+% else it has to fake some of its commands.
+%
+%    \begin{macrocode}
+\if@SOUL@latex
+    \NeedsTeXFormat{LaTeX2e}
+    \ProvidesPackage{soul}
+        [2001/99/99 v1.99 letterspacing/underlining  (mf)]
+    \newfont\SOUL@tt{cmtt10}
+\else
+    \chardef\SOUL@atcode=\catcode`@
+    \catcode`\@=11
+    \def\DeclareRobustCommand*{\def}
+    \def\providecommand*{\def}
+    \def\DeclareOption#1#2{\expandafter\def\csname#1\endcsname{#2}}
+    \def\PackageError#1#2#3{{%
+        \newlinechar`^^J%
+        \errorcontextlines\z@
+        \edef\\{\errhelp{#3}}\\%
+        \errmessage{Package #1 error: #2}%
+    }}
+    \def\@height{height}
+    \def\@depth{depth}
+    \def\@width{width}
+    \def\@plus{plus}
+    \def\@minus{minus}
+    \let\SOUL@tt\tt
+    \let\@xobeysp\space
+\fi
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 % 
+% \noindent
+% Piles of |\newtoks| would be costly, so we try to get away with
+% |\toksdef|. If the future shows that it was a bad decision, we
+% can still switch. Local registers are always even, while global
+% ones are odd. This is a \TeX\ convention.
+%
+%    \begin{macrocode}
+\toksdef\SOUL@wordlist\z@
+\toksdef\SOUL@lasttoken\tw@
+\toksdef\SOUL@remainder=4
+\toksdef\SOUL@replace=6
+\toksdef\SOUL@syllable=8
+\toksdef\SOUL@toklist\@ne
+\toksdef\SOUL@buffer\thr@@
+\toksdef\SOUL@token=5
+\dimendef\SOUL@syllgoal\z@
+\dimendef\SOUL@syllwidth\tw@
+\dimendef\SOUL@charkern=4
+\dimendef\SOUL@hyphkern=6
+%    \end{macrocode}
 %
 %
 %
-% \subsection{Common definitions}
 %
-% 
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \subsection{The kernel}
+%
 % \begin{macro}{\SOUL@}
-% This macro starts the whole process. It expects that the interface
-% macros (see \ref{sec:interface}) are already defined properly.
-% The interface macros |\SOUL@preamble| and |\SOUL@postamble|
-% are executed here.
-%
-% \changes{1999/01/11}{v1.2}{newline command added}
+% This macro is the entry to the |soul| package. It should only be
+% executed \emph{after} setting up a |soul| driver. |\count@| is the
+% recursion counter for |\SOUL@scanwords|.
 %
 %    \begin{macrocode}
-\def\SOUL@#1{\bgroup
-  \def~{\gdef\SOUL@penalty{\penalty\@M}}%
-  \def\break{\gdef\SOUL@penalty{\penalty-\@M}}%
-  \def\\{\gdef\SOUL@penalty{\hfill\penalty-\@M}}%
-  \def\|{\kern-\lastkern}%
-  \let\>\null\let\<\relax
-  \let\hyphen\SOUL@hyphen
-  \let\endash\SOUL@endash
-  \let\emdash\SOUL@emdash
-  \let\slash\SOUL@slash
-  \edef\SOUL@hyph{%
-    \ifnum\hyphenchar\font>\m@ne
-      \ifnum\hyphenchar\font<\@cclvi
-        \char\hyphenchar\font\fi\fi}%
-  \def\SOUL@material{#1 }%
-  \SOUL@preamble
-  \SOUL@donext
-  \SOUL@postamble\egroup}
+\def\SOUL@#1{{%
+    \global\let\SOUL@errmsg\SOUL@error
+    \let\<\relax
+    \SOUL@wordlist={#1}%
+    \leavevmode 
+    \SOUL@preamble
+    \count@\m@ne
+    \SOUL@scanwords
+    \SOUL@postamble
+}}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@donext}
-% Calls |\SOUL@handleword| as long as there is some material left.
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\SOUL@scanwords}
+% The syllable analyzer can only deal with single words so we cut the
+% input text into pieces. Every |\ifcase| branch cuts only one token
+% or token sequence and replaces it by another token sequence. The
+% line with the two |\break| seems unnecessary, but it isn't: The
+% first argument of every |\SOUL@scan| command is only a literal
+% delimiter, while the second is executable code. 
 %
 %    \begin{macrocode}
-\def\SOUL@donext{%
-  \expandafter\SOUL@handleword\SOUL@material\@@
-  \ifx\SOUL@material\empty
-    \let\SOUL@\relax
-  \else
-    \let\SOUL@\SOUL@donext
-  \fi\SOUL@}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-% \begin{macro}{\SOUL@handleword}
-% Splits a word from |\SOUL@material|, and calls |\SOUL@word|
-% for every word. The interface macro |\SOUL@interword| is
-% executed in between.
-%
-%    \begin{macrocode}
-\def\SOUL@handleword#1 #2\@@{%
-  \def\SOUL@material{#2}%
-  \let\SOUL@penalty\allowbreak
-  \if$#1$\else
-    \expandafter\SOUL@word{#1}%
-    \if$#2$\else
-      \SOUL@color{%
-        \unskip\SOUL@penalty
-        \SOUL@interword}%
-    \fi
-  \fi}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-% \begin{macro}{\SOUL@word}
-% This macro does the real hard work. 
-% The huuuuuge kern  ^^A   ;-)
-% will help to catch errors.
-%
-%    \begin{macrocode}
-\def\SOUL@word#1{\bgroup
-  \def\SOUL@toks{#1{\kern.5\maxdimen}\relax\relax}%
-%    \end{macrocode}
-%
-% \noindent
-% The width of the actual hyphen character has to be
-% subtracted from syllables ending with implicit hyphens.
-% Thus, a hyphen is typeset in |\box2|, if there is one
-% enabled currently.
-%
-%    \begin{macrocode}
-  \setbox\tw@\hbox{\SOUL@hyph}%
-  \dimen@ii=\wd\tw@
-%    \end{macrocode}
-%
-% \noindent
-% Now the given word is typeset in |\box0| under circumstances, which
-% enforce hyphenation at every possible point.
-%
-%    \begin{macrocode}
-  \setbox\z@=\vbox{\let\\\empty
-    \hfuzz\maxdimen\hbadness\@M
-    \pretolerance\m@ne\tolerance\@M\leftskip\z@\rightskip\z@
-    \def\SOUL@exhyphen{\kern\dimen@ii\penalty\z@}%
-    \everypar{}\parfillskip\z@\@plus1fil
-    \hsize1sp\noindent\hskip\z@skip\relax#1}%
-%    \end{macrocode}
-%
-% \noindent
-% Now this box is analyzed, and the scanning mechanism
-% restarted. 
-%
-%    \begin{macrocode}
-  \let\-\relax
-  \let\SOUL@syllablelens\empty
-  \count@=\z@
-  \SOUL@analyzesyllables
-  \SOUL@gettoken
-  \let\SOUL@prefetch\SOUL@pprefetch
-  \SOUL@gettoken
-  \def\SOUL@exhyphen{\global\let\SOUL@hflag=n%
-    \penalty\exhyphenpenalty}%
-  \SOUL@donextsyllable
-  \unskip\unpenalty
-  \egroup}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%
-% \begin{macro}{\SOUL@analyzesyllables}
-% This macro decomposes |\box0| removing box after box
-% from the bottom. The length of a hyphen is subtracted from
-% every box width except from the last, the lengths are
-% stored in |\SOUL@syllablelens| separated by a slash.
-% The number of syllables is counted in |\count0|.
-%
-%    \begin{macrocode}
-\def\SOUL@analyzesyllables{%
-  \setbox\z@=\vbox{\unvcopy\z@\unskip\unpenalty
-    \global\setbox\@ne=\lastbox}%
-  \ifvoid\@ne
-    \let\SOUL@\relax
-  \else
-    \setbox4=\hbox{\unhbox\@ne}%
-    \dimen@=\wd4
-    \ifnum\count@>\z@\advance\dimen@-\dimen@ii\fi
-    \edef\SOUL@syllablelens{\the\dimen@/\SOUL@syllablelens}%
+\def\SOUL@scanwords{{%
     \advance\count@\@ne
-    \let\SOUL@\SOUL@analyzesyllables
-  \fi\SOUL@}
+    \ifcase\count@
+        \SOUL@scan{ }{\SOUL@everyspace{}}%
+    \or \SOUL@scan{~}{\SOUL@everyspace{\nobreak}}%
+    \or \SOUL@scan{\\}{\unskip\nobreak\hfil\break}%
+    \or \SOUL@scan{\linebreak}{\linebreak}%
+    \or \SOUL@scan{\break}{\break}%
+    \or \SOUL@scan{---}{\SOUL@everyexhyphen{---}}%
+    \or \SOUL@scan{--}{\SOUL@everyexhyphen{--}}%
+    \or \SOUL@scan{-}{\SOUL@everyexhyphen{-}}%
+    \or \SOUL@scan{\slash}{\SOUL@everyexhyphen{/}}%
+    \or \SOUL@scani
+    \or \SOUL@scanii
+    \or \SOUL@scaniii
+    \or
+        \edef\x{\SOUL@toklist={\the\SOUL@wordlist}}%
+        \x
+        \SOUL@doword
+    \fi    
+}}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@donextsyllable}
-% This macro asks for the length of the next syllable to
-% be set, and outputs tokens until the syllable is complete.
-% The interface macro |\SOUL@everysyllable| is executed
-% after scanning a whole syllable. The interface macro
-% |\SOUL@everyhyphen| is executed at every hyphenation point.
-% 
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\SOUL@scan}
+% Prepares to replace every occurrence of argument |#1| by |#2|.
+% |\SOUL@ignore| is inserted, because when checking for |---| in
+% a string ``|a --|'' \TeX\ would otherwise recognise |---| and |--|
+% instead of |--| and |---|. (The latter has to be added for the
+% check to work with arguments that don't contain an em-dash at all.)
+%
 %    \begin{macrocode}
-\def\SOUL@donextsyllable{%
-  \ifnum\count@>\z@\advance\count@\m@ne
-    \dimen5\z@ 
-    \SOUL@getsyllablelength
-    \let\SOUL@hflag=y%
-    \SOUL@donexttoken
-    \SOUL@everysyllable
-    \ifnum\count@>\z@
-      \ifx y\SOUL@hflag
-        \SOUL@everyhyphen
-      \fi
-    \fi
-    \let\SOUL@\SOUL@donextsyllable
-  \else
-    \let\SOUL@\relax
-  \fi\SOUL@}
+\def\SOUL@scan#1#2{%
+    \def\split##1#1##2\SOUL@stop{%
+        \SOUL@wordlist={##1}%
+        \SOUL@remainder={##2}%
+    }%
+    \SOUL@replace={#2}%
+    \edef\x{\SOUL@wordlist={%
+        \the\SOUL@wordlist
+        \noexpand\SOUL@ignore
+        \noexpand#1%
+    }}%
+    \x
+    \SOUL@dolist
+}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 %
 %
-%
-% \begin{macro}{\SOUL@getkern}
-% This macro detects the inter-character kern between
-% parameter |#1| and |#3| and returns it in |#2|, which
-% has to be a |\dimen| register.
-% 
-%    \begin{macrocode}
-\def\SOUL@getkern#1#2#3{%
-  \setbox4\hbox{#1#3}#2\wd4
-  \setbox4\hbox{#1\null#3}\advance#2-\wd4}
-%    \end{macrocode}
-% \end{macro}
+%^^A--------------------------------------------------------------------
 %
 %
 %
 %
-%
-% \begin{macro}{\SOUL@donexttoken}
-% \begin{macro}{\SOUL@nokern}
-% \begin{macro}{\SOUL@error}
-% This macro outputs all tokens and returns, when the current
-% syllable is complete. First of all, the tokens in |\SOUL@prefetch|
-% and |\SOUL@pprefetch| are shifted, and a new token is read to
-% |\SOUL@pprefetch|.
+% \begin{macro}{\SOUL@dolist}
+% Does the actual word splitting and re-enters |\SOUL@scanwords| for
+% every piece to check for further word delimiters. The |\SOUL@ignore|
+% macro is inserted to keep \TeX's argument scanner from discarding
+% an argument's surrounding pair of braces. Because this is done
+% in every recursion step, we finally end up with twelve |\SOUL@ignore|
+% tokens (and further twelve that were inserted by |\SOUL@scanwords|).
 %
 %    \begin{macrocode}
-\def\SOUL@nokern{\<}
-\def\SOUL@donexttoken{%
-  \let\SOUL@actual\SOUL@prefetch
-  \let\SOUL@prefetch\SOUL@pprefetch
-  \SOUL@gettoken
-%    \end{macrocode}
-%
-% \noindent
-% Now |\SOUL@next| is set equal to |\SOUL@prefetch| or 
-% to |\SOUL@pprefetch|. The character kern between
-% |\SOUL@actual| and |\SOUL@next| is taken and stored in |\dimen@|,
-% after which the current token's length is added to the length
-% register. |\dimen3| is set to the hyphen kern. 
-%
-%    \begin{macrocode}
-  \ifx\SOUL@prefetch\SOUL@nokern
-    \let\SOUL@next\SOUL@pprefetch
-  \else
-    \let\SOUL@next\SOUL@prefetch
-  \fi
-  \SOUL@getkern\SOUL@actual\dimen@\SOUL@next
-  \setbox\z@\hbox{\SOUL@actual}%
-  \advance\dimen5\wd\z@
-  \SOUL@getkern\SOUL@actual{\dimen3}\SOUL@hyph
-  \let\SOUL@\relax
-%    \end{macrocode}
-%
-% \noindent
-% If the current syllable
-% length is yet obtained or, at least, after adding the
-% hyphen kern, we stop, otherwise we add the character kern
-% and continue. If we already got too far, issue an error
-% message and recover.
-%
-%    \begin{macrocode}
-  \ifdim\dimen5=\dimen4
-    \SOUL@everytoken
-  \else
-    \dimen7\dimen3
-    \advance\dimen7\dimen5
-    \ifdim\dimen7=\dimen4
-      \SOUL@everytoken
-    \else\ifdim\dimen5>\dimen4
-      \SOUL@error
-      \count@\z@
+\def\SOUL@dolist{%
+    \expandafter\split\expandafter\SOUL@ignore
+        \the\SOUL@wordlist\SOUL@stop
+    \edef\x{\the\SOUL@wordlist}%
+    \ifx\x\empty
+        \let\SOUL@\relax
     \else
-      \advance\dimen5\dimen@
-      \SOUL@everytoken
-      \let\SOUL@\SOUL@donexttoken
-  \fi\fi\fi\SOUL@}
-\def\SOUL@error{\vrule\@height.8em\@depth.2em\@width1em% 
-  \PackageError{soul}{Reconstruction failed}%
-  {Possible reasons are: you've protected some tokens^^J%
-   containing a hyphenation point with a pair of braces instead of^^J%
-   with a \string\mbox\space; you haven't resolved an ambigous^^J%
-   ligature; you forgot to insert the \string\| command, or^^J%
-   you used `-' instead of \string\hyphen\space etc.^^J%
-   I'm leaving a black square at my current position.^^J%
-   (See section 6.5 in the documentation for further explanation.)}}
+        \SOUL@scanwords
+        \SOUL@wordlist=\SOUL@remainder
+        \edef\x{\the\SOUL@wordlist}%
+        \ifx\x\empty
+            \let\SOUL@\relax
+        \else
+            \the\SOUL@replace
+            \let\SOUL@\SOUL@dolist
+        \fi
+    \fi
+    \SOUL@
+}
 %    \end{macrocode}
 % \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@getsyllablelength}
-% \begin{macro}{\SOUL@splitlen}
-% These macros split one length information from the
-% macro |\SOUL@syllablelens| and return it in |\dimen4|.
+%
+%
+%
+% \begin{macro}{\SOUL@doword}
+% The only way to find out, where a given word can be broken into
+% syllables, is to let \TeX\ actually typeset the word under conditions
+% that force every possible hyphenation. The result is a box with one
+% line for every syllable.
 %
 %    \begin{macrocode}
-\def\SOUL@getsyllablelength{%
-  \expandafter\SOUL@splitlen\SOUL@syllablelens\@@}
-\def\SOUL@splitlen#1/#2\@@{%
-  \dimen4=#1\def\SOUL@syllablelens{#2}}
+\def\SOUL@doword{%
+    \SOUL@buffer={}%
+    \setbox\z@\vbox{%
+        \SOUL@tt
+        \hyphenchar\font`\-
+        \hfuzz\maxdimen
+        \hbadness\@M
+        \pretolerance\m@ne
+        \tolerance\@M
+        \leftskip\z@
+        \rightskip\z@
+        \hsize1sp
+        \everypar{}%
+        \parfillskip\z@\@plus1fil
+        \hyphenpenalty-\@M
+        \noindent
+        \hskip\z@
+        \relax
+        \the\SOUL@toklist}%
+    \count@\m@ne
+    \let\-\relax
+    \SOUL@analyze
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \noindent
+% We store the width of the hyphen character of the |cmtt10| font,
+% because we need it in |\SOUL@doword|. (|cmtt10| is a fixed width
+% font, so every other character would have worked, too.)
+% 
+%    \begin{macrocode}
+\setbox\z@\hbox{\SOUL@tt-}
+\newdimen\SOUL@ttwidth
+\SOUL@ttwidth\wd\z@
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\SOUL@analyze}
+% This macro decomposes the box that |\SOUL@doword| has built.
+% Because we have to start at the bottom, we put every 
+% syllable onto the stack and execute ourselves recursively. If there
+% are no syllables left, we return from the recursion and pick syllable
+% after syllable from the stack again---this time from top to bottom---and
+% hand the syllable width |\SOUL@syllgoal| over to |\SOUL@dosyllable|.
+% All but the last syllable end with the hyphen character, whose
+% width has to be subtracted.
+%
+%    \begin{macrocode}
+\def\SOUL@analyze{{%
+    \setbox\z@\vbox{%
+        \unvcopy\z@
+        \unskip
+        \unpenalty
+        \global\setbox\@ne=\lastbox}%
+    \ifvoid\@ne
+    \else
+        \setbox\@ne\hbox{\unhbox\@ne}%
+        \SOUL@syllgoal=\wd\@ne
+        \advance\count@\@ne
+        \SOUL@analyze
+        \SOUL@syllwidth\z@
+        \SOUL@syllable={}%
+        \ifnum\count@>\z@
+            \advance\SOUL@syllgoal-\SOUL@ttwidth
+            \SOUL@dosyllable
+            \SOUL@getkern{\the\SOUL@token}{\SOUL@hyphkern}%
+                {\char\hyphenchar\font}%
+            \SOUL@everyhyphen
+        \else
+            \SOUL@dosyllable
+        \fi
+    \fi
+}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\SOUL@ignorem}
+% \begin{macro}{\SOUL@ignore}
+% \begin{macro}{\SOUL@stopm}
+% \begin{macro}{\SOUL@stop}
+% \begin{macro}{\SOUL@relaxm}
+% \begin{macro}{\SOUL@lowerthanm}
+% \begin{macro}{\SOUL@hyphenhintm}
+% These macros are used as markers. To be able to check for such a
+% marker with |\ifx| we have also to create a macro that contains
+% the marker.
+%
+%    \begin{macrocode}
+\def\SOUL@ignorem{\SOUL@ignore}
+\let\SOUL@ignore\relax
+\def\SOUL@stopm{\SOUL@stop}
+\let\SOUL@stop\relax
+\def\SOUL@relaxm{\relax}
+\def\SOUL@lowerthanm{\<}
+\def\SOUL@hyphenhintm{\-}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@gettoken}
-% \begin{macro}{\SOUL@splittok}
-% These macros split a single token from the macro |\SOUL@toks|
-% and return it in the macro |\SOUL@pprefetch|.
+%
+%
+%
+% \begin{macro}{\SOUL@dosyllable}
+% 
+%
+%    \begin{macrocode}
+\def\SOUL@dosyllable{%
+    \SOUL@lasttoken=\SOUL@token
+    \SOUL@gettoken
+    \edef\x{\the\SOUL@token}%
+    \ifx\x\SOUL@lowerthanm
+        \SOUL@gettoken
+        \edef\x{\the\SOUL@token}%
+        \ifx\x\SOUL@stopm
+            \let\SOUL@\SOUL@dosyllable
+        \else
+            \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
+                {\the\SOUL@token}%
+            \SOUL@everylowerthan
+            \SOUL@puttoken
+            \let\SOUL@\SOUL@dosyllable
+        \fi
+    \else\ifx\x\SOUL@hyphenhintm
+    \else\ifdim\SOUL@syllwidth=\SOUL@syllgoal
+        \SOUL@everysyllable
+        \SOUL@puttoken
+        \let\SOUL@\relax
+    \else
+        \edef\x{\the\SOUL@token}%
+        \ifx\x\SOUL@stopm
+            \SOUL@errmsg
+            \global\let\SOUL@errmsg\relax
+            \let\SOUL@\relax
+        \else
+            \setbox\tw@\hbox{\SOUL@tt\the\SOUL@token}%
+            \advance\SOUL@syllwidth\wd\tw@
+            \SOUL@lasttoken=\SOUL@token
+            \SOUL@gettoken
+            \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
+                {\the\SOUL@token}%
+            \SOUL@puttoken
+            \SOUL@token=\SOUL@lasttoken
+            \SOUL@everytoken
+            \edef\x{\SOUL@syllable={\the\SOUL@syllable\the\SOUL@token}}%
+            \x
+            \let\SOUL@\SOUL@dosyllable
+        \fi
+    \fi\fi\fi
+    \SOUL@
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
 \def\SOUL@gettoken{%
-  \expandafter\SOUL@splittok\SOUL@toks\@@}
-\def\SOUL@splittok#1#2\@@{%
-  \def\SOUL@pprefetch{#1}\def\SOUL@toks{#2}}
+    \edef\x{\the\SOUL@buffer}%
+    \ifx\x\empty
+        \SOUL@nexttoken
+    \else
+        \global\SOUL@token=\SOUL@buffer
+        \global\SOUL@buffer={}%
+    \fi
+}
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@imhyphen}
-% \begin{macro}{\SOUL@exhyphen}
-% These macros are needed to handle implicit and explicit
-% hyphens. The macro |\SOUL@exhyphen| has to come with every
-% explicit hyphen (see below).
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@imhyphen{\-}
-\def\SOUL@exhyphen{\penalty\exhyphenpenalty}
+\def\SOUL@puttoken{%
+    \edef\x{\the\SOUL@buffer}%
+    \ifx\x\empty
+        \global\SOUL@buffer=\SOUL@token
+        \global\SOUL@token={}%
+    \else
+        \SOUL@debug{puttoken called twice}%
+    \fi
+}
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@allowhyph}
-% This macro is part of the |german| package. It allows hyphenation after
-% non-letters by simply ending the word with an invisible and
-% unbreakable skip.
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@allowhyph{\penalty\@M \hskip\z@skip}
+\def\SOUL@nexttoken{%
+    \edef\x{\the\SOUL@toklist}%
+    \ifx\x\empty
+        \SOUL@token={\SOUL@stop}%
+        \let\SOUL@\relax
+    \else
+        \expandafter\SOUL@splittoken\the\SOUL@toklist\SOUL@stop
+        \edef\x{\the\SOUL@token}%
+        \ifx\x\SOUL@ignorem
+            \let\SOUL@\SOUL@nexttoken
+        \else
+            \let\SOUL@\relax
+        \fi
+    \fi
+    \SOUL@
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@hyphen}
-% \begin{macro}{\SOUL@endash}
-% \begin{macro}{\SOUL@emdash}
-% \begin{macro}{\SOUL@slash}
-% These macros allow the |soul| mechanism to recognize
-% explicit hyphen commands. This is necessary, since it has to
-% subtract the hyphen width from all implicitly hyphenated syllables,
-% except from the last.
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@hyphen{\SOUL@allowhyph\hbox{-}\SOUL@exhyphen\SOUL@allowhyph}
-\def\SOUL@endash{\SOUL@allowhyph\hbox{--}\SOUL@exhyphen\SOUL@allowhyph}
-\def\SOUL@emdash{\SOUL@allowhyph\hbox{---}\SOUL@exhyphen\SOUL@allowhyph}
-\def\SOUL@slash{\SOUL@allowhyph/\SOUL@exhyphen\SOUL@allowhyph}
+\def\SOUL@splittoken#1#2\SOUL@stop{%
+    \global\SOUL@token={#1}%
+    \global\SOUL@toklist={#2}%
+}
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
 %
-% \subsection{The \so{letterspacing} interface}
-% 
 %
-% \begin{macro}{\SOUL@sobody}
-% Define the interface macros. All tokens are output by
-% |\SOUL@everytoken| so there's nothing to do for
-% |\SOUL@everysyllable|. The macro |\SOUL@interword| requests
-% a simple space, knowing that this space will be 
-% increased by the macro |\SOUL@preamble|.
-% 
+%
 %    \begin{macrocode}
-\def\SOUL@sobody{%
-  \let\SOUL@preamble\SOUL@sopreamble
-  \let\SOUL@interword\space
-  \let\SOUL@postamble\SOUL@sopostamble
-  \let\SOUL@everyhyphen\SOUL@soeveryhyphen
-  \let\SOUL@everysyllable\relax
-  \let\SOUL@everytoken\SOUL@soeverytoken}
+\def\SOUL@getkern#1#2#3{%
+    \setbox4\hbox{#1#3}%
+    #2\wd4
+    \setbox4\hbox{#1\null#3}%
+    \advance#2-\wd4
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@sopreamble}
-% Set the proper |\spaceskip|, fix the \textit{inner space}. This can't
-% be done globally because it depends on the current font. Switch
-% to horizontal mode, and add an \textit{outer space} in case
-% it comes right after a space.
-% \changes{1999/05/15}{v1.3}{changed minimum skip to quarter em}
-% \changes{????/??/??}{v1.4}{changed minimum skip to .1em}
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@setkern#1{\ifdim#1=\z@\else\kern#1\fi}
+\def\SOUL@removelastkern{\ifdim\lastkern=\z@\else\kern-\lastkern\fi}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\let\SOUL@scani\SOUL@scanwords
+\let\SOUL@scanii\SOUL@scanwords
+\let\SOUL@scaniii\SOUL@scanwords
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@debug#1{{[:#1:]}}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@error{%
+    \vrule\@height.8em\@depth.2em\@width1em
+    \PackageError{soul}{Reconstruction failed}{%
+        I came across hyphenateable material enclosed in group
+        braces,^^Jwhich I can't handle. Either drop the braces or
+        make the material^^Junbreakable using an \string\mbox\space
+        (\string\hbox). Note that a space^^Jalso counts as possible
+        hyphenation point. See p.?? of the manual.^^JI'm leaving
+        a black square so that you can see where I am right now.%
+    }%
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@setup{%
+    \let\SOUL@preamble\relax
+    \let\SOUL@postamble\relax
+    \let\SOUL@everytoken\relax
+    \let\SOUL@everysyllable\relax
+    \def\SOUL@everyspace##1{##1\space}%
+    \let\SOUL@everyhyphen\relax
+    \let\SOUL@everyexhyphen\relax
+    \let\SOUL@everylowerthan\relax
+}
+\SOUL@setup
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \subsection{The \so{letterspacing} driver}
+%
+%    \begin{macrocode}
+\def\SOUL@sosetletterskip{\nobreak\hskip\SOUL@soletterskip}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
 \def\SOUL@sopreamble{%
-  \spaceskip\SOUL@soinner
-  \skip@=\SOUL@soskip
-  \let\<\empty
-  \leavevmode
-  \ifdim\lastskip>.1em
-    \unskip\hskip\SOUL@soouter
-  \fi}
+    \ifdim\lastskip>5sp
+        \unskip
+        \hskip\SOUL@soouterskip
+    \fi
+    \spaceskip\SOUL@soinnerskip
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@sopostamble}
-% \begin{macro}{\SOUL@socheck}
-% \begin{macro}{\SOUL@sodospace}
-% Add \textit{outer space} at the end in case one of 
-% \texttt{\char`\ } (a normal space, or any character with
-% category code 10), \texttt{\char`\\\char`\ },
-% |\space|, |~|~(unbreakable space), or |\@xobeysp| follows.
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@sopostamble{%
-  \global\skip@\SOUL@soouter
-  \aftergroup\SOUL@socheck}
-\def\SOUL@socheck{\futurelet\SOUL@next\SOUL@sodospace}
-\def\SOUL@sodospace{\bgroup
-  \def\\{\let\\= }\\ %
-  \def\~##1{\hskip\skip@\egroup}%
-  \ifx\SOUL@next\\%
-    \def\~ {\hskip\skip@\egroup}%
-  \else\ifx\SOUL@next~%
-    \def\~~{\nobreak\hskip\skip@\egroup}%
-  \else\ifx\SOUL@next\ %
-  \else\ifx\SOUL@next\space
-  \else\ifx\SOUL@next\@xobeysp
-  \else
-    \let\~\egroup
-  \fi\fi\fi\fi\fi\~}
+\def\SOUL@sopostamble{
+    \unskip
+    \global\skip@=\SOUL@soouterskip
+    \aftergroup\SOUL@socheck
+}
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@soeveryhyphen}
-% Insert the |\discretionary| command that removes the
-% inter-letter kern and provides the hyphen kern and
-% the hyphen character in case hyphenation takes place.
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@soeveryhyphen{%
-  \ifx\SOUL@prefetch\SOUL@noskip\else
-    \discretionary{\advance\dimen3-\dimen@
-      \ifdim\dimen3=\z@\else\kern\dimen3\fi
-      \unhcopy\tw@}{}{}%
-  \fi}
+\def\SOUL@socheck{%
+    \futurelet\SOUL@@\SOUL@sodoouter
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@soeverytoken}
-% If the actual token is an implicit hyphen (|\-|) or a separator (|\>|),
-% do nothing. Else, if it is the \textit{noskip} command (|\<|), remove
-% the last skip. In all other cases output the token followed by the
-% inter-letter kern and a \textit{spaceoutskip.}
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@sodoouter{%
+    \bgroup
+    \aftergroup\kern\aftergroup\z@
+    \def\\{\let\\= }\\ %
+    \def\~##1{\hskip\skip@\egroup}%
+    \ifx\SOUL@@\\%
+        \def\~ {\hskip\skip@\egroup}%
+    \else
+        \ifx\SOUL@@~%
+        \def\~~{\nobreak\hskip\skip@\egroup}%
+    \else\ifx\SOUL@@\ %
+    \else\ifx\SOUL@@\space
+    \else\ifx\SOUL@@\@xobeysp
+    \else
+        \let\~\egroup
+    \fi\fi\fi\fi\fi
+    \~%
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
 \def\SOUL@soeverytoken{%
-  \ifx\SOUL@actual\SOUL@imhyphen\else
-    \ifx\SOUL@actual\SOUL@sep\else
-      \ifx\SOUL@actual\SOUL@noskip
-        \unskip\unpenalty
-      \else
-        \SOUL@actual
-        \ifdim\dimen@=\z@\else\kern\dimen@\fi
-        \nobreak\hskip\skip@
-      \fi
+    \the\SOUL@token
+    \SOUL@gettoken
+    \edef\x{\the\SOUL@token}%
+    \ifx\x\SOUL@stopm
+    \else
+        \SOUL@setkern\SOUL@charkern
+        \SOUL@sosetletterskip
     \fi
-  \fi}
+    \SOUL@puttoken
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@noskip}
-% Define the command sequence that indicates that no
-% \textit{spaceoutskip} should appear and the
-% separator that can be used to break ligatures.
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@noskip{\<}
-\def\SOUL@sep{\>}
+\def\SOUL@soeveryhyphen{%
+    \discretionary{%
+        \hbox{%
+            \SOUL@removelastkern
+            \SOUL@setkern\SOUL@hyphkern
+            \char\hyphenchar\font
+            \penalty\hyphenpenalty
+        }%
+    }{}{}%
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\SOUL@setso}
-% Set the \textit{spaceoutskip, inner,}
-% and \textit{outer space.}
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@soeveryexhyphen#1{%
+    \SOUL@sosetletterskip
+    #1%
+    \penalty\exhyphenpenalty
+    \hskip\SOUL@soletterskip
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@soeverylowerthan{%
+    \SOUL@removelastkern
+    \unskip
+    \SOUL@setkern\SOUL@charkern
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@sosetup{%
+    \SOUL@setup
+    \let\SOUL@preamble\SOUL@sopreamble
+    \let\SOUL@postamble\SOUL@sopostamble
+    \let\SOUL@everytoken\SOUL@soeverytoken
+    \let\SOUL@everyhyphen\SOUL@soeveryhyphen
+    \let\SOUL@everyexhyphen\SOUL@soeveryexhyphen
+    \let\SOUL@everylowerthan\SOUL@soeverylowerthan
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
 \def\SOUL@setso#1#2#3{%
-  \def\SOUL@soskip{#1}%
-  \def\SOUL@soinner{#2}%
-  \def\SOUL@soouter{#3}}
+    \def\SOUL@soletterskip{#1}%
+    \def\SOUL@soinnerskip{#2}%
+    \def\SOUL@soouterskip{#3}%
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\sodef}
-% Define a new `robust' letterspacing command.
+%
+%
 %
 %    \begin{macrocode}
 \def\sodef#1#2#3#4#5{%
-  \DeclareRobustCommand*#1{\SOUL@sobody
-    \def\SOUL@preamble{\SOUL@setso{#3}{#4}{#5}#2\SOUL@sopreamble}%
-    \SOUL@}}
+    \DeclareRobustCommand*#1{\SOUL@sosetup
+        \def\SOUL@preamble{%
+            \SOUL@setso{#3}{#4}{#5}%
+            #2%
+            \SOUL@sopreamble
+        }%
+        \SOUL@
+    }%
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\resetso}
-% (Re-)Define the standard |\so| command with convenient default settings.
+%
+%
 %
 %    \begin{macrocode}
 \def\resetso{%
-  \sodef\so{}{.25em}{.65em\@plus.06em\@minus.08em}%
-    {.55em\@plus.12em\@minus.2em}}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \noindent
-% The |\caps| commands are to be defined different depending on whether \LaTeX\
-% or another package is used.
-%
-%    \begin{macrocode}
-\expandafter\ifx\csname documentclass\endcsname\relax
-\let\@xobeysp\space
+    \sodef\so{}{.25em}{.65em\@plus.08em\@minus.06em}%
+        {.55em\@plus.275em\@minus.183em}%
+}
+\resetso
 %    \end{macrocode}
 %
 %
 %
-% The non-\LaTeX\ |\caps| macro differs from the |\so| macro in that it
-% selects the \emph{small caps shape}, and selects other values.
 %
-%    \begin{macrocode}
-\let\capsfont\relax
-\sodef\caps{\capsfont}{.028em\@plus.005em\@minus.01em}%
-  {.37em\@plus.1667em\@minus.111em}{.37em\@plus.1em\@minus.14em}
-\else
-%    \end{macrocode}
+%^^A--------------------------------------------------------------------
 %
 %
 %
-% \begin{macro}{\capsreset}
-% Delete the caps data base and insert the default set.
-%    \begin{macrocode}
-\DeclareRobustCommand\capsreset{%
-  \let\SOUL@capsbase\empty
-  \SOUL@capsdefault}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-% \begin{macro}{\capsdef}
-% This macro adds an entry to the |\caps| data base.
-%
-%    \begin{macrocode}
-\def\capsdef#1#2#3#4#5{{%
-  \toks\z@{\\{#1/#2/#3/#4/#5}}%
-  \toks\tw@=\expandafter{\SOUL@capsbase}%
-  \xdef\SOUL@capsbase{\the\toks\z@\the\toks\tw@}}}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\capssave}
-% This macro saves the current |\caps| settings in a macro with the given name.
-% The settings remain unchanged. 
-%
-%    \begin{macrocode}
-\DeclareRobustCommand*\capssave[1]{%
-  \expandafter\global\expandafter\let
-    \csname SOUL@@\string#1\endcsname\SOUL@capsbase
-  \def\SOUL@next##1{\DeclareRobustCommand*#1{\let\SOUL@capsbase##1}}%
-  \expandafter\SOUL@next\expandafter{\csname SOUL@@\string#1\endcsname}}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-% \begin{macro}{\SOUL@capsfind}
-% \begin{macro}{\SOUL@chk}
-% \begin{macro}{\SOUL@dimchk}
-% \begin{macro}{\SOUL@rangechk}
-% These macros find the first matching entry in the
-% |\caps| data base.
-%
-%    \begin{macrocode}
-\def\SOUL@capsfind#1/#2/#3/#4/#5/#6/#7/#8/#9/{%
-  \let\SOUL@match=1\SOUL@chk{#1}\f@encoding
-  \SOUL@chk{#2}\f@family\SOUL@chk{#3}\f@series
-  \SOUL@chk{#4}\f@shape\SOUL@dimchk{#5}\f@size
-  \if\SOUL@match1\let\\\@gobble
-    \gdef\SOUL@caps{\SOUL@sobody
-      \def\SOUL@preamble{\SOUL@setso{#7}{#8}{#9}#6\SOUL@sopreamble}%
-      \SOUL@}%
-  \fi}
-\def\SOUL@chk#1#2{%
-  \if$#1$\else\def\~{#1}%
-    \ifx#2\~\else\let\SOUL@match=0\fi
-  \fi}
-\def\SOUL@dimchk#1#2{\if$#1$\else\SOUL@rangechk{#2}#1--\@ne\@@\fi}
-\def\SOUL@rangechk#1#2-#3-#4\@@{\count@=#4%
-  \ifnum\count@>\z@
-    \ifdim#1\p@=#2\p@\else\let\SOUL@match=0\fi
-  \else
-    \dimen@=\if$#2$\z@\else#2\p@\fi
-    \ifdim#1\p@<\dimen@\let\SOUL@match=0\fi
-    \dimen@=\if$#3$\maxdimen\else#3\p@\fi
-    \ifdim#1\p@<\dimen@\else\let\SOUL@match=0\fi
-  \fi}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-%
-%
-%
-% \begin{macro}{\caps}
-% The \LaTeX\ |\caps| version gets its settings from
-% the |\caps| data base.
-%
-%    \begin{macrocode}
-\DeclareRobustCommand*\caps{\bgroup
-  \def\\##1{\expandafter\SOUL@capsfind##1/}%
-  \SOUL@capsbase\aftergroup\SOUL@caps\egroup}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \noindent
-% This default entry matches all fonts, it selects
-% the \emph{small capitals} shape with the given
-% skips.
-%
-%    \begin{macrocode}
-\def\SOUL@capsdefault{\capsdef{////}\SOUL@capsdfltfnt
-  {.028em\@plus.005em\@minus.01em}%
-  {.37em\@plus.1667em\@minus.1em}%
-  {.37em\@plus.111em\@minus.14em}}
-\let\SOUL@capsdfltfnt\scshape
-\fi
-%    \end{macrocode}
-%
-%
-%
-% \begin{macro}{\sloppyword}
 %
 %    \begin{macrocode}
 \sodef\sloppyword{%
-  \linepenalty10
-  \hyphenpenalty10
-  \adjdemerits0
-  \doublehyphendemerits0
-  \finalhyphendemerits0
-  \emergencystretch.1em}%
-  {0ptplus.1em}%
-  {.33emplus.11emminus.11em}%
-  {.33emplus.11emminus.11em}
+    \linepenalty10
+    \hyphenpenalty10
+    \adjdemerits\z@
+    \doublehyphendemerits\z@
+    \finalhyphendemerits\z@
+    \emergencystretch.1em}%
+    {\z@\@plus.1em}%
+    {.33em\@plus.11em\@minus.11em}%
+    {.33em\@plus.11em\@minus.11em}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \subsection{The \ul{underlining} interface}
 %
-% \begin{macro}{\SOUL@ulbody}
-% \begin{macro}{\ul}
-% Set up the underlining interface and define the
-% |\ul| command.
+%
 %
 %    \begin{macrocode}
-\def\SOUL@ulbody{%
-  \let\SOUL@preamble\SOUL@ulpreamble
-  \let\SOUL@interword\SOUL@ulinterword
-  \let\SOUL@postamble\relax
-  \let\SOUL@everyhyphen\SOUL@uleveryhyphen
-  \let\SOUL@everysyllable\relax
-  \let\SOUL@everytoken\SOUL@uleverytoken}
-\DeclareRobustCommand*\ul{\SOUL@ulbody\SOUL@}
+\if@SOUL@latex
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@ulpreamble}
-% Set the spaceskip and the \textit{underlinethickness} and
-% \textit{\hbox{-depth}.}
+%
+%
+%
+%    \begin{macrocode}
+\DeclareRobustCommand\capsreset{%
+    \let\SOUL@capsbase\empty
+    \SOUL@capsdefault
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\capsdef#1#2#3#4#5{{%
+    \toks\z@{\\{#1/#2/#3/#4/#5}}%
+    \toks\tw@=\expandafter{\SOUL@capsbase}%
+    \xdef\SOUL@capsbase{\the\toks\z@\the\toks\tw@}%
+}}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\DeclareRobustCommand*\capssave[1]{%
+    \expandafter\global\expandafter\let
+        \csname SOUL@@\string#1\endcsname\SOUL@capsbase
+    \def\SOUL@next##1{\DeclareRobustCommand*#1{\let\SOUL@capsbase##1}}%
+    \expandafter\SOUL@next\expandafter{%
+        \csname SOUL@@\string#1\endcsname}%
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@capsfind#1/#2/#3/#4/#5/#6/#7/#8/#9/{%
+    \let\SOUL@match=1%
+    \SOUL@chk{#1}\f@encoding
+    \SOUL@chk{#2}\f@family
+    \SOUL@chk{#3}\f@series
+    \SOUL@chk{#4}\f@shape
+    \SOUL@dimchk{#5}\f@size
+    \if\SOUL@match1%
+        \let\\\@gobble
+        \gdef\SOUL@caps{%
+            \SOUL@sosetup
+            \def\SOUL@preamble{\SOUL@setso{#7}{#8}{#9}#6%
+                \SOUL@sopreamble}%
+            \SOUL@}%
+    \fi
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@chk#1#2{%
+    \if$#1$%
+    \else
+        \def\~{#1}%
+        \ifx#2\~\else\let\SOUL@match=0\fi
+    \fi
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@dimchk#1#2{\if$#1$\else\SOUL@rangechk{#2}#1--\@ne\@@\fi}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@rangechk#1#2-#3-#4\@@{%
+    \count@=#4%
+    \ifnum\count@>\z@
+        \ifdim#1\p@=#2\p@\else\let\SOUL@match=0\fi
+    \else
+        \dimen@=\if$#2$\z@\else#2\p@\fi
+        \ifdim#1\p@<\dimen@\let\SOUL@match=0\fi
+        \dimen@=\if$#3$\maxdimen\else#3\p@\fi
+        \ifdim#1\p@<\dimen@\else\let\SOUL@match=0\fi
+    \fi
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\DeclareRobustCommand*\caps{{%
+    \def\\##1{\expandafter\SOUL@capsfind##1/}%
+    \SOUL@capsbase
+    \aftergroup\SOUL@caps
+}}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@capsdefault{%
+    \capsdef{////}%
+    \SOUL@capsdfltfnt
+    {.028em\@plus.005em\@minus.01em}%
+    {.37em\@plus.1667em\@minus.1em}%
+    {.37em\@plus.111em\@minus.14em}%
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\let\SOUL@capsdfltfnt\scshape
+\capsreset
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\else
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\let\capsfont\relax
+\let\capsreset\relax
+\def\capsdef#1#2#3#4#5{}
+\def\capssave#1{}
+\sodef\caps{\capsfont}
+    {.028em\@plus.005em\@minus.01em}%
+    {.37em\@plus.1667em\@minus.111em}%
+    {.37em\@plus.1em\@minus.14em}
+\fi
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \subsection{The \ul{underlining} driver}
+%
+%    \begin{macrocode}
+\newdimen\SOUL@uldp
+\newdimen\SOUL@ulht
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@ulleaders{%
+    \leaders\hrule\@depth\SOUL@uldp\@height\SOUL@ulht
+    \relax
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@ulunderline#1{{%
+    \setbox\z@\hbox{#1}%
+    \dimen@=\wd\z@
+    \dimen@i=\SOUL@uloverlap
+    \advance\dimen@\dimen@i
+    \rlap{%
+        \null\kern-.5\dimen@i
+        \SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@}%
+    }%
+    \unhcopy\z@
+}}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
 \def\SOUL@ulpreamble{%
-  \spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
-    \@minus\fontdimen4\font
-  \leavevmode
-  \let\SOUL@color\SOUL@ulcolor
-  \dimen8=\SOUL@uldepth \dimen6=-\dimen8
-  \advance\dimen8 by\SOUL@ulthickness}
+    \SOUL@uldp=\SOUL@uldepth
+    \SOUL@ulht=-\SOUL@uldp
+    \advance\SOUL@uldp\SOUL@ulthickness
+    \spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
+        \@minus\fontdimen4\font
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@ulinterword}
-% Spaces are expandable and shrinkable, underlined skips.
+%
+%
 %
 %    \begin{macrocode}
-\def\SOUL@ulinterword{\SOUL@ulleaders\hskip\spaceskip}
+\def\SOUL@uleverysyllable{%
+    \SOUL@ulunderline{%
+        \the\SOUL@syllable
+        \SOUL@setkern\SOUL@charkern
+    }%
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@uleverytoken}
-% Output every token and character kern overlapped with the matching
-% underline. The \textsf{overlap} option adds |.5pt| at each side.
+%
+%
 %
 %    \begin{macrocode}
-\DeclareOption{nooverlap}{%
-  \def\SOUL@uleverytoken{{%
-    \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
-    \rlap{\SOUL@color{\SOUL@ulleaders\hskip\wd\z@}}%
-    \unhbox\z@}}}
-\DeclareOption{overlap}{%
-  \def\SOUL@uleverytoken{{%
-    \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
-    \dimen@ii\wd\z@\advance\dimen@ii\p@
-    \rlap{\SOUL@color{\kern-.5\p@\SOUL@ulleaders\hskip\dimen@ii}}\unhbox\z@}}}
+\def\SOUL@uleveryspace#1{%
+    \SOUL@ulcolor{%
+        #1%
+        \SOUL@ulleaders
+        \hskip\spaceskip
+    }%
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@uleveryhyphen}
-% Offer an underlined hyphen character, if hyphenation takes place,
-% or a possibly dropped out underlined inter-character kern
-% otherwise. 
+%
+%
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryhyphen{%
-  \ifdim\dimen@<\z@\dimen@\z@\fi
-  \discretionary
-  {\advance\dimen3-\dimen@\ifdim\dimen3=\z@\else\kern\dimen3\fi
-  \setbox4\hbox{\unhcopy\tw@}%
-  \rlap{\SOUL@color{\SOUL@ulleaders\hskip\wd4}}\box4}{}%
-  {\hbox{\SOUL@color{\SOUL@ulleaders\hskip\dimen@}}}}
+    \discretionary{%
+        \hbox{%
+            \SOUL@removelastkern
+            \SOUL@ulunderline{%
+                \SOUL@setkern\SOUL@hyphkern
+                \char\hyphenchar\font
+            }%
+        }%
+    }{}{}%
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\setul}
-% Allow setting the \textit{underlinedepth} and the
-% \textit{underlinethickness.}
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@uleveryexhyphen#1{%
+    \SOUL@ulunderline{#1}%
+    \penalty\exhyphenpenalty
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\let\SOUL@ulcolor\relax
+\def\setulcolor#1{%
+    \def\SOUL@ulcolor{%
+        \textcolor{#1}%
+    }%
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\setuloverlap#1{%
+    \def\SOUL@uloverlap{#1}%
+}
+\setuloverlap{.5pt}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\SOUL@ulsetup{%
+    \SOUL@setup
+    \let\SOUL@preamble\SOUL@ulpreamble
+    \let\SOUL@everysyllable\SOUL@uleverysyllable
+    \let\SOUL@everyspace\SOUL@uleveryspace
+    \let\SOUL@everyhyphen\SOUL@uleveryhyphen
+    \let\SOUL@everyexhyphen\SOUL@uleveryexhyphen
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\DeclareRobustCommand*\ul{%
+    \SOUL@ulsetup
+    \SOUL@
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
 %
 %    \begin{macrocode}
 \def\setul#1#2{%
-  \if$#1$\else\def\SOUL@uldepth{#1}\fi
-  \if$#2$\else\def\SOUL@ulthickness{#2}\fi}
+    \if$#1$\else\def\SOUL@uldepth{#1}\fi
+    \if$#2$\else\def\SOUL@ulthickness{#2}\fi
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \begin{macro}{\resetul}
-% Provide convenient default settings.
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
 %    \begin{macrocode}
 \def\resetul{\setul{.65ex}{.1ex}}
+\resetul
 %    \end{macrocode}
-% \end{macro}
-%
-%
-%
-% \begin{macro}{\SOUL@ulleaders}
-% This macro is actually providing the underlines. It has to
-% be followed by a |\hskip|.
-%
-%    \begin{macrocode}
-\def\SOUL@ulleaders{\leaders\hrule\@depth\dimen8\@height\dimen6}
-%    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\setuldepth}
-% Set the \textit{underlinedepth} according to the argument.
-% Take all letters (including the commercial `at')
-% if no argument is given.
+%
+%
 %
 %    \begin{macrocode}
 \def\setuldepth#1{{\def\SOUL@@{#1}%
-  \setbox\z@\hbox{\tracinglostchars\z@
-    \ifx\SOUL@@\empty
-      \count@\z@
-      \loop
-        \ifnum\catcode\count@=11\char\count@\fi
-      \ifnum\count@<\@cclv
-        \advance\count@\@ne
-      \repeat
-    \else
-      #1%
-    \fi}%
-  \dimen@\dp\z@\advance\dimen@\p@
-  \xdef\SOUL@uldepth{\the\dimen@}}}
+    \setbox\z@\hbox{%
+        \tracinglostchars\z@
+        \ifx\SOUL@@\empty
+            \count@\z@
+            \loop
+                \ifnum\catcode\count@=11\char\count@\fi
+            \ifnum\count@<\@cclv
+                \advance\count@\@ne
+            \repeat
+        \else
+        #1%
+        \fi
+    }%
+    \dimen@\dp\z@
+    \advance\dimen@\p@
+    \xdef\SOUL@uldepth{\the\dimen@}%
+}}
 %    \end{macrocode}
-% \end{macro}
-%
-%
-%
-% \begin{macro}{\setulcolor}
-% \begin{macro}{\SOUL@ulcolor}
-% Set the argument as underline color. This requires the
-% |color| package to be loaded.
-%
-%    \begin{macrocode}
-\def\setulcolor#1{\def\SOUL@ulcolor{\textcolor{#1}}}
-\let\SOUL@ulcolor\relax
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
 %
 %
 %
 %
+%^^A--------------------------------------------------------------------
 %
 %
 %
 %
-% \subsection{The \st{striking out} interface}
-%
-% \begin{macro}{\st}
-% Striking out is nearly the same as underlining, \dots
-%
-%    \begin{macrocode}
-\DeclareRobustCommand*\st{\SOUL@ulbody
-  \let\SOUL@preamble\SOUL@stpreamble
-  \SOUL@}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-% \begin{macro}{\SOUL@stpreamble}
-% \dots\ only the lines have to be raised 0.5\,ex.
+% \subsection{The \st{overstriking} driver}
 %
 %    \begin{macrocode}
 \def\SOUL@stpreamble{%
-  \dimen@\SOUL@ulthickness
-  \dimen@i=-.5ex
-  \advance\dimen@i-.5\dimen@
-  \edef\SOUL@uldepth{\the\dimen@i}%
-  \SOUL@ulpreamble}
+    \dimen@\SOUL@ulthickness
+    \dimen@i=-.5ex
+    \advance\dimen@i-.5\dimen@
+    \edef\SOUL@uldepth{\the\dimen@i}%
+    \SOUL@ulpreamble
+}
 %    \end{macrocode}
-% \end{macro}
 %
 %
 %
 %
-% \subsection{The postamble}
+%^^A--------------------------------------------------------------------
 %
-% \begin{macro}{\SOUL@color}
-% Set the default options and values. In case we are in \LaTeXe\ mode,
-% add the \textsf{capsdefault} option, reset the |\caps| data base, and
-% include the local configuration file.
-% Finally: exit.
+%
+%
 %
 %    \begin{macrocode}
-\resetso
-\resetul
-\let\SOUL@color\relax
-\expandafter\ifx\csname documentclass\endcsname\relax
-  \catcode`\@=\atcode
-  \overlap
+\def\SOUL@stsetup{%
+    \SOUL@ulsetup
+    \let\SOUL@preamble\SOUL@stpreamble
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\DeclareRobustCommand*\st{%
+    \SOUL@stsetup
+    \SOUL@
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\DeclareRobustCommand*\hl{%
+    \SOUL@stsetup
+    \def\SOUL@preamble{%
+        \setul{}{2.5ex}%
+        \setulcolor{\SOUL@hlcolor}%
+        \SOUL@stpreamble
+    }%    
+    \SOUL@
+}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
+\def\sethlcolor#1{%
+    \def\SOUL@hlcolor{#1}%
+}
+\sethlcolor{yellow}
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \subsection{The package postamble}
+%
+%    \begin{macrocode}
+\if@SOUL@latex
+    \AtBeginDocument{%
+        \expandafter\ifx\csname color\endcsname\relax
+            \let\SOUL@color\relax
+            \let\setulcolor\@gobble
+            \let\sethlcolor\@gobble
+            \let\hl\ul
+        \fi    
+    }
+\DeclareOption{capsdefault}{%
+    \AtBeginDocument{%
+        \def\SOUL@capsdfltfnt#1{\SOUL@ulsetup\SOUL@ulpreamble}%
+    }%
+}
+    \InputIfFileExists{soul.cfg}%
+        {\PackageInfo{soul}{Local config file soul.cfg used}}{}
+    \ProcessOptions
 \else
-  \DeclareOption{capsdefault}%
-    {\AtBeginDocument{%
-      \def\SOUL@capsdfltfnt#1{\SOUL@ulbody\SOUL@ulpreamble}}}
-  \ExecuteOptions{overlap}
-  \capsreset
-  \InputIfFileExists{soul.cfg}%
-    {\PackageInfo{soul}{Local config file soul.cfg used}}{}
-  \ProcessOptions
+    \def\setulcolor#1{}
+    \let\sethlcolor\setulcolor
+    \let\hl\ul
+    \catcode`\@=\SOUL@atcode
 \fi
+%    \end{macrocode}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+%    \begin{macrocode}
 \endinput
 %    \end{macrocode}
-% \end{macro}
 %
-%
-%
-% \subsection{Additional hacks}
-% \label{sec:hacks}
 %
 % \Finale
 % 
-% {\def\MacroFont{\small\ttfamily\itshape}%
-% \begin{macro}{\superspaceout}
-% If you are spacing out a lot, you are probably doing something wrong.
-% If you are sure you aren't, you may type
-% in the following lines, after which you can access the |\so| command
-% by simply enclosing the respective words in circumflexes.
-% Type |^space out^| to \so{space out}. This construction is
-% fragile and can't be used in floating arguments like section headings
-% etc.
-% It may, however, be used in mathematical environments without interfering
-% with the circumflex's superscript function.
-%
-%\begin{verbatim}
-%\makeatletter                                 % <-- LaTeX
-%% \chardef\atcode=\catcode`@ \catcode`\@=11   % <-- TeX
-%{\catcode`^\active
-%\gdef\superspaceout{\catcode`^\active
-%  \def^{\relax
-%    \ifmmode\let\next\sp\else\let\next\SOUL@so\fi\next}%
-%  \def\SOUL@so##1^{\so{##1}}}
-%}
-%\end{verbatim}
-% \end{macro}
-%
-%
-%
-% \begin{macro}{\offsuperspaceout}
-% To allow |^^xx| constructions you have to execute this macro
-% first. It restores the circumflex's superscript |\catcode|.
-%
-%\begin{verbatim}
-%\def\offsuperspaceout{\catcode`\^=7 }
-%\end{verbatim}
-% \end{macro}
-%
-%
-%
-%
-% \begin{macro}{\subunderline}
-% In analogy to the |\superspaceout| command you can define
-% a |\subunderline| command that lets |_text_| stand for |\ul{text}|.
-% It, too, can be used in mathematical environments without interfering
-% with the underscore's subscript function.
-%
-%\begin{verbatim}
-%{\catcode`_\active
-%\gdef\subunderline{\catcode`_\active
-%  \def_{\relax
-%    \ifmmode\let\next\sb\else\let\next\SOUL@ul\fi\next}%
-%  \def\SOUL@ul##1_{\ul{##1}}}
-%}
-%\makeatother                                  % <-- LaTeX
-%% \catcode`\@=\atcode                         % <-- TeX
-%\end{verbatim}
-% \end{macro}
-% }
 %                                     
 %                                                       ^^A.E.I.O.U.^^
