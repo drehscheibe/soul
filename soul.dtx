@@ -125,7 +125,7 @@
 %
 %
 %
-% \CheckSum{1962}
+% \CheckSum{1938}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -2605,46 +2605,28 @@
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
 % to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
 % which will be fed to the analyzer every time a word is completed.
-% Unfortunately, we need separate versions for \LaTeX\ and for
-% other flavors of \TeX, because the former also needs to check for
-% originally robust commands that lost their robust-ness due to
-% expansion as in |{\let\protect\noexpand| |\xdef\x{\foo}}||\so\x|.
-% The empty braces are there for commands that expect an argument.
+% Since \emph{robust} commands come with an additional space, we
+% have also to examine if there's a space variant. Otherwise we
+% couldn't detect pre-expanded former robust commands.
 %
 %    \begin{macrocode}
-\expandafter\ifx\csname documentclass\endcsname\relax
 \def\SOUL@dotoken#1{%
     \def\SOUL@@{\SOUL@addtoken{#1}}%
     \def\\##1##2{%
-        \ifx#1##2%
+        \edef\SOUL@x{\string#1}%
+        \edef\SOUL@n{\string##2}%
+        \ifx\SOUL@x\SOUL@n
             \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
+        \else
+            \edef\SOUL@n{\string##2\space}%
+            \ifx\SOUL@x\SOUL@n
+                \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
+            \fi
         \fi
     }%
     \the\SOUL@cmds
     \SOUL@@    
 }
-\else
-\def\SOUL@dotoken#1{%
-    \def\SOUL@@{\SOUL@addtoken{#1}}%
-    \def\\##1##2{%
-        \ifx#1##2%
-            \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
-        \else\ifx\@undefined##2%
-        \else
-            \def\SOUL@n{#1{}}%
-            \bgroup
-                \let\protect\noexpand
-                \xdef\SOUL@x{##2{}}%
-            \egroup
-            \ifx\SOUL@n\SOUL@x
-                \def\SOUL@@{\SOUL@docmd{##1}{#1}}%
-            \fi
-        \fi\fi
-    }%
-    \the\SOUL@cmds
-    \SOUL@@    
-}
-\fi
 %    \end{macrocode}
 % \end{macro}
 %
