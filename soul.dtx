@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1918}
+% \CheckSum{1919}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -281,7 +281,7 @@
 %   }^^A
 %   \def\SOUL@everyexhyphen##1{^^A
 %       \SOUL@setkern\SOUL@hyphkern
-%       ##1^^A
+%       \hbox{##1}^^A
 %       \discretionary{}{}{^^A
 %           \SOUL@setkern\SOUL@charkern
 %       }^^A
@@ -414,7 +414,7 @@
 %   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
-%
+% ^^A 2.2   fixed SOUL@soeveryexhyphen   2002-01-12
 %
 %
 %
@@ -613,9 +613,9 @@
 %   and the |\slash| command work as usual.
 % \item[Newlines: \so{new\\line}]
 %   The |\\|~command fills the current line with white space
-%   and starts a new line. Unlike the original \LaTeX\ command
-%   \soul's version does not handle optional parameters
-%   like in |\\*[1ex]|.
+%   and starts a new line. Spaces or linebreaks afterwards are ignored.
+%   Unlike the original \LaTeX\ command \soul's version does not handle
+%   optional parameters like in |\\*[1ex]|.
 % \item[Breaking lines: \so{foo\linebreak bar}]
 %   The \cs{\linebreak} command breaks the line without
 %   filling it with white space at the end. \soul's version
@@ -684,19 +684,19 @@
 % \item[Conditional statements: \so{foo \iffalse bar\fi baz}]
 %   \soul\ arguments must not contain conditional statements like
 %   |\if|, |\else|, |\fi|, |\ifcase|, etc.
-% \item[Other weird stuff: \so{foo \verb|\bar| baz}]
-%   \package{soul} arguments must not contain \LaTeX\ environments, command definitions,
-%   and fancy stuff like |\vadjust|. As long as you are writing simple,
-%   ordinary `horizontal' material, you are on the safe side.
 % \item[Unexpandable material in command sequences: \def\foo{\copyright} \so\foo]
 %   Some commands must not be used in an \cs{\edef} statement^^A
-%   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}}.
+%   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.}.
 %   As \package{soul} does this when its argument is
 %   a command sequence, it has to protect such commands with \cs{\noexpand} in
 %   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
 %   \cs{\S}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright}.
 %   You can put \cs{\noexpand} manually in front of similar commands, that
 %   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|
+% \item[Other weird stuff: \so{foo \verb|\bar| baz}]
+%   \package{soul} arguments must not contain \LaTeX\ environments, command definitions,
+%   and fancy stuff like |\vadjust|. As long as you are writing simple,
+%   ordinary `horizontal' material, you are on the safe side.
 % \end{verblist}
 %
 %
@@ -1923,12 +1923,14 @@
 %\end{example}
 %
 % Explicit hyphens like dashes and slashes shall be set normally.
-% We just have to care for kerning.
+% We just have to care for kerning. The hyphen has to be put into
+% a box, because, as \cs{\hyphenchar}, it would yield its own, internal
+% \cs{\discretionary}. We need to set ours instead, though.
 %
 % \begin{example}
 % |    \def\SOUL@everyexhyphen##1{%|\\
 % |        \SOUL@setkern\SOUL@hyphkern|\\
-% |        ##1%|\\
+% |        \hbox{##1}%|\\
 % |        \discretionary{}{}{%|\\
 % |            \SOUL@setkern\SOUL@charkern|\\
 % |        }%|\\
@@ -3201,7 +3203,7 @@
 \def\SOUL@soeveryexhyphen#1{%
     \SOUL@setkern\SOUL@hyphkern
     \SOUL@soeventuallyskip
-    #1%
+    \hbox{#1}%
     \discretionary{}{}{%
         \SOUL@setkern\SOUL@charkern
     }%
