@@ -2593,6 +2593,27 @@
     \fi\fi\fi\fi
     \SOUL@n*%
 }
+%    \end{macrocode}
+% \end{macro}
+% \iffalse$\fi          ^^A:  fool vim
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\SOUL@flushminus}
+% \begin{macro}{\SOUL@flushcomma}
+% \begin{macro}{\SOUL@flushapo}
+% \begin{macro}{\SOUL@flushgrave}
+% As their names imply, these macros flush special tokens or token
+% groups to the word register. They don't do anything if the respective
+% counter equals zero.
+%
+%    \begin{macrocode}
 \def\SOUL@flushminus{%
     \ifnum\SOUL@minus=\thr@@
         \SOUL@doword
@@ -2640,7 +2661,9 @@
 }
 %    \end{macrocode}
 % \end{macro}
-% \iffalse$\fi          ^^A:  fool vim
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
