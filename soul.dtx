@@ -126,7 +126,7 @@
 %
 %
 %
-% \CheckSum{1951}
+% \CheckSum{1947}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -750,7 +750,8 @@
 % \verb+\sodef\cs{1em}{2em}{3em}+&          \pref{sodef}        &\ti{define new spacing command} \m{\cs}\\
 % \verb+\resetso+&                          \pref{resetso}      &\ti{reset} \m{\so} \ti{dimensions}\\
 % \verb+\capsdef{////}{1em}{2em}{3em}+\Ast& \pref{capsdef}      &\ti{define (default)} \m{\caps} \ti{data entry}\\
-% \verb+\capssave\cs+\Ast&                  \pref{capssave}     &\ti{save} \m{\caps} \ti{database under name} \rlap{\texttt{\string\cs}}\\
+% \verb+\capssave{name}+\Ast&               \pref{capssave}     &\ti{save} \m{\caps} \ti{database under name} \rlap{\texttt{name}}\\
+% \verb+\capsselect{name}+\Ast&             \pref{capssave}     &\ti{restore} \m{\caps} \ti{database of name} \rlap{\texttt{name}}\\
 % \verb+\capsreset+\Ast&                    \pref{capsreset}    &\ti{clear caps database}\\
 % \verb+\setul{1ex}{2ex}+&                  \pref{setul}        &\ti{set} \m{\ul} \ti{dimensions}\\
 % \verb+\resetul+&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
@@ -1023,15 +1024,15 @@
 % The \cs{\caps} database can be cleared with the \describemacro{\capsreset}
 % command and will only contain the default entry thereafter. The
 % \describemacro{\capssave} command saves the whole current database
-% and assigns it to a macro name. This allows to predefine different
-% groups of \cs{\caps} data sets:
+% under the given name. \describemacro{\capsselect} restores such a database.
+% This allows to predefine different groups of \cs{\caps} data sets:
 %
 % \begin{example}
 % |\capsreset|\\
 % |\capsdef{/cmss///12}{}{12pt}{23pt}{34pt}|\\
 % |\capsdef{/cmss///}{}{1em}{2em}{3em}|\\
 % |...|\\
-% |\capssave\widecaps|\\
+% |\capssave{wide}|\\
 % \end{example}
 % \indent
 % \begin{example}
@@ -1039,12 +1040,12 @@
 % |\capsreset|\\
 % |\capsdef{/cmss///}{}{.1em}{.2em}{.3em}|\\
 % |...|\\
-% |\capssave\narrowcaps|\\
+% |\capssave{narrow}|\\
 % \end{example}
 % \indent
 % \begin{example}
 % |%---------------------------------------|\\
-% |{\widecaps|\\
+% |{\capsselect{wide}|\\
 % |\title{\caps{Yet Another Silly Example}}|\\
 % |}|\\
 % \end{example}
@@ -1430,7 +1431,7 @@
 % introduce new ones. But if you intend to give
 % your documents to others, don't forget to give them the
 % required configuration files, too! That's how such a file
-% could look like:                                                                                                           
+% could look like:
 %
 % \indent
 % \begin{example}
@@ -3562,6 +3563,7 @@
 \let\capsreset\relax
 \def\capsdef#1#2#3#4#5{}
 \def\capssave#1{}
+\def\capsselect#1{}
 \sodef\textcaps{\capsfont}
     {.028em\@plus.005em\@minus.01em}%
     {.37em\@plus.1667em\@minus.111em}%
@@ -3622,19 +3624,20 @@
 %
 %
 % \begin{macro}{\capssave}
+% \begin{macro}{\capsselect}
 % Save the current database in a macro within the |SOUL@| namespace
-% and let the given argument be a `robust' command that restores this
-% database.
+% and let |\capsselect| restore this database.
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\capssave[1]{%
     \expandafter\global\expandafter\let
-        \csname SOUL@@\string#1\endcsname\SOUL@capsbase
-    \def\SOUL@next##1{\DeclareRobustCommand*#1{\let\SOUL@capsbase##1}}%
-    \expandafter\SOUL@next\expandafter{%
-        \csname SOUL@@\string#1\endcsname}%
+        \csname SOUL@@#1\endcsname\SOUL@capsbase
+}
+\DeclareRobustCommand*\capsselect[1]{%
+    \expandafter\let\expandafter\SOUL@capsbase\csname SOUL@@#1\endcsname
 }
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %
