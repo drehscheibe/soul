@@ -5,7 +5,7 @@
 %
 %<*batchfile>
 %
-% on Unix/Linux just run "make" to get the style file and the documentation;
+% on Unix/Linux just run "make" to get the style file and the documentation,
 % else generate the driver soul.ins (if you don't already have it):
 %
 %     $ latex soul.dtx
@@ -20,6 +20,12 @@
 %     $ latex soul.dtx
 %
 %
+%
+%
+% DISCLAIMER: note that a Makefile could actually contain malign commands
+% that erase your whole account, so having a look at it before won't hurt!
+% I take no responsibility for any damage, but I'll do what I can to make
+% using the original Makefile safe.
 %
 %
 %$
@@ -317,9 +323,6 @@
 %   \SOUL@}
 %
 %^^A  magazine-like (truly awful) paragraphs
-%^^A  (This macro was part of v1.0.  I took this out of the package,
-%^^A  after I was warned, that one would not see any difference between
-%^^A  Micros~1 WinWord and TeX documents in the future, after which I had sleepless nights...   ;-)
 %^^A  If you know what you're doing, you can copy it to your personal `soul.cfg' file.
 %
 %  \DeclareRobustCommand*\magstylepar{\SOUL@sosetup
@@ -435,6 +438,9 @@
 %
 % \changes{v2.3}{2002/05/29}{compatibility with cmbright/ccfonts}
 %
+% \changes{v2.4}{2003/??/??}{Fix the font bug. Fix a scanner bug.
+%   Other bugfixes; change caps set handling; add footnote and
+%   textsuperscript support}
 %
 %
 %
@@ -861,6 +867,7 @@
 % 4.& \verb*|XX \null{\so{aaa bbb ccc}}{} YY|& \textsf{XX\_a\.a\.a\-b\.b\.b\-c\.c\.c\_YY}\\
 % \end{tabular}
 % \end{center}
+% ^^A* %                     fool vim (fixes syntax highlighting)
 %
 % \noindent
 % Case~1 shows how letterspacing macros (\cs{\so} and \cs{\caps}) behave if
@@ -2353,7 +2360,7 @@
 %
 %
 %
-% \FIXME{\newpage}
+% ^^A\FIXME{\newpage}
 % \begin{macro}{\soulomit}
 % \begin{macro}{\SOUL@ignorem}
 % \begin{macro}{\SOUL@ignore}
