@@ -412,8 +412,8 @@
 %
 % \changes{v2.0}{2002/01/03}{(almost) complete rewrite}
 %
-% \changes{v2.1}{2002/01/06}{"The now-traditional fix for the
-%   now-traditional brown-paper-bag major release."
+% \changes{v2.1}{2002/01/06}{``The now-traditional fix for the
+%   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
 %
@@ -588,7 +588,7 @@
 % nothing else than common \LaTeX\ notation with a few exceptions, but this is
 % only the half story: The \soul\ package has to pre-process the argument
 % before it can split it into characters and syllables, and all described
-% constructs are only allowed because the package explicitly provides them.
+% constructs are only allowed because the package explicitly implements them.
 %
 % \begin{verblist}{1}
 % \item[Quotes: \so{``quotes''}]
@@ -662,8 +662,8 @@
 %   The argument must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
 % \item[Material without ectt1000 representation: \so{foo \TeX\ bar}]
-%   Every token that can't be typeset with just one character of
-%   the |cmtt10| font leads to a reconstruction error. This can be
+%   Every token that can't be typeset using characters of the |ectt1000| font
+%   without any space in between leads to a reconstruction error. This can be
 %   avoided by enclosing the token in braces, e.\,g.~|\so{foo {\TeX} bar}|, or registering
 %   it as font, e.\,g.~|\soulfont{\TeX}{0}| |\so{foo \TeX\ bar}|. It doesn't matter
 %   if it isn't really a font at all. \cs{\TeX} is actually a bad example,
@@ -1331,7 +1331,7 @@
 %
 % Some other macros are also registered as fonts, so the
 % analyzer won't see them. This is necessary because they
-% have no representation in the |cmtt10| font and would
+% have no representation in the |ectt1000| font and would
 % hence cause a reconstruction error.
 % See~\ref{par:Material without ectt1000 representation}.
 %
