@@ -1627,7 +1627,7 @@
 % \indent
 % \begin{example}
 % |\begin{document}|\\
-% |\section{VON DEN MAASSEN UND MAASSST\"ABEN}|\\
+% |\section{Von den Maassen und Maassst\"aben}|\\
 % |\subsection{Das L\"angenmaass im Allgemeinen}|\\
 % \\
 % |Um L\"angen genau messen und vergleichen zu k\"onnen,|\\
@@ -2562,7 +2562,7 @@
 %
 % \begin{macro}{\SOUL@exhyphen}
 % Dealing with explicit hyphens can't be done before we know the
-% following character, because we need to know if a kerning values
+% following character, because we need to know if a kerning value
 % has to be inserted, hence we delay the \cs{\SOUL@everyexhyphen} call.
 % Unfortunately, the word scanner has no look-ahead mechanism.
 %
@@ -2931,8 +2931,8 @@
 %
 % \begin{macro}{\SOUL@setkern}
 % Set a kerning value if it doesn't equal 0\,pt. Of course, we could
-% also set a zero value, but that would needlessly clutter debug
-% output.
+% also set a zero value, but that would needlessly clutter the
+% logfile.
 %
 %    \begin{macrocode}
 \def\SOUL@setkern#1{\ifdim#1=\z@\else\kern#1\fi}
@@ -3152,7 +3152,7 @@
 % any of the coloring commands into the core. |\kern\z@| prevents
 % in subsequent \cs{\so} commands that the second discards the
 % \syn{outer space} of the first. To remove the space simply
-% use |\unkern\unskip|
+% use |\unkern\unskip|.
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryspace#1{#1\space\kern\z@}
