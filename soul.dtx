@@ -109,6 +109,11 @@
 %
 %
 %
+\ifx\makehyperref\SOULundefined
+    \newcommand*\texorpdfstring[2]{#1}
+\else
+    \usepackage[colorlinks=true]{hyperref}
+\fi
 %
 %
 %\RecordChanges
@@ -342,7 +347,7 @@
 %   \def\sodef#1#2#3#4{\let#1\relax\SOUL@@@X}%
 % \fi
 %
-% \newcommand*\path{^^A
+% \newcommand*\xpath{^^A
 %   \bgroup
 %   \let\do\@makeother
 %   \dospecials
@@ -355,7 +360,7 @@
 %
 % \newcommand*\SOUL@@@code[1]{\normalfont\texttt{#1}\egroup}
 %
-% \let\cs\path
+% \let\cs\xpath
 % \let\option\textsf
 % \def\package#1{{\normalfont\texttt{#1}}}
 % \let\program\texttt
@@ -664,7 +669,7 @@
 %
 %
 %
-% \subsection{\dots\ others don't}
+% \subsection{\texorpdfstring{\dots\ }{}others don't}
 %
 % Although the new \soul\ is much more robust and forgiving than
 % versions prior to~2.0, there are
@@ -687,11 +692,11 @@
 %   course, not get broken then.\\
 %   \null\qquad|\newbox\anyboxname|\\
 %   \null\qquad|\sbox\anyboxname{ \so{the worst} }|\\
-%   \null\qquad|\ul{This is by far\mbox{\usebox\anyboxname}example!}|\\
+%   \null\qquad|\ul{This is by far{\usebox\anyboxname}example!}|\\
 %   yields:\\
 %   \newbox\anyboxname
 %   \sbox\anyboxname{ \so{the worst} }
-%   \null\qquad\ul{This is by far\mbox{\usebox\anyboxname}example!}
+%   \null\qquad\ul{This is by far{\usebox\anyboxname}example!}
 % \item[Leaking font switches: \def\foo{\bf bar} \so{\foo baz}]
 %   A hidden font switching command that leaks into its neighborship
 %   causes a \texttt{`Reconstruction failed'} error. To avoid this either limit its
@@ -823,7 +828,7 @@
 %
 %
 %
-% \section{\so{Letterspacing}}
+% \section{\texorpdfstring{\so{Letterspacing}}{Letterspacing}}
 %
 % \subsection{How it works}
 % \label{sec:so}
@@ -966,7 +971,7 @@
 %
 %
 %
-% \subsection[Typesetting \caps{caps-and-small-caps} fonts]
+% \subsection[Typesetting \texorpdfstring{\caps{caps-and-small-caps}}{caps-and-small-caps} fonts]
 %       {Typesetting capitals-and-small-capitals fonts}
 %
 % There is a special letterspacing command called \describemacro{\caps},
@@ -1070,9 +1075,9 @@
 % \subsection{Typesetting Fraktur}
 % \label{sec:fraktur}
 %
-% The old German fonts^^A
+% Black letter fonts^^A
 %^^A%%
-%   \footnote{See the great old German fonts, which \person{Yannis Haralambous}
+%   \footnote{See the great black letter fonts, which \person{Yannis Haralambous}
 %   kindly provided, and the \package{oldgerm} and \package{yfonts} package~\cite{yfonts}
 %   as their \LaTeX\ interfaces.}
 %^^A%%
@@ -1138,7 +1143,7 @@
 %
 %
 %
-% \section{\ul{Underlining}}
+% \section{\texorpdfstring{\ul{Underlining}}{Underlining}}
 %
 % The underlining macros are my answer to Prof.~\person{Knuth'{\normalfont s}}
 % exercise 18.26 from his \TeX{}book~\cite{DEK}. \texttt{:-)} Most of what
@@ -1851,7 +1856,7 @@
 % trigger |\SOUL@everyexhyphen{---}|. A third group leads to special actions,
 % like |\mbox| that starts reading-in a whole group to protect its contents and let them be
 % seen as one entity. All other tokens, mostly characters and digits, are collected in
-% a word register, which is passed to the analyzer, whenever a whole word was read-in.
+% a word register, which is passed to the analyzer, whenever a whole word was read in.
 %
 % The analyzer typesets the word in a 1\,sp ($=\frac1{65536}$\,pt) wide \cs{\vbox},
 % hence encouraging \TeX\ to break lines at every possible hyphenation point. It
@@ -3192,7 +3197,7 @@
 %
 %
 %
-% \subsection{The \so{letterspacing} driver}
+% \subsection{The \texorpdfstring{\so{letterspacing}}{letterspacing} driver}
 %
 % \begin{macro}{\SOUL@sosetletterskip}
 % A handy helper macro that sets the inter-letter skip with a
@@ -3550,7 +3555,7 @@
 %
 %
 %
-% \subsection[The \caps{caps} driver]{The caps driver}
+% \subsection[The \texorpdfstring{\caps{caps}}{caps} driver]{The caps driver}
 %
 % \begin{macro}{\caps}
 % Unless run under \LaTeX, make \cs{\caps} just another simple letterspacing
@@ -3634,7 +3639,8 @@
         \csname SOUL@db@#1\endcsname\SOUL@capsbase
 }
 \DeclareRobustCommand*\capsselect[1]{%
-    \expandafter\let\expandafter\SOUL@capsbase\csname SOUL@db@#1\endcsname
+    \expandafter\let\expandafter\SOUL@capsbase
+        \csname SOUL@db@#1\endcsname
 }
 %    \end{macrocode}
 % \end{macro}
@@ -3788,7 +3794,7 @@
 %
 %
 %
-% \subsection{The \ul{underlining} driver}
+% \subsection{The \texorpdfstring{\ul{underlining}}{underlining} driver}
 %
 % \begin{macro}{\SOUL@ulleaders}
 % This macro sets the underline under the following \cs{\hskip}.
@@ -4125,7 +4131,7 @@
 %
 %
 %
-% \subsection{The \st{overstriking} driver}
+% \subsection{The \texorpdfstring{\st{overstriking}}{overstriking} driver}
 %
 % \begin{macro}{\SOUL@stpreamble}
 % Striking out is just underlining with a raised line of a different

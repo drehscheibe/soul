@@ -14,15 +14,18 @@ print: $(NAME).ps
 	@ read key
 	psbook $(NAME).ps|psnup -2|psselect -o -r|lpr
 
-%.ps: %.dvi 
+%.ps: %.dvi
 	dvips $(DVIPSOPT) $< -o $@
+
+hyper: $(NAME).dtx $(NAME).sty
+	pdflatex "\relax\let\makehyperref\active\input $(NAME).dtx"
 
 $(NAME).pdf: $(NAME).dtx $(NAME).sty
 	pdflatex $(NAME).dtx
 
 archive:
-	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
-	@ echo $(ARCHNAME)		
+	@ tar -czf $(ARCHNAME) $(ARCHIVE)
+	@ echo $(ARCHNAME)
 
 clean: 
 	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
