@@ -1,3 +1,4 @@
+%? rm soul.sty;make
 % \iffalse
 %% File: soul.dtx  Copyright (C) 1998, 1999, 2001  Melchior FRANZ
 %
@@ -165,7 +166,7 @@
 % \fi
 %
 %
-% \CheckSum{1085}
+% \CheckSum{1089}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -238,6 +239,7 @@
 % \changes{v1.3}{1999/05/15}{changed allowhyphen, preambles; added a paragraph
 %   in the `features' section}
 %
+% \changes{v???}{????/??/??}{Alexander SHIBAKOV}
 %
 % \begin{abstract}
 % This article describes the \texttt{soul} package^^A
@@ -1955,6 +1957,7 @@
   \spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
     \@minus\fontdimen4\font
   \leavevmode
+  \let\SOUL@color\SOUL@ulcolor
   \dimen8=\SOUL@uldepth \dimen6=-\dimen8
   \advance\dimen8 by\SOUL@ulthickness}
 %    \end{macrocode}
@@ -1978,14 +1981,14 @@
 %
 % \begin{macro}{\SOUL@uleverytoken}
 % Output every token and character kern overlapped with the matching
-% underline. The \textsf{overlap} option adds |.5pt| at every side.
+% underline. The \textsf{overlap} option adds |.5pt| at each side.
 %
 %    \begin{macrocode}
 \DeclareOption{nooverlap}{%
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
-    \dimen@ii\wd\z@
-    \unhbox\z@\llap{\SOUL@color{\SOUL@ulleaders\hskip\dimen@ii}}}}}
+    \rlap{\SOUL@color{\SOUL@ulleaders\hskip\wd\z@}}%
+    \unhbox\z@}}}
 \DeclareOption{overlap}{%
   \def\SOUL@uleverytoken{{%
     \setbox\z@\hbox{\SOUL@actual\ifdim\dimen@=\z@\else\kern\dimen@\fi}%
@@ -2078,12 +2081,15 @@
 %
 %
 % \begin{macro}{\setulcolor}
+% \begin{macro}{\SOUL@ulcolor}
 % Set the argument as underline color. This requires the
 % |color| package to be loaded.
 %
 %    \begin{macrocode}
-\def\setulcolor#1{\def\SOUL@color{\textcolor{#1}}}
+\def\setulcolor#1{\def\SOUL@ulcolor{\textcolor{#1}}}
+\let\SOUL@ulcolor\relax
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %
