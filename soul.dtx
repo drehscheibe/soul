@@ -2741,14 +2741,27 @@
             \SOUL@doword
             \SOUL@scan
         }%
+    \else\ifx7#1%
+        \SOUL@doword
+        \def\SOUL@@##1{%
+            \SOUL@token={#2{##1}}%
+            \SOUL@everytoken
+            \SOUL@syllable={#2{##1}}%
+            \SOUL@everysyllable
+            \SOUL@doword
+            \SOUL@scan
+        }%
     \else\ifx1#1%
         \SOUL@doword
-        \def\SOUL@@##1{#2{\protect\SOUL@do{##1}}\SOUL@scan}%
+        \def\SOUL@@##1{%
+            #2{\protect\SOUL@do{##1}}%
+            \SOUL@scan
+        }%
     \else
         \SOUL@doword
         #2%
         \let\SOUL@@\SOUL@scan
-    \fi\fi\fi
+    \fi\fi\fi\fi
     \SOUL@@
 }
 %    \end{macrocode}
@@ -2850,7 +2863,7 @@
     \\0\em\\0\rm\\0\bf\\0\it\\0\tt\\0\sc\\0\sl\\0\sf
     \\0\tiny\\0\scriptsize\\0\footnotesize\\0\small
     \\0\normalsize\\0\large\\0\Large\\0\LARGE\\0\huge\\0\Huge
-    \\1\MakeUppercase\\1\textsuperscript\\8\footnote
+    \\1\MakeUppercase\\7\textsuperscript\\8\footnote
     \\1\textfrak\\1\textswab\\1\textgoth
     \\0\frakfamily\\0\swabfamily\\0\gothfamily
 }
