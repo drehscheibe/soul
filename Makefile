@@ -2,7 +2,7 @@
 
 NAME=soul
 ARCHNAME=$(NAME).tar.gz
-ARCHIVE=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
+ARCHIVE=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins $(NAME).pdf
 MAKEIDXOPT=
 DVIPSOPT=#-Pcmz -Pamz
 DEP=$(NAME).sty
@@ -21,12 +21,15 @@ ps: $(NAME).ps
 	dvips $(DVIPSOPT) $< -o $@
 
 hyper: $(NAME).dtx $(NAME).sty
+	rm $(NAME).aux
+	pdflatex "\relax\let\makehyperref\active\input $(NAME).dtx"
+	pdflatex "\relax\let\makehyperref\active\input $(NAME).dtx"
 	pdflatex "\relax\let\makehyperref\active\input $(NAME).dtx"
 
 $(NAME).pdf: $(NAME).dtx $(NAME).sty
 	pdflatex $(NAME).dtx
 
-archive:
+archive: $(NAME).pdf
 	@ tar -czf $(ARCHNAME) $(ARCHIVE)
 	@ echo $(ARCHNAME)
 
