@@ -16,5 +16,6 @@
 
  + add \MakeUppercase and \textsuperscript to font list
 
- - fix font handling bug (make \MakeUppercase et al. work)
+ + fix font handling bug (make \MakeUppercase et al. work)
 
+ + make footnotes work
