@@ -19,3 +19,5 @@
  + fix font handling bug (make \MakeUppercase et al. work)
 
  + make footnotes work
+
+ + fix \char\hyphenchar\font for negative hyphenchar (\hl{\texttt{a-b}}
