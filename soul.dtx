@@ -128,7 +128,7 @@
 %
 %
 %
-% \CheckSum{1829}
+% \CheckSum{1835}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -627,6 +627,13 @@
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
 %   The input text must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
+% \item[Material without cmtt10 representation: \so{foo \TeX\ bar}]
+%   Every token that can't be typeset with just one character in
+%   the |cmtt10| font leads to a reconstruction error. This can be
+%   avoided by grouping the token, e.\,g.~|\so{foo {\TeX} bar}|, or registering
+%   it as font, e.\,g.~|\soulfont{\TeX}{0}| |\so{foo \TeX\ bar}|. It doesn't matter
+%   that it isn't really a font at all. |\TeX| is actually a bad example.
+%   because it \emph{is} already pre-registered as font.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
 %   \package{soul} commands must not be nested. If you really
 %   need such, put the inner stuff in a box and use this box.\\
@@ -854,7 +861,7 @@
 %
 %
 %
-% \subsection[Typesetting \caps{caps-and-small-caps}fonts]
+% \subsection[Typesetting \caps{caps-and-small-caps} fonts]
 %       {Typesetting capitals-and-small-capitals fonts}
 %
 % There is a special letterspacing command called \describemacro{\caps}.
@@ -1182,11 +1189,128 @@
 %
 %
 %
+% \section{Customization}
+%
+% \subsection{Adding accents}
+% \label{sec:soulaccent}
+%
+% The \package{soul} scanner generally sees every input token separately.
+% It has to be taught that some tokens belong together. For accents this is done
+% by registering them via the \describemacro{\soulaccent} macro.
+%
+% \begin{syntax}
+% |\soulaccent{|\<accent command>|}|
+% \end{syntax}
+%
+% The standard accents, however, are already pre-registered:
+% |\`|, |\'|, |\^|, |\"|, |\~|, |\=|, |\.|, |\u|, |\v|, |\H|, |\t|,
+% |\c|, |\d| and |\b|. If used together with the \package{german}
+% package, \package{soul} automatically adds the |"| command.
+% Let's assume you have defined |\%e| to produce some weird accent on
+% an `e'. Simply put the following line into your |soul.cfg|:
+%
+% \begin{example}
+% |\soulaccent{\%}|
+% \end{example}
+%
+%
+%
+%
+%
+%
+% \subsection{Adding font commands}
+% \label{sec:soulfont}
+%
+% To convince \package{soul} not to feed font switching
+% commands to the analyzer, but rather to execute these immediately,
+% they have to be registered, too. The \describemacro{\soulfont} macro
+% takes the name of the font switching command and either
+% |0| or |1| as the number of arguments:
+% 
+% \begin{syntax}
+% |\soulfont{|\<font command>|}{|\<number of arguments>|}|
+% \end{syntax}
+%
+% The standard commands of \TeX\ and \LaTeX\, as well as the
+% \package{yfonts} commands are already pre-registered:
+% 
+% \begin{example}
+% |\em, \rm, \bf, \it, \tt, \emph, \textrm, \textsf,|\\
+% |\texttt, \textmd, \textbf, \textup, \textsl, \textit,|\\
+% |\textsc, \textnormal, \rmfamily, \sffamily, \ttfamily,|\\
+% |\mdseries, \upshape, \slshape, \itshape, \scshape,|\\
+% |\normalfont, \tiny, \scriptsize, \footnotesize, \small|\\
+% |\normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
+% |\textfrak, \textswab, \textgoth, \frakfamily,|\\
+% |\swabfamily, \gothfamily|\\
+% \end{example}
+%
+% Some other macros are also registered as fonts, so the
+% analyzer won't see them. This is necessary because they
+% have no representation in the |cmtt10| font and would
+% hence cause a reconstruction error.
+% See~\ref{par:Material without cmtt10 representation}.)
+%
+% \begin{example}
+% |\S, \textregistered, \copyright, \TeX, \LaTeX|\\
+% \end{example}
+%
+%
+%
+%
+%
+%
+%
+% \subsection{The configuration file}
+% \label{sec:config}
+%
+% If you want to change the predefined settings or add new features,
+% then create a file named `|soul.cfg|' and put it in a directory, where \TeX\
+% can find it. This configuration file will then be loaded
+% at the end of the |soul.sty| file, so you may redefine
+% any settings or commands therein, select package options and even
+% introduce new ones. But if you intend to give
+% your documents to others, don't forget to give them the
+% required configuration files, too! That's how such a file
+% could look like:                                                                                                           
+%
+% \indent
+% \begin{example}
+% |% define macros for logical markup|\\
+% |\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}|\\
+% \\
+% |\sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}|\\
+% |\DeclareRobustCommand*\versal[1]{%|\\
+% |    \MakeUppercase{\SOUL@@@versal{#1}}%|\\
+% |    \SOUL@socheck|\\
+% |}|\\
+% \end{example}
+%
+% \indent
+% \begin{example}
+% |% load the color package and set|\\
+% |% a different highlighting color|\\
+% |\RequirePackage{color}|\\
+% |\definecolor{lightblue}{rgb}{.90,.95,1}|\\
+% |\sethlcolor{lightblue}|\\
+% |\endinput|
+% \end{example}
+%
+% You can safely use the |\SOUL@@@| namespace for internal macros---it
+% won't be used by the \package{soul} package in the future.
+%
+%
+%
+%
+%
+%
+%
+%
 %
 %
 % \section{Miscellaneous}
 %
-% \subsection{Using \package{soul} with other flavours of \TeX}
+% \subsection{Using \package{soul} with other flavors of \TeX}
 %
 % The |soul| package has a \LaTeXe\ mode, which is selected if the |\documentclass|
 % command can be found, and a \emph{plain} \TeX\ mode, which is selected otherwise. These
@@ -1417,116 +1541,6 @@
 %
 %
 %
-% \section{Customization}
-%
-% \subsection{Adding accents}
-% \label{sec:soulaccent}
-%
-% The \package{soul} scanner generally sees every input token separately.
-% It has to be taught that some tokens belong together. For accents this is done
-% by registering them via the \describemacro{\soulaccent} macro.
-%
-% \begin{syntax}
-% |\soulaccent{|\<accent command>|}|
-% \end{syntax}
-%
-% The standard accents, however, are already pre-registered:
-% |\`|, |\'|, |\^|, |\"|, |\~|, |\=|, |\.|, |\u|, |\v|, |\H|, |\t|,
-% |\c|, |\d| and |\b|. If used together with the \package{german}
-% package, \package{soul} automatically adds the |"| command.
-% Let's assume you have defined |\%e| to produce some weird accent on
-% an `e'. Simply put the following line into your |soul.cfg|:
-%
-% \begin{example}
-% |\soulaccent{\%}|
-% \end{example}
-%
-%
-%
-%
-%
-%
-% \subsection{Adding font commands}
-% \label{sec:soulfont}
-%
-% To convince \package{soul} not to feed font switching
-% commands to the analyzer, but rather to execute these immediately,
-% they have to be registered, too. The \describemacro{\soulfont} macro
-% takes the name of the font switching command and either
-% |0| or |1| as the number of arguments:
-% 
-% \begin{syntax}
-% |\soulfont{|\<font command>|}{|\<number of arguments>|}|
-% \end{syntax}
-%
-% The standard commands of \TeX\ and \LaTeX\, as well as the
-% \package{yfonts} commands are already pre-registered:
-% 
-% \begin{example}
-% |\em, \rm, \bf, \it, \tt, \emph, \textrm, \textsf,|\\
-% |\texttt, \textmd, \textbf, \textup, \textsl, \textit,|\\
-% |\textsc, \textnormal, \rmfamily, \sffamily, \ttfamily,|\\
-% |\mdseries, \upshape, \slshape, \itshape, \scshape,|\\
-% |\normalfont, \tiny, \scriptsize, \footnotesize, \small|\\
-% |\normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
-% |\textfrak, \textswab, \textgoth, \frakfamily,|\\
-% |\swabfamily, \gothfamily|\\
-% \end{example}
-%
-%
-% \S \textregistered \copyright
-%
-%
-%
-%
-%
-%
-%
-% \subsection{The configuration file}
-% \label{sec:config}
-%
-% If you want to change the predefined settings or add new features,
-% then create a file named `|soul.cfg|' and put it in a directory, where \TeX\
-% can find it. This configuration file will then be loaded
-% at the end of the |soul.sty| file, so you may redefine
-% any settings or commands therein, select package options and even
-% introduce new ones. But if you intend to give
-% your documents to others, don't forget to give them the
-% required configuration files, too! That's how such a file
-% could look like:                                                                                                           
-%
-% \indent
-% \begin{example}
-% |% define macros for logical markup|\\
-% |\sodef\person{\scshape}{0.125em}{0.4583em}{0.5833em}|\\
-% \\
-% |\sodef\SOUL@@@versal{\upshape}{0.125em}{0.4583em}{0.5833em}|\\
-% |\DeclareRobustCommand*\versal[1]{%|\\
-% |    \MakeUppercase{\SOUL@@@versal{#1}}%|\\
-% |    \SOUL@socheck|\\
-% |}|\\
-% \end{example}
-%
-% \indent
-% \begin{example}
-% |% load the color package and set|\\
-% |% a different highlighting color|\\
-% |\RequirePackage{color}|\\
-% |\definecolor{lightblue}{rgb}{.90,.95,1}|\\
-% |\sethlcolor{lightblue}|\\
-% |\endinput|
-% \end{example}
-%
-% You can safely use the |\SOUL@@@| namespace for internal macros---it
-% won't be used by the \package{soul} package in the future.
-%
-%
-%
-%
-%
-%
-%
-%
 % \section{How the package works}
 %
 % \subsection{The kernel}
@@ -1729,7 +1743,7 @@
 %
 %
 %
-% \section{Acknowledgements}
+% \section*{Acknowledgements}
 %
 % A big thank you goes to \person{Stefan Ulrich} for his tips and bug reports
 % during the development of versions 1.* and for his lessons on high quality
@@ -2315,7 +2329,7 @@
 \SOUL@cmds={%
     \\9\`\\9\'\\9\^\\9\"\\9\~\\9\=\\9\.%
     \\9\u\\9\v\\9\H\\9\t\\9\c\\9\d\\9\b
-    \\0\S\\0\textregistered\\0\copyright
+    \\0\S\\0\textregistered\\0\copyright\\0\TeX\\0\LaTeX
     \\1\emph\\1\textrm\\1\textsf\\1\texttt\\1\textmd\\1\textbf
     \\1\textup\\1\textsl\\1\textit\\1\textsc\\1\textnormal
     \\0\rmfamily\\0\sffamily\\0\ttfamily\\0\mdseries\\0\upshape
