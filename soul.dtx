@@ -668,7 +668,7 @@
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
 %   The argument must not contain discretionary hyphens. Thus you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
-% \item[Material without ectt10 representation: \so{foo \TeX\ bar}]
+% \item[Material without ectt1000 representation: \so{foo \TeX\ bar}]
 %   Every token that can't be typeset with just one character of
 %   the |cmtt10| font leads to a reconstruction error. This can be
 %   avoided by enclosing the token in braces, e.\,g.~|\so{foo {\TeX} bar}|, or registering
@@ -767,7 +767,7 @@
 % \subsubsection{\texttt{`Reconstruction failed'}}
 %
 % This message appears, if \ref{par:Grouping hyphenateable material} or
-% \ref{par:Material without ectt10 representation} were
+% \ref{par:Material without ectt1000 representation} were
 % violated. It is caused by the fact that the reconstruction pass
 % couldn't collect tokens with an overall width of the syllable that
 % was measured by the analyzer. This does either occur when you
@@ -1340,7 +1340,7 @@
 % analyzer won't see them. This is necessary because they
 % have no representation in the |cmtt10| font and would
 % hence cause a reconstruction error.
-% See~\ref{par:Material without ectt10 representation}.
+% See~\ref{par:Material without ectt1000 representation}.
 %
 % \begin{example}
 % |\S, \textregistered, \copyright, \TeX, \LaTeX|\\
@@ -1354,14 +1354,14 @@
 % \subsection{Changing the internal font}
 % \label{sec:internalfont}
 %
-% The \soul\ package uses the |ectt10| font to
+% The \soul\ package uses the |ectt1000| font to
 % analyze the syllables. This font is used, because it
 % has 256~mono-spaced characters without any kerning.
 % It belongs to \person{J\"org Knappen'\textrm{s}}
 % \caps{EC}-fonts, which should be part of every modern \TeX\ installation.
-% If \TeX\ reports ``\texttt{I can't find file `ectt10'}'' you don't
+% If \TeX\ reports ``\texttt{I can't find file `ectt1000'}'' you don't
 % seem to have this font installed. It is recommended that
-% you install at least the file |ectt10.tfm| which has less than 1.4\,kB\null.
+% you install at least the file |ectt1000.tfm| which has less than 1.4\,kB\null.
 % Alternatively, you can let the \soul\ package use the |cmtt10| font that
 % is part of any installation, or some other mono-spaced font:
 % 
@@ -1678,7 +1678,7 @@
 %
 % The analyzer typesets the word in a 1\,sp ($=\frac1{65536}$\,pt) wide \cs{\vbox},
 % hence encouraging \TeX\ to break lines at every possible hyphenation point. It
-% uses the mono-spaced \cs{\SOUL@tt} font (|ectt10|), so as to avoid any inter-character
+% uses the mono-spaced \cs{\SOUL@tt} font (|ectt1000|), so as to avoid any inter-character
 % kerning. Now the \cs{\vbox} is decomposed splitting off \cs{\hbox} after \cs{\hbox}
 % from the bottom. All boxes, each of which contains one syllable, are pushed onto a
 % stack, which is provided by \TeX's grouping mechanism. When returning from the
@@ -2057,7 +2057,7 @@
     \def\@width{width}
     \def\@plus{plus}
     \def\@minus{minus}
-    \font\SOUL@tt=ectt10
+    \font\SOUL@tt=ectt1000
     \let\@xobeysp\space
     \let\linebreak\break
     \let\mbox\hbox
@@ -2083,7 +2083,7 @@
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
         [2002/01/03 v2.0 letterspacing/underlining  (mf)]
-    \newfont\SOUL@tt{ectt10}
+    \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
     \newcommand*\textso{}
@@ -2671,8 +2671,8 @@
 %
 %
 % \noindent
-% We store the hyphen width of the |ectt10| font,
-% because we will need it in |\SOUL@doword|. (|ectt10| is a mono-spaced
+% We store the hyphen width of the |ectt1000| font,
+% because we will need it in |\SOUL@doword|. (|ectt1000| is a mono-spaced
 % font, so every other character would have worked, too.)
 % 
 %    \begin{macrocode}
