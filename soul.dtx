@@ -2452,7 +2452,7 @@
     \fi
     \SOUL@n
 }
-\def\SOUL@start#1{{%
+\long\def\SOUL@start#1{{%
     \let\<\SOUL@lowerthan
     \let\>\empty
     \def\soulomit{\noexpand\soulomit}%
@@ -2472,7 +2472,7 @@
     \SOUL@do{#1}%
     \SOUL@postamble
 }}
-\def\SOUL@do#1{%
+\long\def\SOUL@do#1{%
     \SOUL@scan#1\SOUL@stop
 }
 %    \end{macrocode}
