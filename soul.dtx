@@ -26,7 +26,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.2",
-%%     date            = "25 April 2002",
+%%     date            = "30 April 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -79,7 +79,7 @@
 %
 %<*driver>
 \def\fileversion{2.2}
-\def\filedate{2002/04/25}
+\def\filedate{2002/04/30}
 %
 %
 %
@@ -147,7 +147,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{April 25, 2002}
+% \date{April 30, 2002}
 %
 %^^A=====================================================
 %
@@ -414,7 +414,7 @@
 %   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
-% \changes{v2.2}{2002/04/25}{fixed a couple of bugs; added support for
+% \changes{v2.2}{2002/04/30}{fixed a couple of bugs; added support for
 %   the Plain TeX color.sty wrapper}
 %
 %
@@ -699,7 +699,7 @@
 %   Some commands---don't ask for examples--- must not be used in an \cs{\edef} statement^^A
 %   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.
 %   Yet \texttt{\string\copyright} works in \soul\ arguments, because it is
-%   explicitly protected by the package}.
+%   explicitly taken care of by the package}.
 %   As \soul\ does this when its argument is
 %   a command sequence, it has to protect such commands with \cs{\noexpand} in
 %   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
@@ -2152,7 +2152,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/04/25 v2.2 letterspacing/underlining  (mf)]
+        [2002/04/30 v2.2 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2482,10 +2482,10 @@
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
 % to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
 % which will be fed to the analyzer every time a word is completed.
-% The mysterious second and third \cs{\if} branch checks for
+% The mysterious second and third \cs{\if} branch check for
 % formerly robust commands that lost their robust-ness due to
 % expansion as in |{\let\protect\noexpand| |\xdef\x{\foo}}||\so\x|.
-% The empty braces are there for commands that take an argument.
+% The empty braces are there for commands that expect an argument.
 %
 %    \begin{macrocode}
 \def\SOUL@dotoken#1{%
