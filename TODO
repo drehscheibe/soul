@@ -12,5 +12,7 @@
 
  + check for \expandafter\ifx\csname bla\endcsname\relax
 
- - hyperref: \so in section titles
+ + fix -,'` flushing
+
+ - hyperref: Document \so in section titles?
 
