@@ -1,3 +1,4 @@
+- watch for FIXME and \marginpars
 - activate and specify checksum
 - set release date (both in doc and implementation)
 - set release version (both in doc and implementation)
