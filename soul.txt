@@ -2,7 +2,7 @@ soul.sty
 ========
 
 This article describes the `soul' package, which
-provides hyphenateable letterspacing (spacing out),
+provides hyphenatable letterspacing (spacing out),
 underlining, and some derivatives.
 All features are based upon a common mechanism 
 that allows to typeset text syllable by syllable,

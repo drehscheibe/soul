@@ -40,7 +40,7 @@
 %%                        highlighting",
 %%     supported       = "yes",
 %%     docstring       = "This article describes the `soul' package, which
-%%                        provides hyphenateable letterspacing (spacing out),
+%%                        provides hyphenatable letterspacing (spacing out),
 %%                        underlining, and some derivatives.
 %%                        All features are based upon a common mechanism 
 %%                        that allows to typeset text syllable by syllable,
@@ -431,7 +431,7 @@
 %   \footnote{This file has version number \fileversion, last revised \filedate, on
 %             DEK's 64\textsuperscript{th} birthday.},
 %^^A%%
-% which provides \so{hyphenateable letterspacing (spacing out),} \ul{underlining}
+% which provides \so{hyphenatable letterspacing (spacing out),} \ul{underlining}
 % and some derivatives such as \st{overstriking} and highlighting.
 % Although the package is optimized for \LaTeXe, it also works with
 % Plain \TeX\ and with other flavors of \TeX\ like, for instance, \ConTeXt.
@@ -657,7 +657,7 @@
 % character before it can hand it over to \TeX's paragraph builder.
 %
 % \begin{verblist}{20}
-% \item[Grouping hyphenateable material: \so{foo {little} bar}]
+% \item[Grouping hyphenatable material: \so{foo {little} bar}]
 %   Grouped characters must not contain hyphenation points. Instead of
 %   |\so{foo {little}}| write |\so{foo \mbox{little}}|. You get a
 %   \texttt{`Re\-con\-struction failed'} error and a black square like
@@ -771,12 +771,12 @@
 %
 % \subsubsection{\texttt{`Reconstruction failed'}}
 %
-% This message appears, if \ref{par:Grouping hyphenateable material} or
+% This message appears, if \ref{par:Grouping hyphenatable material} or
 % \ref{par:Leaking font switching} was
 % violated. It is caused by the fact that the reconstruction pass
 % couldn't collect tokens with an overall width of the syllable that
 % was measured by the analyzer. This does either occur when you
-% grouped hyphenateable text or used an unregistered command
+% grouped hyphenatable text or used an unregistered command
 % that influences the syllable width. Font switching commands belong
 % to the latter group. See the above cited sections for how to fix
 % these problems.
@@ -2957,7 +2957,7 @@
 \def\SOUL@error{%
     \vrule\@height.8em\@depth.2em\@width1em
     \PackageError{soul}{Reconstruction failed}{%
-        I came across hyphenateable material enclosed in group
+        I came across hyphenatable material enclosed in group
         braces,^^Jwhich I can't handle. Either drop the braces or
         make the material^^Junbreakable using an \string\mbox\space
         (\string\hbox). Note that a space^^Jalso counts as possible
