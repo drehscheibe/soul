@@ -16,7 +16,7 @@ packages, too.
 
 author          = "Melchior FRANZ"
 version         = "2.2"
-date            = "17 April 2002"
+date            = "12 May 2002"
 address         = "Melchior FRANZ
                    Rieder Hauptstrasse 52
                    A-5212 SCHNEEGATTERN
@@ -35,7 +35,8 @@ COPYRIGHT NOTICE
 ================
 This package is free software that can be redistributed and/or modified
 under the terms of the LaTeX Project Public License as specified
-in the file macros/latex/base/lppl.txt on any CTAN archive server.
+in the file macros/latex/base/lppl.txt on any CTAN archive server,
+such as ftp://ftp.dante.de/.
 
 
 

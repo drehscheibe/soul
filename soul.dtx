@@ -26,7 +26,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.2",
-%%     date            = "30 May 2002",
+%%     date            = "12 May 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -57,7 +57,8 @@
 % COPYRIGHT NOTICE:
 % This package is free software that can be redistributed and/or modified
 % under the terms of the LaTeX Project Public License as specified
-% in the file macros/latex/base/lppl.txt on any CTAN archive server.
+% in the file macros/latex/base/lppl.txt on any CTAN archive server,
+% such as ftp://ftp.dante.de/.
 %
 %
 %
@@ -79,7 +80,7 @@
 %
 %<*driver>
 \def\fileversion{2.2}
-\def\filedate{2002/05/08}
+\def\filedate{2002/05/12}
 %
 %
 %
@@ -147,7 +148,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{May 30, 2002}
+% \date{May 12, 2002}
 %
 %^^A=====================================================
 %
@@ -416,7 +417,7 @@
 %   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
-% \changes{v2.2}{2002/05/08}{fixed a couple of bugs; added support for
+% \changes{v2.2}{2002/05/12}{fixed a couple of bugs; added support for
 %   the Plain TeX color.sty wrapper}
 %
 %
@@ -555,7 +556,7 @@
 % The \cs{\hl} command does only highlight if the \package{color} package
 % was loaded, otherwise it falls back to underlining.\footnote{Note that
 % you can also use \LaTeX's \package{color} package with Plain \TeX.
-% See~\ref{sec:plain} for the details.} The highlighting
+% See~\ref{sec:plain} for details.} The highlighting
 % color is by default yellow, underlines and overstriking lines are by
 % default black. The colors can be changed using the following commands:
 %
@@ -704,14 +705,13 @@
 %   Some macros might not be expandable in an \cs{\edef} definition^^A
 %   \footnote{Try \texttt{\string\edef\string\x\char`\{\string\copyright\char`\}}.
 %   Yet \texttt{\string\copyright} works in \soul\ arguments, because it is
-%   explicitly taken care of by the package}.
-%   They have to be protected with \cs{\noexpand} in front. This is done
+%   explicitly taken care of by the package}
+%   and have to be protected with \cs{\noexpand} in front. This is automatically done
 %   for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
 %   \cs{\S}, \cs{\slash}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright},
-%   as well as for all registered fonts and accents.
-%   You can put \cs{\noexpand} manually in front of similar commands, that
-%   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo| or register
-%   it as font (see section \ref{sec:soulfont}).
+%   as well as for all registered fonts and accents. Instead of putting \cs{\noexpand}
+%   manually in front of such commands, as in |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|,
+%   you can also register them as font (see section \ref{sec:soulfont}).
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
 %   \soul\ arguments must not contain \LaTeX\ environments, command definitions,
 %   and fancy stuff like |\vadjust|. As long as you are writing simple,
@@ -1121,7 +1121,7 @@
 % \begin{center}
 % \usebox\dirtytrick
 % \caption{Ragged-right, magazine style (using \soul), and block-aligned
-%          in comparison. But frankly, none of them is really acceptable.
+%          in comparison. But, frankly, none of them is really acceptable.
 %          (Don't do this at home, kids!)}
 % \label{tab:dirtytricks}
 % \end{center}
@@ -2263,7 +2263,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/05/08 v2.2 letterspacing/underlining  (mf)]
+        [2002/05/12 v2.2 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}

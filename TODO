@@ -6,3 +6,4 @@ v2.2:
 + fix \SOUL@soeveryexhyphen (#1 -> \hbox{#1})
 + likewise s/toksdef/newtoks/ for SOUL@cmds. (nasty bug!)
 + make \hl work in plain mode (explain /tex-archive/macros/plain/graphics use)
++ fix \soulaccent{"} and update documentation
