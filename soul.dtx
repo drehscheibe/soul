@@ -385,6 +385,7 @@
 %   \overfullrule5pt
 % }
 %
+% \def\FIXME{\message{<FIXME>}}
 %
 % \makeatother
 %
@@ -1067,7 +1068,7 @@
 % The old German fonts^^A
 %^^A%%
 %   \footnote{See the great old German fonts, which \person{Yannis Haralambous} 
-%   kindly provided, and the \package{oldgerm} and \package{yfonts} package
+%   kindly provided, and the \package{oldgerm} and \package{yfonts} package~\cite{yfonts}
 %   as their \LaTeX\ interfaces.}
 %^^A%%
 % deserve some additional considerations. As stated in section~\ref{sec:typesetting},
@@ -1119,8 +1120,8 @@
 % \begin{table}
 % \begin{center}
 % \usebox\dirtytrick
-% \caption{Ragged-right, magazine style (using \soul), and Plain \TeX\
-%          in comparison. Frankly, none of them is really acceptable.
+% \caption{Ragged-right, magazine style (using \soul), and block-aligned
+%          in comparison. But frankly, none of them is really acceptable.
 %          (Don't do this at home, kids!)}
 % \label{tab:dirtytricks}
 % \end{center}
@@ -1134,7 +1135,7 @@
 %
 % \section{\ul{Underlining}}
 %
-% The underlining macros are my answer to Prof.~\person{Knuth{\normalfont's}}
+% The underlining macros are my answer to Prof.~\person{Knuth'{\normalfont s}}
 % exercise 18.26 from his \TeX{}book~\cite{DEK}. \texttt{:-)} Most of what
 % is said about the macro \describemacro{\ul} is also true of the
 % striking out macro \describemacro{\st} and the highlighting macro \describemacro{\hl},
@@ -1232,8 +1233,8 @@
 %   spaced equally on low resolution printers.
 % \item
 %   Let the lines stick out by a certain amount on each side so that they
-%   overlap. This overlap amount can be set using the \describemacro{\setuloverlap}.
-%   It is set to 0.25\,pt by default. |\setuloverlap{0pt}| turns overlapping off.
+%   overlap. This overlap amount can be set using the \describemacro{\setuloverlap}
+%   command. It is set to 0.25\,pt by default. |\setuloverlap{0pt}| turns overlapping off.
 % \end{enumerate}
 %
 %
@@ -1497,7 +1498,7 @@
 % \end{example}
 % 
 % The \option{capsdefault} package option is mapped to a simple command
-% \cs{\capsdefault}.
+% \describemacro{\capsdefault}.
 % 
 % 
 %
@@ -1552,7 +1553,7 @@
 % \begin{example}
 % |\newcommand*\somsg[1]{\so{#1}\message{#1}}|\\
 % |...|\\
-% |foo \somsg{bar} baz       % wrong spacing!|\\
+% |foo \somsg{bar} baz       % wrong spacing after `bar'!|\\
 % \end{example}
 %
 % In this case you won't get the following space replaced by \emph{outer space}
@@ -1627,7 +1628,7 @@
 % \end{example}
 %
 % Another problem arises: bibliography entries that must not get
-% ripped apart are supposed to be enclosed in additional braces.
+% teared apart are supposed to be enclosed in additional braces.
 % This, however, won't work with \soul\ because of
 % \ref{par:Grouping hyphenatable material}. A simple trick will
 % get you around that problem: define a dummy command that only
@@ -2328,6 +2329,7 @@
 %
 %
 %
+% \newpage\FIXME
 % \begin{macro}{\soulomit}
 % \begin{macro}{\SOUL@ignorem}
 % \begin{macro}{\SOUL@ignore}
@@ -2603,8 +2605,9 @@
 % Command sequences from the \cs{\SOUL@cmds} list are handed over
 % to \cs{\SOUL@docmd}, everything else it added to \cs{\SOUL@word},
 % which will be fed to the analyzer every time a word is completed.
-% The mysterious second and third \cs{\if} branch check for
-% formerly robust commands that lost their robust-ness due to
+% Unfortunately, we need separate versions for \LaTeX\ and for
+% other flavors of \TeX, because the former also needs to check for
+% originally robust commands that lost their robust-ness due to
 % expansion as in |{\let\protect\noexpand| |\xdef\x{\foo}}||\so\x|.
 % The empty braces are there for commands that expect an argument.
 %
@@ -4012,7 +4015,7 @@
 %
 %
 % \begin{macro}{\SOUL@ulsetup}
-% The underlining driver is quite simple. No need for \cs{\SOUL@postamle}
+% The underlining driver is quite simple. No need for \cs{\SOUL@postamble}
 % and \cs{\SOUL@everytoken}.
 %
 %    \begin{macrocode}
