@@ -14,5 +14,7 @@
 
  + fix -,'` flushing
 
- - hyperref: Document \so in section titles?
+ + add \MakeUppercase and \textsuperscript to font list
+
+ - fix font handling bug (make \MakeUppercase et al. work)
 

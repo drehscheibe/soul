@@ -2336,7 +2336,6 @@
 \countdef\SOUL@comma\tw@
 \countdef\SOUL@apo=4
 \countdef\SOUL@grave=6
-\countdef\SOUL@level=8
 \newskip\SOUL@spaceskip
 \newif\ifSOUL@ignorespaces
 %    \end{macrocode}
@@ -2394,13 +2393,12 @@
 % \begin{macro}{\SOUL@}
 % This macro is the entry to \soul. Using it does only make
 % sense after setting up a \soul\ driver. The next token after
-% the \soul\ command will be assigned to \cs{\SOUL@@}. This should
-% either be an opening brace or the name of a macro that contains text.
+% the \soul\ command will be assigned to \cs{\SOUL@@}. This can be
+% some text enclosed in braces, or the name of a macro that contains text.
 %
 %    \begin{macrocode}
 \def\SOUL@{%
-    \afterassignment\SOUL@expand
-    \let\SOUL@@
+    \futurelet\SOUL@@\SOUL@expand
 }
 %    \end{macrocode}
 % \end{macro}
@@ -2424,25 +2422,7 @@
 %    \begin{macrocode}
 \def\SOUL@expand{%
     \ifcat\bgroup\noexpand\SOUL@@
-        \bgroup
-        \let\<\SOUL@lowerthan
-        \let\>\relax
-        \def\soulomit{\noexpand\soulomit}%
-        \gdef\SOUL@eventuallyexhyphen##1{}%
-        \let\SOUL@soeventuallyskip\relax
-        \SOUL@spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
-            \@minus\fontdimen4\font
-        \SOUL@ignorespacesfalse
-        \leavevmode
-        \SOUL@preamble
-        \SOUL@lasttoken={}%
-        \SOUL@word={}%
-        \SOUL@minus\z@
-        \SOUL@comma\z@
-        \SOUL@apo\z@
-        \SOUL@grave\z@
-        \SOUL@level\z@
-        \let\SOUL@n\SOUL@scan
+        \let\SOUL@n\SOUL@start
     \else
         \bgroup
             \def\\##1##2{\def##2{\noexpand##2}}%
@@ -2458,10 +2438,33 @@
             \def\TeX{\noexpand\TeX}%
             \def\LaTeX{\noexpand\LaTeX}%
             \let\protect\noexpand
-            \xdef\SOUL@n{\noexpand\SOUL@{\SOUL@@}}%
+            \xdef\SOUL@n##1{\noexpand\SOUL@start{\SOUL@@}}%
         \egroup
     \fi
     \SOUL@n
+}
+\def\SOUL@start#1{{%
+    \let\<\SOUL@lowerthan
+    \let\>\relax
+    \def\soulomit{\noexpand\soulomit}%
+    \gdef\SOUL@eventuallyexhyphen##1{}%
+    \let\SOUL@soeventuallyskip\relax
+    \SOUL@spaceskip=\fontdimen\tw@\font\@plus\fontdimen\thr@@\font
+        \@minus\fontdimen4\font
+    \SOUL@ignorespacesfalse
+    \leavevmode
+    \SOUL@preamble
+    \SOUL@lasttoken={}%
+    \SOUL@word={}%
+    \SOUL@minus\z@
+    \SOUL@comma\z@
+    \SOUL@apo\z@
+    \SOUL@grave\z@
+    \SOUL@do{#1}%
+    \SOUL@postamble
+}}
+\def\SOUL@do#1{%
+    \SOUL@scan#1\SOUL@stop
 }
 %    \end{macrocode}
 % \end{macro}
@@ -2535,15 +2538,11 @@
         \SOUL@flushcomma
         \SOUL@flushapo
         \SOUL@flushgrave
-        \ifcat\egroup\noexpand\SOUL@@
-            \SOUL@doword
-            \ifnum\SOUL@level>\z@
-                \egroup
-                \def\SOUL@n*{\afterassignment\SOUL@scan\let\SOUL@}%
-            \else
+        \ifx\SOUL@@\SOUL@stop
+            \def\SOUL@n*{%
+                \SOUL@doword
                 \SOUL@eventuallyexhyphen\null
-                \def\SOUL@n*{\SOUL@postamble}%
-            \fi
+            }%
         \else\ifx\SOUL@@\par
             \def\SOUL@n*\par{\par\leavevmode\SOUL@scan}%
         \else\if\noexpand\SOUL@@\SOUL@spc
@@ -2718,45 +2717,26 @@
 % buffer being flushed to the analyzer, after which the command
 % itself is executed.
 %
-%    \begin{macrocode}
-\def\SOUL@docmd#1#2{%
-    \ifx9#1%
-        \def\SOUL@@{\SOUL@addgroup{#2}}%
-    \else\ifx1#1%
-        \SOUL@doword
-        \def\SOUL@@{\SOUL@dofont{#2}}%
-    \else
-        \SOUL@doword
-        #2%
-        \def\SOUL@@{\SOUL@scan}%
-    \fi\fi
-    \SOUL@@
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \begin{macro}{\SOUL@dofont}
 % Font switching commands which take an argument need special
 % treatment: They need to increment the level counter, so that
 % \cs{\SOUL@eval} knows where to stop scanning. Furthermore the
 % scanner has to be enabled to see the next token after the opening
 % brace.
 %
+%
 %    \begin{macrocode}
-\def\SOUL@dofont#1{%
-    #1%
-    \bgroup
-    \advance\SOUL@level\@ne
-    \afterassignment\SOUL@scan
-    \let\SOUL@
+\def\SOUL@docmd#1#2{%
+    \ifx9#1%
+        \def\SOUL@@{\SOUL@addgroup{#2}}%
+    \else\ifx1#1%
+        \SOUL@doword
+        \def\SOUL@@##1{#2{\protect\SOUL@do{##1}}\SOUL@scan}%
+    \else
+        \SOUL@doword
+        #2%
+        \def\SOUL@@{\SOUL@scan}%
+    \fi\fi
+    \SOUL@@
 }
 %    \end{macrocode}
 % \end{macro}
@@ -2857,6 +2837,7 @@
     \\0\em\\0\rm\\0\bf\\0\it\\0\tt\\0\sc\\0\sl\\0\sf
     \\0\tiny\\0\scriptsize\\0\footnotesize\\0\small
     \\0\normalsize\\0\large\\0\Large\\0\LARGE\\0\huge\\0\Huge
+    \\1\MakeUppercase\\1\textsuperscript
     \\1\textfrak\\1\textswab\\1\textgoth
     \\0\frakfamily\\0\swabfamily\\0\gothfamily
 }
@@ -3030,22 +3011,22 @@
     \SOUL@eventuallyexhyphen{\the\SOUL@token}%
     \edef\x{\the\SOUL@token}%
     \ifx\x\SOUL@hyphenhintM
-        \let\SOUL@\SOUL@dosyllable
+        \let\SOUL@r\SOUL@dosyllable
     \else\ifx\x\SOUL@lowerthanM
         \SOUL@gettoken
         \SOUL@getkern{\the\SOUL@lasttoken}{\SOUL@charkern}
             {\the\SOUL@token}%
         \SOUL@everylowerthan
         \SOUL@puttoken
-        \let\SOUL@\SOUL@dosyllable
+        \let\SOUL@r\SOUL@dosyllable
     \else\ifdim\SOUL@syllwidth=\SOUL@syllgoal
         \SOUL@everysyllable
         \SOUL@puttoken
-        \let\SOUL@\relax
+        \let\SOUL@r\relax
     \else\ifx\x\SOUL@stopM
         \SOUL@errmsg
         \global\let\SOUL@errmsg\relax
-        \let\SOUL@\relax
+        \let\SOUL@r\relax
     \else
         \setbox\tw@\hbox{\SOUL@tt\the\SOUL@token}%
         \advance\SOUL@syllwidth\wd\tw@
@@ -3057,9 +3038,9 @@
         \global\SOUL@token=\SOUL@lasttoken
         \SOUL@everytoken
         \edef\x{\SOUL@syllable={\the\SOUL@syllable\the\SOUL@token}}\x
-        \let\SOUL@\SOUL@dosyllable
+        \let\SOUL@r\SOUL@dosyllable
     \fi\fi\fi\fi
-    \SOUL@
+    \SOUL@r
 }
 %    \end{macrocode}
 % \end{macro}
