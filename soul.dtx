@@ -112,6 +112,7 @@
     \setulcolor{darkblue}
     \sethlcolor{lightblue}
 }{
+    \def\textcolor##1{}
     \AtBeginDocument{\let\hl\relax}
 }  
 \fi
@@ -281,16 +282,21 @@
 %   \def\SOUL@everysyllable{\the\SOUL@syllable}^^A
 %   \def\SOUL@everyspace##1{##1\space}^^A
 %   \def\SOUL@everyhyphen{^^A
-%       \unkern
 %       \discretionary{^^A
 %           \SOUL@setkern\SOUL@hyphkern
 %           \char\hyphenchar\font
 %       }{}{^^A
 %           \hbox{\kern1pt$\cdot$}^^A
-%      }^^A
-%    }^^A
-%    \def\SOUL@everyexhyphen##1{\textbf{##1}}^^A
-%    \SOUL@}
+%       }^^A
+%   }^^A
+%   \def\SOUL@everyexhyphen##1{^^A
+%       \SOUL@setkern\SOUL@hyphkern
+%       ##1^^A
+%       \discretionary{}{}{^^A
+%           \SOUL@setkern\SOUL@charkern
+%       }^^A
+%   }^^A
+%   \SOUL@}
 %
 %^^A  analyze the engine---described somewhere below, too
 %
@@ -1736,7 +1742,7 @@
 % takes one argument.
 % 
 % \begin{labeling}{\hspace{.36\hsize}}
-% \def\m#1{\leavevmode\llap{#1\hskip.7em}}
+% \def\m#1{\leavevmode\llap{\hbox to1em{\hss#1\hss}\hskip.7em}}
 % \item[\texttt{\string\SOUL@preamble}]\m{$P$}^^A
 %   executed once at the beginning
 % \item[\texttt{\string\SOUL@postamble}]\m{$E$}^^A
@@ -1754,29 +1760,30 @@
 % \item[\texttt{\string\SOUL@everyhyphen}]\m{$-$}^^A
 %   This macro is executed at every implicit hyphenation point.
 %   It is responsible for setting the hyphen and will likely do this
-%   in a \cs{\discretionary} command. It has also to care about the
-%   kerning values. May access \cs{\SOUL@lasttoken}, \cs{\SOUL@syllable},
-%   \cs{\SOUL@charkern} and \cs{\SOUL@hyphkern}.
-%   Note that \cs{\discretionary} inserts \cs{\penalty\exhyphenpenalty}
-%   if the first part of the discretionary is empty, and of
-%   \cs{\penalty\hyphenpenalty} else.
+%   in a \cs{\discretionary} statement. It has to care about the
+%   kerning values. The registers \cs{\SOUL@lasttoken}, \cs{\SOUL@syllable},
+%   \cs{\SOUL@charkern} and \cs{\SOUL@hyphkern} contain useful information.
+%   Note that \cs{\discretionary} inserts \cs{\exhyphenpenalty}
+%   if the first part of the discretionary is empty, and
+%   \cs{\hyphenpenalty} else.
 % \item[\texttt{\string\SOUL@everyexhyphen\#1}]\m{$=$}^^A
 %   This macro is executed at every explicit hyphenation point. The
-%   hyphen character is passed as parameter |#1|, that is one of
-%   hyphen, en-dash, em-dash or \cs{\slash}. The minimal implementation
-%   should be |{#1\penalty\exhyphenpenalty}|. The kerning value
-%   before the hyphen is stored in \cs{\SOUL@hyphkern} and that after
-%   the hyphen in \cs{\SOUL@charkern}. Thus, if the argument was
-%   |{foo-bar}| then \cs{\SOUL@hyphkern} is set to the kerning value
-%   between `|o|' and~`|-|', and \cs{\SOUL@charkern} to the kerning
-%   value between `|-|' and~`|b|'. 
-%   May access \cs{\SOUL@lasttoken} and \cs{\SOUL@syllable}. 
+%   hyphen `character' (one of hyphen, en-dash, em-dash or \cs{\slash})
+%   is passed as parameter |#1|. A minimal implementation
+%   would be |{#1\penalty\exhyphenpenalty}|. The kerning value
+%   between the last character and the hyphen is passed in \cs{\SOUL@hyphkern},
+%   that between the hyphen and the next character in \cs{\SOUL@charkern}.
+%   The last syllable can be found in \cs{\SOUL@syllable}, the last
+%   character in \cs{\SOUL@lasttoken}. 
 % \item[\texttt{\string\SOUL@everyspace\#1}]\m{\texttt{\char`\ }}^^A
 %   This macro is executed between every two words. It is responsible for
 %   setting the space. The engine submits a \cs{\penalty} setting as
 %   parameter |#1| that should be put in front of the space. The
-%   macro should at least do |{#1\space}|. May access \cs{\SOUL@lasttoken}
-%   and \cs{\SOUL@syllable}.
+%   macro should at least do |{#1\space}|. Further information can be found in
+%   \cs{\SOUL@lasttoken} and \cs{\SOUL@syllable}. Note that the leading and
+%   trailing space of the \cs{\so} driver implementation is not covered
+%   by \cs{\SOUL@everyspace}, but provided by \cs{\SOUL@preamble} and
+%   \cs{\SOUL@postamble}.
 % \end{labeling}
 %
 %
@@ -1787,16 +1794,14 @@
 % \subsubsection{Some examples}
 % \label{sec:interfaceexamples}
 %
-% The above table's middle column shows a mark that indicates in the
+% The above list's middle column shows a mark that indicates in the
 % following examples, when the respective macros are executed:\nopagebreak
 %
 % \begin{labeling}{\hspace{.36\hsize}}
 % \item[\normalfont\an{word}]
-%   At the first execution of |\SOUL@everytoken| the token `|w|' is  ????
-%   stored in |\SOUL@actual| while the token `|o|' is already stored
-%   in |\SOUL@prefetch|, and the token `|r|' in the macro
-%   |\SOUL@pprefetch|. The preamble and postamble are executed
-%   at the beginning\slash end.
+%   \cs{\SOUL@everytoken}$^T$ is executed for every token. \cs{\SOUL@everysyllable}$^S$
+%   is \emph{additionally} executed for every syllable. You will mostly just
+%   want to use either of them. 
 % \item[\normalfont\an{one two}]
 %   The macro |\SOUL@everyspace| is executed at every space within
 %   the \soul\ argument. It has to take one argument, that can either
@@ -1805,27 +1810,29 @@
 %   The macro |\SOUL@everyhyphen| is executed at every possible
 %   imcplicit hyphenation point.
 % \item[\normalfont\an{beta-test}]
-%   ??????????? An explicit |\hyphen| belongs to the left syllable. No, it doesn't!
+%   Explicit hyphens trigger \cs{\SOUL@everyexhyphen}.
 % \end{labeling}
 %
 %
 %
+% \bigbreak
 % \noindent
 % It's only natural that these examples, too,
 % were automatically typeset by the |soul| package
-% using a special interface:
+% using a special driver:
 %
-%\begin{verbatim}
-%    \DeclareRobustCommand*\an{%
-%      \def\SOUL@preamble{$^{^P}$}%
-%      \def\SOUL@everyspace##1{##1\texttt{\char`\ }}%
-%      \def\SOUL@postamble{$^{^E}$}%
-%      \def\SOUL@everyhyphen{$^{^-}$}%
-%      \def\SOUL@everyexhyphen##1{##1$^{^=}$}%
-%      \def\SOUL@everysyllable{$^{^S}$}%
-%      \def\SOUL@everytoken{\SOUL@actual$^{^T}$}%
-%      \SOUL@}
-%\end{verbatim}
+% \begin{example}
+% |\DeclareRobustCommand*\an{%|\\
+% |    \def\SOUL@preamble{$^{^P}$}%|\\
+% |    \def\SOUL@everyspace##1{##1\texttt{\char`\ }}%|\\
+% |    \def\SOUL@postamble{$^{^E}$}%|\\
+% |    \def\SOUL@everyhyphen{$^{^-}$}%|\\
+% |    \def\SOUL@everyexhyphen##1{##1$^{^=}$}%|\\
+% |    \def\SOUL@everysyllable{$^{^S}$}%|\\
+% |    \def\SOUL@everytoken{\the\SOUL@token$^{^T}$}%|\\
+% |    \def\SOUL@everylowerthan{$^{^L}$}%|\\
+% |    \SOUL@}|\\
+% \end{example}
 %
 %
 %
@@ -1842,10 +1849,8 @@
 % Since the \soul\ mechanism is highly fragile, we use the \LaTeX\
 % command \cs{\DeclareRobustCommand}, so that the \cs{\sy} macro
 % can be used even in section headings etc. The \cs{\SOUL@setup}
-% macro sets all interface macros to reasonalbe default values.
-% This could of course be done manually, but what if a later
-% \soul\ release has some interface macro added? 
-% \cs{\SOUL@setup} will consider future additions. As we won't
+% macro sets all interface macros to reasonable default definitions.
+% This could of course be done manually, too. As we won't
 % make use of \cs{\SOUL@everytoken} and \cs{\SOUL@postamble}
 % and both default to \cs{\relax}, anyway, we don't have to
 % define them here.
@@ -1882,12 +1887,10 @@
 %
 % The \TeX\ primitive \cs{\discretionary}
 % takes three arguments: 1.~pre-hyphen material 
-% (\cs{\box2} contains the current hyphen sign);
-% 2.~post-hyphen material; 3.~no-hyphen material.
+% 2.~post-hyphen material, and 3.~no-hyphenation material.
 %
 % \begin{example}
 % |    \def\SOUL@everyhyphen{%|\\
-% |        \unkern|\\
 % |        \discretionary{%|\\
 % |            \SOUL@setkern\SOUL@hyphkern|\\
 % |            \char\hyphenchar\font|\\
@@ -1897,15 +1900,20 @@
 % |    }%|\\
 %\end{example}
 %
-% Explicit hyphens like dashes and slashes shall be set in boldface type.
-% To make the example simple, kerning is omitted. See the implementation
-% of \cs{\so} and \cs{\ul} for details.
+% Explicit hyphens like dashes and slashes shall be set normally.
+% We just have to care for kerning.
 %
 % \begin{example}
-% |    \def\SOUL@everyexhyphen##1{\textbf{##1}}|\\
+% |    \def\SOUL@everyexhyphen##1{%|\\
+% |        \SOUL@setkern\SOUL@hyphkern|\\
+% |        ##1%|\\
+% |        \discretionary{}{}{%|\\
+% |            \SOUL@setkern\SOUL@charkern|\\
+% |        }%|\\
+% |    }|%\\
 % \end{example}
 %
-% Now that the driver is defined, we can start the scanner.
+% Now that the interface macros are defined, we can start the scanner.
 %
 % \begin{example}
 % |    \SOUL@|\\
@@ -1933,7 +1941,8 @@
 % who sent me a couple of bug reports and feature requests, and finally encouraged
 % me to (almost) completely rewrite \soul. \person{Rowland McDonnel}
 % gave useful hints for how to improve the documentation, but I'm afraid
-% he will still not be satisfied. And rightfully so. \texttt{:-)}
+% he will still not be satisfied, and rightfully so. If only documentation
+% writing weren't that boring.\qquad\texttt{;-)}
 %
 %
 %
@@ -1963,9 +1972,10 @@
 %   \bibtitle{Exercier-Reglement f\"ur die k.\,u.\,k.~Cavallerie, I. Theil.}
 %   Wien, k.\,k.~Hof- und Staatsdruckerei, 1898, 4th~edition.}
 %
-% \bibitem{german}{\person{Raichle, Bernd} \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
+% \bibitem{german}{\person{Raichle, Bernd}. \bibtitle{The german package.} \CTAN-Archive, 1998, v2.5e.}
 %    
-% \bibitem{yfonts}{\person{Schmidt, Walter} \bibtitle{The yfonts package.} \CTAN-Archive, 1998, v1.2.}
+% \bibitem{yfonts}{\person{Schmidt, Walter}. \bibtitle{Ein Makropaket f\"ur die gebrochenen
+%   Schriften.} \CTAN-Archive, 1998, v1.2.}
 %    
 % \bibitem{Tschichold}{\person{Tschichold, Jan}. \bibtitle{Ausgew\"ahlte Aufs\"atze \"uber Fragen
 %   der Gestalt des Buches und der Typographie.} Birkh\"auser, Basel,
@@ -2200,7 +2210,7 @@
 % be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
 % if the first token was a macro name, we expand that macro and
 % call \cs{\SOUL@} with its contents again. Unfortunately, we have to
-% exclude some macrs therein from expansion.
+% exclude some macros therein from expansion.
 %
 %    \begin{macrocode}
 \def\SOUL@expand{%
@@ -2417,7 +2427,7 @@
 % \begin{macro}{\SOUL@docmd}
 % Here we deal with commands that were registered with \cs{\soulaccent}
 % or \cs{\soulfont} or were already predefined in \cs{\SOUL@cmds}.
-% Commands with the |9| identifier are accents that are put in a
+% Commands with identifier |9| are accents that are put in a
 % group with their argument. The others are mostly (but not necessarily)
 % font switching commands, which may (|1|) or may not (|0|) take
 % an argument. A registered command leads to the current word
@@ -2515,9 +2525,9 @@
 %
 % \begin{macro}{\SOUL@exhyphen}
 % Dealing with explicit hyphens can't be done before we know the
-% following character, because we need eventual kerning values,
-% hence we delay the \cs{\SOUL@everyexhyphen} call. Unfortunately,
-% the word scanner has no look-ahead mechanism.
+% following character, because we need to know if a kerning values
+% has to be inserted, hence we delay the \cs{\SOUL@everyexhyphen} call.
+% Unfortunately, the word scanner has no look-ahead mechanism.
 %
 %    \begin{macrocode}
 \def\SOUL@exhyphen#1{%
@@ -2605,7 +2615,7 @@
 % \begin{macro}{\SOUL@doword}
 % The only way to find out, where a given word can be broken into
 % syllables, is to let \TeX\ actually typeset the word under conditions
-% that enforce every possible hyphenation. The result is a box with one
+% that enforce every possible hyphenation. The result is a paragraph with one
 % line for every syllable.
 %
 %    \begin{macrocode}
@@ -2650,8 +2660,8 @@
 %
 %
 % \noindent
-% We store the hyphen width of the |cmtt10| font,
-% because we will need it in |\SOUL@doword|. (|cmtt10| is a fixed width
+% We store the hyphen width of the |ectt10| font,
+% because we will need it in |\SOUL@doword|. (|ectt10| is a mono-spaced
 % font, so every other character would have worked, too.)
 % 
 %    \begin{macrocode}
@@ -2679,7 +2689,7 @@
 % we subtract the hyphen width accordingly. After processing a
 % syllable we calculate the hyphen kern (i.\,e.~the kerning amount
 % between the last character and the hyphen). This might be needed
-% by \cs{\SOUL@everyhyphen} that we call now.
+% by \cs{\SOUL@everyhyphen}, which we call now.
 %
 %    \begin{macrocode}
 \def\SOUL@analyze{{%
@@ -2723,8 +2733,8 @@
 % until \cs{\SOUL@syllwidth} has reached
 % the requested width \cs{\SOUL@syllgoal}. Furthermore the kerning
 % values are prepared in case \cs{\SOUL@everytoken} needs them.
-% The \cs{\<} command needed by \cs{\so} and \cs{\caps} needs some
-% special treatment: It has to be checked for even before
+% The \cs{\<} command used by \cs{\so} and \cs{\caps} needs some
+% special treatment: It has to be checked for, even before
 % we can end a syllable.
 %
 %    \begin{macrocode}
@@ -2930,8 +2940,8 @@
 %
 % \begin{macro}{\SOUL@setup}
 % This is a null driver, that will be used as the basis for
-% other drivers, which have to redefine only interface commands
-% that shall do more than just \cs{\relax}.
+% other drivers. These have then to redefine only interface commands
+% that shall differ from the default.
 %
 %    \begin{macrocode}
 \def\SOUL@setup{%
@@ -3023,8 +3033,8 @@
 % \begin{macro}{\SOUL@socheck}
 % \begin{macro}{\SOUL@sodoouter}
 % Read the next token after the \soul\ command into \cs{\SOUL@@}
-% and examine it. If it's some kind of space, remove that and set
-% our \syn{outer space} with the appropriate penalty, else if it's
+% and examine it. If it's some kind of space, replace it with
+% our \syn{outer space} and the appropriate penalty, else if it's
 % a closing brace, continue scanning. If it is neither: do nothing.
 %
 %    \begin{macrocode}
@@ -3123,9 +3133,7 @@
 %
 % \begin{macro}{\SOUL@soeveryhyphen}
 % Sets implicit hyphens. The kerning value between the current token
-% and the hyphen character is passed in \cs{\SOUL@hyphkern}. The last
-% token can be seen in \cs{\SOUL@lasttoken} and the next one could be
-% fetched with \cs{\SOUL@gettoken}.
+% and the hyphen character is passed in \cs{\SOUL@hyphkern}.
 %
 %    \begin{macrocode}
 \def\SOUL@soeveryhyphen{%
@@ -3420,7 +3428,7 @@
 % Go through the database entries and pick the first entry that matches
 % the currently active font. Then define an internal macro that uses
 % the respective spacing values in a macro that is equivalent to the
-% the \cs{\textso} command.
+% \cs{\textso} command.
 %
 %    \begin{macrocode}
 \def\SOUL@capsfind#1/#2/#3/#4/#5/#6/#7/#8/#9/{%
@@ -3558,7 +3566,7 @@
 % \subsection{The \ul{underlining} driver}
 %
 % \begin{macro}{\SOUL@ulleaders}
-% This macro sets the underline under the followin \cs{\hsbkip}.
+% This macro sets the underline under the following \cs{\hskip}.
 %
 %    \begin{macrocode}
 \newdimen\SOUL@uldp
@@ -3701,8 +3709,8 @@
 %
 %
 % \begin{macro}{\SOUL@uleveryexhyphen}
-% Underline the given hyphen, en-dash, em-dash or \cs{\slash} and set
-% the appropriate \cs{\penalty}.
+% Underline the given hyphen, en-dash, em-dash or \cs{\slash} and care
+% for kerning.
 %
 %    \begin{macrocode}
 \def\SOUL@uleveryexhyphen#1{%
@@ -3725,9 +3733,9 @@
 %
 % \begin{macro}{\SOUL@ulcolor}
 % \begin{macro}{\setulcolor}
-% Define the underline color or turn off coloring. The lines are not
-% just colored black, but remain uncolored, which makes them appear
-% black nevertheless. This has the advantage, that no PostScript
+% Define the underline color or turn off coloring, in which case the lines are not
+% just colored black, but remain uncolored. This makes them appear
+% black, nevertheless, and has the advantage, that no PostScript
 % \cs{\specials} are cluttering the output. 
 %
 %    \begin{macrocode}
@@ -3772,7 +3780,8 @@
 %
 %
 % \begin{macro}{\SOUL@ulsetup}
-% The underlining driver is quite simple. No need for fancy.
+% The underlining driver is quite simple. No need for \cs{\SOUL@postamle}
+% and \cs{\SOUL@everytoken}.
 %
 %    \begin{macrocode}
 \def\SOUL@ulsetup{%
@@ -3795,7 +3804,7 @@
 %
 %
 % \begin{macro}{\SOUL@textul}
-% Describing selfexplanatory macros is so boring!
+% Describing self-explanatory macros is so boring!
 %
 %    \begin{macrocode}
 \DeclareRobustCommand*\textul{\SOUL@ulsetup\SOUL@}
@@ -3814,7 +3823,7 @@
 % \begin{macro}{\SOUL@uldepth}
 % \begin{macro}{\SOUL@ulthickness}
 % Set the underlining dimensions. Either value may be omitted and
-% lets the respective macro keep its contents.
+% lets the respective macro keep its current contents.
 %
 %    \begin{macrocode}
 \def\setul#1#2{%
@@ -3853,7 +3862,7 @@
 %
 % \begin{macro}{\setuldepth}
 % This macro sets all designated ``letters'' (\cs{\catcode=11}) or the
-% given material in box and sets the underlining dimensions according
+% given material in a box and sets the underlining dimensions according
 % to the box depth.
 %
 %    \begin{macrocode}
@@ -3890,10 +3899,10 @@
 % \subsection{The \st{overstriking} driver}
 %
 % \begin{macro}{\SOUL@stpreamble}
-% Striking out is just underlining with a higher line with a different
+% Striking out is just underlining with a raised line with a different
 % color. Hence we only need to define the preamble accordingly and
-% let the underlining preamble do its job at last. Not that colored
-% overstriking was especially useful, but we want at least to keep
+% let the underlining preamble finally do its job. Not that colored
+% overstriking were especially useful, but we want at least to keep
 % it black while we might want to set underlines in some fancy color.
 %
 %    \begin{macrocode}
@@ -4106,8 +4115,8 @@
 %
 %
 % \noindent
-% If we are used in a \LaTeX\ environment, we disable colors if the
-% \package{color} packager weren't loaded. Then we add the umlaut accent
+% If we have been loaded by a \LaTeX\ environment and the \package{color}
+% package wasn't also loaded, we disable all colors. Then we add the umlaut accent
 % |"| if the \package{german} package is present. The \option{capsdefault}
 % option swallows the \cs{\caps} command and sets an underline instead.
 % Finally load the local configuration, process the |capsdefault|
