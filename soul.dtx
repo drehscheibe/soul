@@ -2595,7 +2595,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-% \iffalse$\fi          ^^A:  fool vim
 %
 %
 %
@@ -2611,25 +2610,23 @@
 % \begin{macro}{\SOUL@flushgrave}
 % As their names imply, these macros flush special tokens or token
 % groups to the word register. They don't do anything if the respective
-% counter equals zero.
+% counter equals zero. \cs{\SOUL@minus} does also flush the word
+% register, because hyphens disturb the analyzer.
 %
 %    \begin{macrocode}
 \def\SOUL@flushminus{%
     \ifcase\SOUL@minus
-    \or
+    \else
         \SOUL@doword
         \SOUL@eventuallyexhyphen{-}%
-        \SOUL@exhyphen{-}%
-        \SOUL@minus\z@
-    \or
-        \SOUL@doword
-        \SOUL@eventuallyexhyphen{-}%
-        \SOUL@exhyphen{--}%
-        \SOUL@minus\z@
-    \or
-        \SOUL@doword
-        \SOUL@eventuallyexhyphen{-}%
-        \SOUL@exhyphen{---}%
+        \ifcase\SOUL@minus
+        \or
+            \SOUL@exhyphen{-}%
+        \or
+            \SOUL@exhyphen{--}%
+        \or
+            \SOUL@exhyphen{---}%
+        \fi
         \SOUL@minus\z@
     \fi
 }
@@ -2637,31 +2634,28 @@
     \ifcase\SOUL@comma
     \or
         \edef\x{\SOUL@word={\the\SOUL@word,}}\x
-        \SOUL@comma\z@
     \or
         \edef\x{\SOUL@word={\the\SOUL@word{{,,}}}}\x
-        \SOUL@comma\z@
     \fi
+    \SOUL@comma\z@
 }
 \def\SOUL@flushapo{%
     \ifcase\SOUL@apo
     \or
         \edef\x{\SOUL@word={\the\SOUL@word'}}\x
-        \SOUL@apo\z@
     \or
         \edef\x{\SOUL@word={\the\SOUL@word{{''}}}}\x
-        \SOUL@apo\z@
     \fi
+    \SOUL@apo\z@
 }
 \def\SOUL@flushgrave{%
     \ifcase\SOUL@grave
     \or
         \edef\x{\SOUL@word={\the\SOUL@word`}}\x
-        \SOUL@grave\z@
     \or
         \edef\x{\SOUL@word={\the\SOUL@word{{``}}}}\x
-        \SOUL@grave\z@
     \fi
+    \SOUL@grave\z@
 }
 %    \end{macrocode}
 % \end{macro}
