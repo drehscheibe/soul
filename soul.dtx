@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1896}
+% \CheckSum{1896} ^^A very tempting to add four meaningless \relax somewhere ... ;-)
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -680,15 +680,15 @@
 %   \newbox\anyboxname
 %   \sbox\anyboxname{ \so{the worst} }
 %   \null\qquad\ul{This is by far\mbox{\usebox\anyboxname}example!}
-% \item[Leaking font switching: \def\foo{\bf bar} \so{\foo baz}]
-%   A hidden font switching command that infects its neighborship
+% \item[Leaking font switches: \def\foo{\bf bar} \so{\foo baz}]
+%   A hidden font switching command that leaks into its neighborship
 %   causes a \texttt{`Reconstruction failed'} error. To avoid this either limit its
 %   scope as in |\def\foo{{\bf bar}}| or register the `container'
 %   as font switching command: |\soulfont{\foo}{0}|. Note that both
-%   solutions yield different results. 
+%   solutions yield slightly different results. 
 % \item[Material that needs expansion: \so{\romannumeral\year}]
 %   In this example \cs{\so} would try to put space between \cs{\romannumeral}
-%   and \cs{\year}, which will, of course, not work. Putting group braces
+%   and \cs{\year}, which can, of course, not work. Putting group braces
 %   around the argument would work, but keep the contents from being
 %   letterspaced.
 %   You have to expand them before you feed them to \soul, or even better:
@@ -745,11 +745,11 @@
 % \verb+\capsreset+\Ast&                    \pref{capsreset}    &\ti{clear caps database}\\
 % \verb+\setul{1ex}{2ex}+&                  \pref{setul}        &\ti{set} \m{\ul} \ti{dimensions}\\
 % \verb+\resetul+&                          \pref{resetul}      &\ti{reset} \m{\ul} \ti{dimensions}\\
-% \verb+\setuldepth{y}+&                    \pref{setuldepth}   &\ti{set underline depth to depth of} \m{y}\\
-% \verb+\setuloverlap{y}+&                  \pref{setuloverlap} &\ti{set underline overlap width to} \m{y}\\
-% \verb+\setulcolor{y}+&                    \pref{setulcolor}   &\ti{set underline color to} \m{y}\\
-% \verb+\setstcolor{y}+&                    \pref{setstcolor}   &\ti{set overstriking color to} \m{y}\\
-% \verb+\sethlcolor{y}+&                    \pref{sethlcolor}   &\ti{set highlighting color to} \m{y}\\
+% \verb+\setuldepth{y}+&                    \pref{setuldepth}   &\ti{set underline depth to depth of an} y\\
+% \verb+\setuloverlap{1pt}+&                \pref{setuloverlap} &\ti{set underline overlap width}\\
+% \verb+\setulcolor{red}+&                  \pref{setulcolor}   &\ti{set underline color}\\
+% \verb+\setstcolor{green}+&                \pref{setstcolor}   &\ti{set overstriking color}\\
+% \verb+\sethlcolor{blue}+&                 \pref{sethlcolor}   &\ti{set highlighting color}\\
 % \end{tabular}
 % \caption{List of all available commands. The number points to the
 %          page where the command is described. Those marked
@@ -785,7 +785,7 @@
 % \subsubsection{\texttt{`Reconstruction failed'}}
 %
 % This message appears, if \ref{par:Grouping hyphenatable material} or
-% \ref{par:Leaking font switching} was
+% \ref{par:Leaking font switches} was
 % violated. It is caused by the fact that the reconstruction pass
 % couldn't collect tokens with an overall width of the syllable that
 % was measured by the analyzer. This does either occur when you
@@ -2019,9 +2019,9 @@
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
 % suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach,}
 % who sent me a couple of bug reports and feature requests, and finally encouraged
-% me to (almost) completely rewrite \soul. Thanks to \person{Axel Reichert,}
+% me to (almost) completely rewrite \soul. Thanks to \person{Axel Reichert,}\show\urks
 % \person{Anshuman Pandey,} \person{Peter Kreynin,} and \person{Thorsten Mangold}
-% for bringing nasty bugs to my attention that crept into \soul\ 2.1.
+% for bringing nasty bugs to my attention that had crept into \soul\ 2.1.
 % \person{Rowland McDonnel} gave useful hints for how to improve the documentation,
 % but I'm afraid he will still not be satisfied, and rightfully so. If only documentation
 % writing weren't that boring.\qquad\texttt{;-)}
