@@ -44,7 +44,7 @@ LATEXMAX = 5
 		RUNS=`expr $$RUNS - 1`; \
 	done
 
-$(NAME).sty: $(NAME).ins
+$(NAME).sty: $(NAME).ins soul.dtx
 	tex $(NAME).ins
 
 $(NAME).ins:
