@@ -113,7 +113,6 @@
 %
 %
 \ifx\makehyperref\SOULundefined
-    \newcommand*\texorpdfstring[2]{#1}
 \else   ^^A for "make hyper"
     \usepackage{hyperref}
     \hypersetup{
@@ -125,6 +124,15 @@
         pdfkeywords={space out, letterspacing, underlining, overstriking, highlighting}
     }
     \usepackage[pdftex]{graphicx,color}
+    \pdfstringdefDisableCommands{%
+        \let\so\relax
+        \let\caps\relax
+        \let\ul\relax
+        \let\st\relax
+        \let\hl\relax
+        \def\soul{soul}
+        \def\TeX{TeX}
+    }
 \fi
 %
 %
@@ -685,7 +693,7 @@
 %
 %
 %
-% \subsection{\texorpdfstring{\dots\ }{... }others don't}
+% \subsection{\dots\ others don't}
 %
 % Although the new \soul\ is much more robust and forgiving than
 % versions prior to~2.0, there are
@@ -845,7 +853,7 @@
 %
 %
 %
-% \section{\texorpdfstring{\so{Letterspacing}}{Letterspacing}}
+% \section{\so{Letterspacing}}
 %
 % \subsection{How it works}
 % \label{sec:so}
@@ -989,7 +997,7 @@
 %
 %
 %
-% \subsection[Typesetting \texorpdfstring{\caps{caps-and-small-caps}}{caps-and-small-caps} fonts]
+% \subsection[Typesetting \caps{caps-and-small-caps} fonts]
 %       {Typesetting capitals-and-small-capitals fonts}
 %
 % There is a special letterspacing command called \describemacro{\caps},
@@ -1162,7 +1170,7 @@
 %
 %
 %
-% \section{\texorpdfstring{\ul{Underlining}}{Underlining}}
+% \section{\ul{Underlining}}
 %
 % The underlining macros are my answer to Prof.~\person{Knuth'{\normalfont s}}
 % exercise 18.26 from his \TeX{}book~\cite{DEK}. \texttt{:-)} Most of what
@@ -1497,7 +1505,7 @@
 %
 % \section{Miscellaneous}
 %
-% \subsection{Using \texorpdfstring{\soul\ }{soul }with other flavors of \texorpdfstring{\TeX}{TeX}}
+% \subsection{Using \soul\ with other flavors of \TeX}
 % \label{sec:plain}
 %
 % This documentation describes how to use \soul\ together
@@ -1540,7 +1548,7 @@
 %
 %
 %
-% \subsection{Using \texorpdfstring{\soul\ }{soul }commands for logical markup}
+% \subsection{Using \soul\ commands for logical markup}
 % \label{sec:markup}
 %
 % It's generally a bad idea to use font style commands like \cs{\textsc}
@@ -1737,7 +1745,7 @@
 %
 %
 %
-% \subsection{Using \texorpdfstring{\soul\ }{soul }commands in section headings}
+% \subsection{Using \soul\ commands in section headings}
 %
 % Letterspacing was often used for section titles in the past,
 % mostly centered and with a closing period. The following example
@@ -3316,7 +3324,7 @@
 %
 %
 %
-% \subsection{The \texorpdfstring{\so{letterspacing}}{letterspacing} driver}
+% \subsection{The \so{letterspacing} driver}
 %
 % \begin{macro}{\SOUL@sosetletterskip}
 % A handy helper macro that sets the inter-letter skip with a
@@ -3674,7 +3682,7 @@
 %
 %
 %
-% \subsection[The \texorpdfstring{\caps{caps}}{caps} driver]{The caps driver}
+% \subsection[The \caps{caps} driver]{The caps driver}
 %
 % \begin{macro}{\caps}
 % Unless run under \LaTeX, make \cs{\caps} just another simple letterspacing
@@ -3913,7 +3921,7 @@
 %
 %
 %
-% \subsection{The \texorpdfstring{\ul{underlining}}{underlining} driver}
+% \subsection{The \ul{underlining} driver}
 %
 % \begin{macro}{\SOUL@ulleaders}
 % This macro sets the underline under the following \cs{\hskip}.
@@ -4250,7 +4258,7 @@
 %
 %
 %
-% \subsection{The \texorpdfstring{\st{overstriking}}{overstriking} driver}
+% \subsection{The \st{overstriking} driver}
 %
 % \begin{macro}{\SOUL@stpreamble}
 % Striking out is just underlining with a raised line of a different
