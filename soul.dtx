@@ -1390,7 +1390,7 @@
 % |\ttfamily, \mdseries, \upshape, \slshape, \itshape,|\\
 % |\scshape, \normalfont, \tiny, \scriptsize, \footnotesize,|\\
 % |\small, \normalsize, \large, \Large, \LARGE, \huge, \Huge,|\\
-% |\MakeUppercase, \textsuperscript,|\\
+% |\MakeUppercase, \textsuperscript, \footnote|\\
 % |\textfrak, \textswab, \textgoth, \frakfamily,|\\
 % |\swabfamily, \gothfamily|\\
 % \end{example}
@@ -2730,6 +2730,17 @@
 \def\SOUL@docmd#1#2{%
     \ifx9#1%
         \def\SOUL@@{\SOUL@addgroup{#2}}%
+    \else\ifx8#1%
+        \SOUL@doword
+        \def\SOUL@@##1{%
+            \SOUL@token={\footnotemark}%
+            \SOUL@everytoken
+            \SOUL@syllable={\footnotemark}%
+            \SOUL@everysyllable
+            \footnotetext{##1}%
+            \SOUL@doword
+            \SOUL@scan
+        }%
     \else\ifx1#1%
         \SOUL@doword
         \def\SOUL@@##1{#2{\protect\SOUL@do{##1}}\SOUL@scan}%
@@ -2737,7 +2748,7 @@
         \SOUL@doword
         #2%
         \let\SOUL@@\SOUL@scan
-    \fi\fi
+    \fi\fi\fi
     \SOUL@@
 }
 %    \end{macrocode}
@@ -2839,7 +2850,7 @@
     \\0\em\\0\rm\\0\bf\\0\it\\0\tt\\0\sc\\0\sl\\0\sf
     \\0\tiny\\0\scriptsize\\0\footnotesize\\0\small
     \\0\normalsize\\0\large\\0\Large\\0\LARGE\\0\huge\\0\Huge
-    \\1\MakeUppercase\\1\textsuperscript
+    \\1\MakeUppercase\\1\textsuperscript\\8\footnote
     \\1\textfrak\\1\textswab\\1\textgoth
     \\0\frakfamily\\0\swabfamily\\0\gothfamily
 }
