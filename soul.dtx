@@ -26,7 +26,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "2.2",
-%%     date            = "17 April 2002",
+%%     date            = "25 April 2002",
 %%     filename        = "soul.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -79,7 +79,7 @@
 %
 %<*driver>
 \def\fileversion{2.2}
-\def\filedate{2002/04/17}
+\def\filedate{2002/04/25}
 %
 %
 %
@@ -124,7 +124,7 @@
 %
 %
 %
-% \CheckSum{1917}
+% \CheckSum{1912}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -147,7 +147,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{April 17, 2002}
+% \date{April 25, 2002}
 %
 %^^A=====================================================
 %
@@ -414,7 +414,7 @@
 %   now-traditional brown-paper-bag major release.''
 %   as Eric S. RAYMOND commented on his CML2.0.1 release. ;-)}
 %
-% \changes{v2.2}{2002/04/17}{fixed a couple of bugs; added support for
+% \changes{v2.2}{2002/04/25}{fixed a couple of bugs; added support for
 %   the Plain TeX color.sty wrapper}
 %
 %
@@ -456,7 +456,7 @@
 % \label{sec:typesetting}
 % 
 % There are several possibilities to emphasize parts of a paragraph,
-% where not all are considered good style. While underlining
+% not all of which are considered good style. While underlining
 % is commonly rejected, experts dispute about whether letterspacing
 % should be used or not, and in which cases. If you are not interested
 % in such debates, you may well skip to the next section.
@@ -568,8 +568,8 @@
 % }
 %
 % \noindent
-% |\setulcolor{}| and |\setstcolor{}| (note the empty braces) turn
-% coloring off. There are only few colors predefined by the \package{color}
+% |\setulcolor{}| and |\setstcolor{}|  turn coloring off.
+% There are only few colors predefined by the \package{color}
 % package, but you can easily add custom color definitions.
 % See the \package{color} package documentation~\cite{color} for further
 % information.
@@ -606,6 +606,8 @@
 %   further accents.
 % \item[Quotes: \so{``quotes''}]
 %   The \soul\ package recognizes the quotes ligatures |``|, |''| and |,,|. 
+%   The Spanish ligatures |!`| and |?`| are not recognized and have, thus,
+%   to be written enclosed in braces like in |\caps{{!`}Hola!}|.
 % \item[Mathematics: \so{foo$x^3$bar}]
 %   Mathematic formulas are allowed, as long as they are
 %   surrounded by~\texttt\$. Note that the \LaTeX\ 
@@ -632,7 +634,7 @@
 %   not contain potential hyphenation points. (See~\ref{par:Protecting})
 % \item[Protecting: \so{foo \mbox{little} bar}]
 %   An \cs{\mbox} also lets \soul\ see the contents as one
-%   item, but they may even contain hyphenation points. \cs{\hbox} can
+%   item, but these may even contain hyphenation points. \cs{\hbox} can
 %   be used as a synonym.
 % \item[Font switching commands: \so{foo \texttt{bar}}]
 %   All standard \TeX\ and \LaTeX\ font switching commands are allowed, as
@@ -642,7 +644,7 @@
 % \item[Breaking up ligatures: \ul{Auf{}lage}]
 %   Use |{}| or \cs{\null} to break up ligatures like `fl' in \cs{\ul}, \cs{\st} and \cs{\hl}
 %   arguments.
-%   This won't work conveniently for \cs{\so} and \cs{\caps}, because they break up
+%   This doesn't make sense for \cs{\so} and \cs{\caps}, though, because they break up
 %   every unprotected (ungrouped\slash unboxed) ligature, anyway, and would
 %   then just add undesirable extra space around the additional item.
 % \end{verblist}
@@ -665,11 +667,12 @@
 %   \texttt{`Re\-con\-struction failed'} error and a black square like
 %   \errsquare\ in the \caps{DVI} file where you violated this rule.
 % \item[Discretionary hyphens: \so{Zu\discerctionary{k-}{}{c}ker}]
-%   The argument must not contain discretionary hyphens. Thus you have to
+%   The argument must not contain discretionary hyphens. Thus, you have to
 %   handle cases like the German word |Zu\discretionary{k-}{}{c}ker| by yourself.
 % \item[Nested soul commands: \ul{foo \so{bar} baz}]
 %   \soul\ commands must not be nested. If you really
-%   need such, put the inner stuff in a box and use this box.\\
+%   need such, put the inner stuff in a box and use this box. It will, of
+%   course, not get broken then.\\
 %   \null\qquad|\newbox\anyboxname|\\
 %   \null\qquad|\sbox\anyboxname{ \so{the worst} }|\\
 %   \null\qquad|\ul{This is by far\mbox{\usebox\anyboxname}example!}|\\
@@ -694,7 +697,7 @@
 %   a command sequence, it has to protect such commands with \cs{\noexpand} in
 %   front. This is done for the following tokens: |~|, \cs{\,}, \cs{\TeX}, \cs{\LaTeX},
 %   \cs{\S}, \cs{\slash}, \cs{\textregistered}, \cs{\textcircled}, and \cs{\copyright},
-%   as well as for all registered fonts and accents, but not for active characters.
+%   as well as for all registered fonts and accents.
 %   You can put \cs{\noexpand} manually in front of similar commands, that
 %   cause problems: |\def\foo{foo {\noexpand\bar} bar}| |\so\foo|
 % \item[Other weird stuff: \so{foo \verb|\bar| baz}]
@@ -837,13 +840,13 @@
 % the \soul\ statement. Case~2 is what you'll mostly need---letterspaced
 % text amidst running text. Following and leading space get replaced by
 % \syn{outer space}. It doesn't matter if there are opening braces before
-% or closing braces afterwards. \soul\ can see though both of them (case~3).
+% or closing braces afterwards. \soul\ can see through both of them (case~3).
 % Note that leading space has to be at least |5sp| wide to be recognized as
 % space, because \LaTeX\ uses tiny spaces generated by |\hskip1sp| as marker.
 % Case~4 shows how to enforce normal spaces instead of \syn{outer spaces:}
-% Preceding space can be hidden by or |\kern0pt| or \cs{\null} or any character.
+% Preceding space can be hidden by |\kern0pt| or \cs{\null} or any character.
 % Following space can also be hidden by any token, but note that a typical macro name
-% like \cs{\relax} or \cs{\null} would also hide the space after.
+% like \cs{\relax} or \cs{\null} would also hide the space thereafter.
 %
 %
 % The values are predefined for typesetting facsimiles mainly with
@@ -964,6 +967,7 @@
 % |\normalfont|&\sampletext\\
 % |\scshape|&{\scshape\sampletext}\\
 % |\caps|&\caps\sampletext\\
+% ^^A|\person|&\person\sampletext\\
 % \end{tabular}
 %
 % \medbreak\noindent 
@@ -1002,7 +1006,7 @@
 % entry after it can be reached.
 %
 % The \cs{\caps} database can be cleared with the \describemacro{\capsreset}
-% command and will only contain the default entry after that. The
+% command and will only contain the default entry thereafter. The
 % \describemacro{\capssave} command saves the whole current database
 % and assigns it to a macro name. This allows to predefine different
 % groups of \cs{\caps} data sets:
@@ -1013,16 +1017,16 @@
 % |\capsdef{/cmss///}{}{10pt}{20pt}{30pt}|\\
 % |...|\\
 % |\capssave\widecaps|\\
+% |%---------------------------------------|\\
 % \end{example}
-%
 % \indent
 % \begin{example}
 % |\capsreset|\\
 % |\capsdef{/cmss///}{}{.1pt}{.2pt}{.3pt}|\\
 % |...|\\
 % |\capssave\narrowcaps|\\
+% |%---------------------------------------|\\
 % \end{example}
-% 
 % \indent
 % \begin{example}
 % |{\widecaps|\\
@@ -1083,8 +1087,8 @@
 % \label{sec:dirtytricks}
 %
 % Narrow columns are hard to set, because they don't allow much spacing
-% flexibility, hence long words often cause overfull boxes. A macro---let us
-% call it \cs{\magstylepar}---could use \cs{\so} to insert stretchability between the single
+% flexibility, hence long words often cause overfull boxes. A macro
+% could use \cs{\so} to insert stretchability between the single
 % characters. The following columns show some text typeset with such a funny
 % definition at the left side and under \emph{plain} conditions at
 % the right side, both with a width of~6\,pc.
@@ -1178,7 +1182,7 @@
 %
 % The colors for overstriking lines and highlighting are likewise set
 % with \describemacro{\setstcolor} (default: black) and \describemacro{\sethlcolor}
-% (default: yellow). If the \package{color} package wasn't loaded
+% (default: yellow). If the \package{color} package wasn't loaded,
 % underlining and overstriking color are black, while highlighting
 % is replaced by underlining.
 %
@@ -1194,7 +1198,7 @@
 % \ul{Underlining}, \st{striking out} and highlighting build up
 % their lines with many short line segments. If you used the `\program{dvips}'
 % program with default settings, you would get little gaps on some places, because
-% the \emph{maxdrift} value allows the single objects to drift
+% the \emph{maxdrift} parameter allows the single objects to drift
 % this many pixels from their real positions.
 % \bigbreak
 %
@@ -1359,8 +1363,8 @@
 % \subsection{Changing the internal font}
 % \label{sec:internalfont}
 %
-% The \soul\ package uses the |ectt1000| font to
-% analyze the syllables. This font is used, because it
+% The \soul\ package uses the |ectt1000| font while it analyzes
+% the syllables. This font is used, because it
 % has 256~mono-spaced characters without any kerning.
 % It belongs to \person{J\"org Knappen'\textrm{s}}
 % \caps{EC}-fonts, which should be part of every modern \TeX\ installation.
@@ -1723,7 +1727,7 @@
 %
 % \subsection{The kernel}
 % \so{Letterspacing,} \ul{underlining}, \st{striking out} and highlighting
-% use the same kernel mechanism. It lets a \emph{word scanner} run over the given argument,
+% use the same kernel. It lets a \emph{word scanner} run over the given argument,
 % which inspects every token. If a token is a command registered via \cs{\soulfont},
 % it is executed immediately. Other tokens are only counted and trigger some action
 % when a certain number is reached (quotes and dashes). Three subsequent `|-|', for example,
@@ -1967,7 +1971,7 @@
 %\end{example}
 %
 % Explicit hyphens like dashes and slashes shall be set normally.
-% We just have to care for kerning. The hyphen has to be put into
+% We just have to care for kerning. The hyphen has to be put in
 % a box, because, as \cs{\hyphenchar}, it would yield its own, internal
 % \cs{\discretionary}. We need to set ours instead, though.
 %
@@ -2007,7 +2011,9 @@
 % typesetting. The \cs{\caps} mechanism was very much influenced by his
 % suggestions. Thanks to \person{Alexander Shibakov} and \person{Frank Mittelbach,}
 % who sent me a couple of bug reports and feature requests, and finally encouraged
-% me to (almost) completely rewrite \soul.
+% me to (almost) completely rewrite \soul. Thanks to \person{Axel Reichert,}
+% \person{Anshuman Pandey,} \person{Peter Kreynin,} and \person{Thorsten Mangold}
+% for bringing nasty bugs to my attention that crept into \soul\ 2.1.
 % \person{Rowland McDonnel} gave useful hints for how to improve the documentation,
 % but I'm afraid he will still not be satisfied, and rightfully so. If only documentation
 % writing weren't that boring.\qquad\texttt{;-)}
@@ -2141,7 +2147,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2002/04/17 v2.2 letterspacing/underlining  (mf)]
+        [2002/04/25 v2.2 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2255,7 +2261,7 @@
 % \begin{macro}{\SOUL@}
 % This macro is the entry to \soul. Using it does only make
 % sense after setting up a \soul\ driver. The next token after
-% the \soul\ command will be assigned to \cs{\SOUL@}. This should
+% the \soul\ command will be assigned to \cs{\SOUL@@}. This should
 % either be an opening brace or the name of a macro that contains text.
 %
 %    \begin{macrocode}
@@ -2280,8 +2286,7 @@
 % be closed in the \cs{\egroup} branch of \cs{\SOUL@eval}. Otherwise,
 % if the first token was a macro name, we expand that macro and
 % call \cs{\SOUL@} with its contents again. Unfortunately, we have to
-% exclude some macros therein from expansion. This won't work with
-% active characters.
+% exclude some macros therein from expansion.
 %
 %    \begin{macrocode}
 \def\SOUL@expand{%
@@ -2303,11 +2308,7 @@
         \let\SOUL@n\SOUL@scan
     \else
         \bgroup
-            \def\\##1##2{%
-                \ifcat\noexpand##2\noexpand\SOUL@expand
-                    \def##2{\noexpand##2}%
-                \fi
-            }%
+            \def\\##1##2{\def##2{\noexpand##2}}%
             \the\SOUL@cmds
             \def\\{\noexpand\\}%
             \def~{\noexpand~}%
@@ -2672,7 +2673,7 @@
 %
 % \begin{macro}{\soulfont}
 % \begin{macro}{\soulaccent}
-% Register a font switching command (or some other command) to the
+% Register a font switching command (or some other command) for the
 % scanner. The first argument is the macro name, the second is
 % the number of arguments (|0|~or~|1|). Example: |\soulfont{\bold}{0}|.
 % \cs{\soulaccent} has only one argument---the accent macro name.
