@@ -130,7 +130,7 @@
 %
 %
 %
-% \CheckSum{1834}
+% \CheckSum{1843}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -976,7 +976,7 @@
 %
 % The old German fonts^^A
 %^^A%%
-%   \footnote{See the great old German fonts, which \caps{Yannis Haralambous} 
+%   \footnote{See the great old German fonts, which \person{Yannis Haralambous} 
 %   kindly provided, and the \package{oldgerm} and \package{yfonts} package
 %   as their \LaTeX\ interfaces.}
 %^^A%%
@@ -1252,7 +1252,7 @@
 % \package{yfonts} commands are already pre-registered:
 % 
 % \begin{example}
-% |\em, \rm, \bf, \it, \tt, \emph, \textrm, \textsf,|\\
+% |\em, \rm, \bf, \it, \tt, \sc, \sl, \sf, \emph, \textrm, \textsf,|\\
 % |\texttt, \textmd, \textbf, \textup, \textsl, \textit,|\\
 % |\textsc, \textnormal, \rmfamily, \sffamily, \ttfamily,|\\
 % |\mdseries, \upshape, \slshape, \itshape, \scshape,|\\
@@ -1874,7 +1874,7 @@
     \def\@width{width}
     \def\@plus{plus}
     \def\@minus{minus}
-    \font\SOUL@tt=cmtt10
+    \font\SOUL@tt=ectt10
     \let\@xobeysp\space
     \let\linebreak\break
     \let\mbox\hbox
@@ -1900,7 +1900,7 @@
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
         [2001/12/99 v2.0 letterspacing/underlining  (mf)]
-    \newfont\SOUL@tt{cmtt10}
+    \newfont\SOUL@tt{ectt10}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
     \newcommand*\textso{}
@@ -2358,7 +2358,7 @@
     \\1\textup\\1\textsl\\1\textit\\1\textsc\\1\textnormal
     \\0\rmfamily\\0\sffamily\\0\ttfamily\\0\mdseries\\0\upshape
     \\0\slshape\\0\itshape\\0\scshape\\0\normalfont
-    \\0\em\\0\rm\\0\bf\\0\it\\0\tt
+    \\0\em\\0\rm\\0\bf\\0\it\\0\tt\\0\sc\\0\sl\\0\sf
     \\0\tiny\\0\scriptsize\\0\footnotesize\\0\small
     \\0\normalsize\\0\large\\0\Large\\0\LARGE\\0\huge\\0\Huge
     \\1\textfrak\\1\textswab\\1\textgoth
