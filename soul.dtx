@@ -1665,7 +1665,6 @@
 %
 %
 %
-%
 % \subsection{The interface}
 % \label{sec:interface}
 % 
@@ -1673,9 +1672,10 @@
 %
 % The package offers eight interface macros that can be used to define
 % the required actions. Some of the macros receive data as macro parameter
-% or in special \emph{token} or \emph{dimen} registers.
+% or in special \emph{token} or \emph{dimen} registers. Here is a list of
+% all available registers:
 % 
-% \begin{labeling}{\hspace{.335\hsize}}
+% \begin{labeling}{\hspace{.36\hsize}}
 % \item[\texttt{\string\SOUL@token}]
 %   This token register contains the current token. To be used as |\the\SOUL@token|.
 %   \cs{\SOUL@gettoken} reads the next token into \cs{\SOUL@token} and
@@ -1708,54 +1708,48 @@
 % \subsubsection{The interface macros}
 %
 % The following list describes each of the interface macros and which
-% registers they can rely on. The \emph{mark} will be used in section
-% \ref{sec:interfaceexamples} to show when the macros are executed.
-% \vspace{2.5ex}
+% registers they can rely on. The mark between label and description
+% will be used in section \ref{sec:interfaceexamples} to show when
+% the macros are executed. The addition |#1| means that the macro
+% takes one argument.
 % 
-%
-% \newcommand*\tabline[3]{{\let\sloppy\relax\noindent
-%   \parbox[t]{.3\hsize}{\noindent\strut\texttt{#1}}^^A%
-%   \parbox[t]{.05\hsize}{\noindent\strut#2}^^A%
-%   \parbox[t]{.65\hsize}{\noindent\strut#3\strut}}\smallskip}
-%
-%^^A page breaks between the header and the first two items are deprecated
-% \noindent
-% \parbox{\hsize}{^^A
-% \tabline{\normalfont\textbf{macro name}}
-%   {\textbf{\hidewidth mark\hidewidth}}
-%   {\hfil\textbf{short description}}\\*[-8pt]
-% \rule{\hsize}{.4pt}\par
-% \tabline{\string\SOUL@preamble}{$P$}
-%   {executed once at the beginning}
-% \tabline{\string\SOUL@postamble}{$E$}
-%   {executed once at the end}
-% }
-% \tabline{\string\SOUL@everyhyphen}{$-$}    
-%   {executed at every implicit hyphenation point; It may access the
-%   letter kern in \texttt{\string\dimen@}, the hyphen kern in \texttt{\string\dimen3},
-%   and the hyphen in \texttt{\string\box2}. This interface macro has
-%   to reinsert the hyphen kern, it may remove a
-%   character kern inserted by \texttt{\string\SOUL@everytoken}, if
-%   necessary.}
-% \tabline{\string\SOUL@everyexhyphen}{$=$}    
-%   {executed at every explicit hyphenation point; ???? }
-% \tabline{\string\SOUL@everytoken}{$T$}
-%   {executed after scanning a token; It may access the 
+% \begin{labeling}{\hspace{.36\hsize}}
+% \def\m#1{\leavevmode\llap{#1\hskip.7em}}
+% \item[\texttt{\string\SOUL@preamble}]\m{$P$}^^A
+%   executed once at the beginning
+% \item[\texttt{\string\SOUL@postamble}]\m{$E$}^^A
+%   executed once at the end
+% \item[\texttt{\string\SOUL@everytoken}]\m{$T$}^^A
+%   executed after scanning a token; It may access the 
 %   current token in \texttt{\string\SOUL@actual}, the next two tokens in
 %   \texttt{\string\SOUL@prefetch} and \texttt{\string\SOUL@pprefetch}, where 
 %   \texttt{\string\SOUL@next} points to the first of them, which doesn't
 %   contain an \texttt{\string\empty} token. The
 %   character kern is accessible via \texttt{\string\dimen@}. This
 %   interface macro is responsible for reinserting the
-%   character kern.}
-% \tabline{\string\SOUL@everysyllable}{$S$}
-%   {executed after scanning a whole syllable; not used by the
-%   package definitions so far; If you want to access the whole syllable,
-%   you have to let \texttt{\string\SOUL@everytoken} collect the tokens.}
-% \noindent{\parbox{\hsize}{^^A
-% \tabline{\string\SOUL@everyspace}{\texttt{\char`\ }}
-%   {executed between every two words}
-% }
+%   character kern.
+% \item[\texttt{\string\SOUL@everysyllable}]\m{$S$}^^A
+%   This macro is executed after scanning a whole syllable. It gets the
+%   syllable in \cs{\SOUL@syllable} 
+% \item[\texttt{\string\SOUL@everyhyphen}]\m{$-$}^^A
+%   This macro is executed at every implicit hyphenation point.
+%   It is responsible for setting the hyphen and will likely do this
+%   in a \cs{\discretionary} command. It has also to care about the
+%   kerning values. May access \cs{\SOUL@lasttoken}, \cs{\SOUL@syllable},
+%   \cs{\SOUL@charkern} and \cs{\SOUL@hyphkern}.
+% \item[\texttt{\string\SOUL@everyexhyphen\#1}]\m{$=$}^^A
+%   This macro is executed at every explicit hyphenation point. The
+%   hyphen character is passed as parameter |#1|, that is one of
+%   hyphen, en-dash, em-dash or \cs{\slash}. The minimal implementation
+%   should be |{#1\penalty\exhyphenpenalty}|. May access \cs{\SOUL@lasttoken}
+%   and \cs{\SOUL@syllable}. 
+% \item[\texttt{\string\SOUL@everyspace\#1}]\m{\texttt{\char`\ }}^^A
+%   This macro is executed between every two words. It is responsible for
+%   setting the space. The engine submits a \cs{\penalty} setting as
+%   parameter |#1| that should be put in front of the space. The
+%   macro should at least do |{#1\space}|. May access \cs{\SOUL@lasttoken}
+%   and \cs{\SOUL@syllable}.
+% \end{labeling}
 %
 %
 %
@@ -1768,7 +1762,7 @@
 % The above table's middle column shows a mark that indicates in the
 % following examples, when the respective macros are executed:\nopagebreak
 %
-% \begin{labeling}{\hspace{.335\hsize}}
+% \begin{labeling}{\hspace{.36\hsize}}
 % \item[\normalfont\an{word}]
 %   At the first execution of |\SOUL@everytoken| the token `|w|' is  ????
 %   stored in |\SOUL@actual| while the token `|o|' is already stored
@@ -1812,9 +1806,7 @@
 %
 %
 %
-% \subsection{Doing it yourself}
-%
-% \subsubsection{Defining a new driver}
+% \subsection{An driver example}
 %
 % Let's define a \soul\ driver that allows to typeset text
 % with a hyphen at every potential hyphenation point. The name of
