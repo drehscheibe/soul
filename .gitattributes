@@ -1,0 +1,3 @@
+# Replace $Id$ in these files by their respective hashes
+Makefile ident
+soul.dtx ident

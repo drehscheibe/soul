@@ -1,7 +1,7 @@
 % \iffalse
 %% File: soul.dtx  Copyright (C) 1998--2003  Melchior FRANZ
 %% $Id$
-%% $Version: 2.4 $
+%% $Version: 2.5 $
 %
 %<*batchfile>
 %
@@ -37,16 +37,9 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "2.4",
-%%     date            = "17 November 2003",
+%%     version         = "2.5",
+%%     date            = "30 August 2020",
 %%     filename        = "soul.dtx",
-%%     address         = "Melchior FRANZ
-%%                        Rieder Hauptstrasse 52
-%%                        A-5212 SCHNEEGATTERN
-%%                        AUSTRIA",
-%%     telephone       = "++43 7746 3109",
-%%     URL             = "http://www.unet.univie.ac.at/~a8603365/",
-%%     email           = "a8603365@unet.univie.ac.at",
 %%     codetable       = "ISO/ASCII",
 %%     keywords        = "spacing out, letterspacing, underlining, striking out,
 %%                        highlighting",
@@ -85,8 +78,8 @@
 %
 %
 %<*driver>
-\def\fileversion{2.4}
-\def\filedate{2003/11/17}
+\def\fileversion{2.5}
+\def\filedate{2020/08/30}
 %
 %
 %
@@ -96,7 +89,7 @@
 %
 \makeatletter\let\SOUL@sethyphenchar\relax\makeatother
 \IfFileExists{soul.sty}{%
-    \usepackage{soul}[2002/01/10]
+    \usepackage{soul}[2020/08/30]
     \expandafter\ifx\csname sloppyword\endcsname\relax  % old version?
         \def\sloppyword{\textbf{?? [obsolete soul version]}}
     \fi
@@ -175,7 +168,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{November 17, 2003}
+% \date{August 30, 2020}
 %
 %^^A=====================================================
 %
@@ -450,10 +443,8 @@
 %   Other bugfixes; change caps set handling; add footnote and
 %   textsuperscript support}
 %
-% \changes{v2.5}{????/??/??}{don't use `count0 to avoid problems
-%   with the `output routine}
-%
-%
+% \changes{v2.5}{2020/08/30}{Allocate all registers used by SOUL to avoid
+%   incompatibilities with other packages and the LaTeX output routine.}
 %
 %
 %
@@ -2337,7 +2328,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2003/11/17 v2.4 letterspacing/underlining  (mf)]
+        [2020/08/30 v2.5 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2372,7 +2363,7 @@
 %
 % \noindent
 % To avoid clashes with other packages, every register used by SOUL is
-% explicitly allocated. Prior to version 2.6 of SOUL, several of these
+% explicitly allocated. Prior to version 2.5 of SOUL, several of these
 % registers were declared using \cs{\toksdef}, \cs{\dimendef} and
 % \cs{\countdef} to conserve free registers. This is no longer necessary
 % due to the large number of additional registers provided by e-TeX.
