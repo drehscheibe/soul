@@ -443,7 +443,7 @@
 %   Other bugfixes; change caps set handling; add footnote and
 %   textsuperscript support}
 %
-% \changes{v2.5}{2020/08/30}{Allocate all registers used by SOUL to avoid
+% \changes{v2.5}{2020/08/30}{Allocate all registers used by soul to avoid
 %   incompatibilities with other packages and the LaTeX output routine.}
 %
 %
@@ -2362,8 +2362,8 @@
 %
 %
 % \noindent
-% To avoid clashes with other packages, every register used by SOUL is
-% explicitly allocated. Prior to version 2.5 of SOUL, several of these
+% To avoid clashes with other packages, every register used by \soul\ is
+% explicitly allocated. Prior to version 2.5 of \soul, several of these
 % registers were declared using \cs{\toksdef}, \cs{\dimendef} and
 % \cs{\countdef} to conserve free registers. This is no longer necessary
 % due to the large number of additional registers provided by e-TeX.
