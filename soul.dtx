@@ -1,7 +1,7 @@
 % \iffalse
 %% File: soul.dtx  Copyright (C) 1998--2003  Melchior FRANZ
 %% $Id$
-%% $Version: 2.4 $
+%% $Version: 2.5 $
 %
 %<*batchfile>
 %
@@ -37,16 +37,9 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "2.4",
-%%     date            = "17 November 2003",
+%%     version         = "2.5",
+%%     date            = "30 August 2020",
 %%     filename        = "soul.dtx",
-%%     address         = "Melchior FRANZ
-%%                        Rieder Hauptstrasse 52
-%%                        A-5212 SCHNEEGATTERN
-%%                        AUSTRIA",
-%%     telephone       = "++43 7746 3109",
-%%     URL             = "http://www.unet.univie.ac.at/~a8603365/",
-%%     email           = "a8603365@unet.univie.ac.at",
 %%     codetable       = "ISO/ASCII",
 %%     keywords        = "spacing out, letterspacing, underlining, striking out,
 %%                        highlighting",
@@ -85,8 +78,8 @@
 %
 %
 %<*driver>
-\def\fileversion{2.4}
-\def\filedate{2003/11/17}
+\def\fileversion{2.5}
+\def\filedate{2020/08/30}
 %
 %
 %
@@ -96,7 +89,7 @@
 %
 \makeatletter\let\SOUL@sethyphenchar\relax\makeatother
 \IfFileExists{soul.sty}{%
-    \usepackage{soul}[2002/01/10]
+    \usepackage{soul}[2020/08/30]
     \expandafter\ifx\csname sloppyword\endcsname\relax  % old version?
         \def\sloppyword{\textbf{?? [obsolete soul version]}}
     \fi
@@ -175,7 +168,7 @@
 %
 % \author{Melchior \caps{FRANZ}}
 %
-% \date{November 17, 2003}
+% \date{August 30, 2020}
 %
 %^^A=====================================================
 %
@@ -450,10 +443,8 @@
 %   Other bugfixes; change caps set handling; add footnote and
 %   textsuperscript support}
 %
-% \changes{v2.5}{????/??/??}{don't use `count0 to avoid problems
-%   with the `output routine}
-%
-%
+% \changes{v2.5}{2020/08/30}{Allocate all registers used by soul to avoid
+%   incompatibilities with other packages and the LaTeX output routine.}
 %
 %
 %
@@ -2337,7 +2328,7 @@
 \else
     \NeedsTeXFormat{LaTeX2e}
     \ProvidesPackage{soul}
-        [2003/11/17 v2.4 letterspacing/underlining  (mf)]
+        [2020/08/30 v2.5 letterspacing/underlining  (mf)]
     \newfont\SOUL@tt{ectt1000}
     \newcommand*\sodef{}
     \newcommand*\resetso{}
@@ -2371,27 +2362,29 @@
 %
 %
 % \noindent
-% Other packages wouldn't be happy if we reserved piles of \cs{\newtoks} and
-% \cs{\newdimen}, so we try to get away with their \cs{\...def} counterparts
-% where possible.
-% Local registers are always even, while global ones are odd---this is a
-% \TeX\ convention.
+% To avoid clashes with other packages, every register used by \soul\ is
+% explicitly allocated. Prior to version 2.5 of \soul, several of these
+% registers were declared using \cs{\toksdef}, \cs{\dimendef} and
+% \cs{\countdef} to conserve free registers. This is no longer necessary
+% due to the large number of additional registers provided by e-TeX.
 %
 %    \begin{macrocode}
 \newtoks\SOUL@word
 \newtoks\SOUL@lasttoken
-\toksdef\SOUL@syllable\z@
+\newtoks\SOUL@syllable
 \newtoks\SOUL@cmds
 \newtoks\SOUL@buffer
 \newtoks\SOUL@token
-\dimendef\SOUL@syllgoal\z@
-\dimendef\SOUL@syllwidth\tw@
-\dimendef\SOUL@charkern=4
-\dimendef\SOUL@hyphkern=6
-\countdef\SOUL@minus\tw@
-\countdef\SOUL@comma4
-\countdef\SOUL@apo=6
-\countdef\SOUL@grave=8
+\newdimen\SOUL@syllgoal
+\newdimen\SOUL@syllwidth
+\newdimen\SOUL@charkern
+\newdimen\SOUL@hyphkern
+\newdimen\SOUL@dimen
+\newdimen\SOUL@dimeni
+\newcount\SOUL@minus
+\newcount\SOUL@comma
+\newcount\SOUL@apo
+\newcount\SOUL@grave
 \newskip\SOUL@spaceskip
 \newif\ifSOUL@ignorespaces
 %    \end{macrocode}
@@ -3857,10 +3850,10 @@
     \ifnum\count@>\z@
         \ifdim#1\p@=#2\p@\else\let\SOUL@match=0\fi
     \else
-        \dimen@=\if$#2$\z@\else#2\p@\fi
-        \ifdim#1\p@<\dimen@\let\SOUL@match=0\fi
-        \dimen@=\if$#3$\maxdimen\else#3\p@\fi
-        \ifdim#1\p@<\dimen@\else\let\SOUL@match=0\fi
+        \SOUL@dimen=\if$#2$\z@\else#2\p@\fi
+        \ifdim#1\p@<\SOUL@dimen\let\SOUL@match=0\fi
+        \SOUL@dimen=\if$#3$\maxdimen\else#3\p@\fi
+        \ifdim#1\p@<\SOUL@dimen\else\let\SOUL@match=0\fi
     \fi
 }
 %    \end{macrocode}
@@ -3952,13 +3945,13 @@
 %    \begin{macrocode}
 \def\SOUL@ulunderline#1{{%
     \setbox\z@\hbox{#1}%
-    \dimen@=\wd\z@
-    \dimen@i=\SOUL@uloverlap
-    \advance\dimen@2\dimen@i
+    \SOUL@dimen=\wd\z@
+    \SOUL@dimeni=\SOUL@uloverlap
+    \advance\SOUL@dimen2\SOUL@dimeni
     \rlap{%
         \null
-        \kern-\dimen@i
-        \SOUL@ulcolor{\SOUL@ulleaders\hskip\dimen@}%
+        \kern-\SOUL@dimeni
+        \SOUL@ulcolor{\SOUL@ulleaders\hskip\SOUL@dimen}%
     }%
     \unhcopy\z@
 }}
@@ -4243,9 +4236,9 @@
             #1%
         \fi
     }%
-    \dimen@\dp\z@
-    \advance\dimen@\p@
-    \xdef\SOUL@uldepth{\the\dimen@}%
+    \SOUL@dimen\dp\z@
+    \advance\SOUL@dimen\p@
+    \xdef\SOUL@uldepth{\the\SOUL@dimen}%
 }}
 %    \end{macrocode}
 % \end{macro}
@@ -4269,10 +4262,10 @@
 %
 %    \begin{macrocode}
 \def\SOUL@stpreamble{%
-    \dimen@\SOUL@ulthickness
-    \dimen@i=-.5ex
-    \advance\dimen@i-.5\dimen@
-    \edef\SOUL@uldepth{\the\dimen@i}%
+    \SOUL@dimen\SOUL@ulthickness
+    \SOUL@dimeni=-.5ex
+    \advance\SOUL@dimeni-.5\SOUL@dimen
+    \edef\SOUL@uldepth{\the\SOUL@dimeni}%
     \let\SOUL@ulcolor\SOUL@stcolor
     \SOUL@ulpreamble
 }
